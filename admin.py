@@ -13,26 +13,26 @@ class ProblemScribbleInline(admin.TabularInline):
 
 @admin.register(he.Test)
 class TestAdmin(admin.ModelAdmin):
-    list_display = ('name', 'color')
+    list_display = ('id', 'name', 'color')
     inlines = (ProblemInline,)
 
 @admin.register(he.Problem)
 class ProblemAdmin(admin.ModelAdmin):
-    list_display = ('test', 'problem_number', 'weight', 'allow_partial')
+    list_display = ('id', 'test', 'problem_number', 'weight', 'allow_partial')
 
 @admin.register(he.TestScribble)
 class TestScribbleAdmin(admin.ModelAdmin):
-    list_display = ('test', 'mathlete', 'team')
+    list_display = ('id', 'test', 'mathlete', 'team')
 
 @admin.register(he.Verdict)
 class VerdictAdmin(admin.ModelAdmin):
-    list_display = ('problem', 'mathlete', 'team', 'cached_score', 'cached_valid')
+    list_display = ('id', 'problem', 'mathlete', 'team', 'cached_score', 'cached_valid')
     inlines = (EvidenceInline, ProblemScribbleInline,)
 
 @admin.register(he.ProblemScribble)
 class ProblemScribbleAdmin(admin.ModelAdmin):
-    list_display = ('problem_number', 'testscan')
+    list_display = ('id', 'verdict', 'problem_number', 'testscan')
 
 @admin.register(he.Evidence)
 class EvidenceAdmin(admin.ModelAdmin):
-    list_display = ('verdict', 'user', 'score', 'god_mode')
+    list_display = ('id', 'verdict', 'user', 'score', 'god_mode')

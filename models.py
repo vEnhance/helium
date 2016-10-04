@@ -14,9 +14,9 @@ def validateForeignKey(obj, is_indiv, nonempty=False):
         if obj.mathlete is None and nonempty is True:
             raise ValidationError("Individual verdict has no individual attached")
     else:
-        if obj.indiv is not None:
+        if obj.mathlete is not None:
             raise ValidationError("Team problems can't have mathletes attached")
-        if obj.mathlete is None and nonempty is True:
+        if obj.team is None and nonempty is True:
             raise ValidationError("Team problems has no team attached")
 
 
@@ -26,6 +26,7 @@ class Test(models.Model):
             help_text='Hex code for color test printed on')
     is_indiv = models.BooleanField()
     algorithm_scoring = models.BooleanField()
+    def __unicode__(self): return self.name
 
 class Problem(models.Model):
     test = models.ForeignKey(Test)
@@ -34,37 +35,60 @@ class Problem(models.Model):
     cached_beta = models.FloatField(blank=True, null=True)
     weight = models.IntegerField(blank=True, null=True)
     allow_partial = models.BooleanField(default=False)
+    def __unicode__(self): return self.test.name + " #" + unicode(self.problem_number)
 
 # Scribble objects
 class TestScribble(models.Model):
     test = models.ForeignKey(Test)
     mathlete = models.ForeignKey(reg.AbstractMathlete, blank=True, null=True)
     team = models.ForeignKey(reg.AbstractTeam, blank=True, null=True)
-    scan_image = models.FileField()
+    scan_image = models.FileField(upload_to='scans/')
 
     def clean(self):
-        validateForeignKey(self, self.problem.test.is_indiv)
+        validateForeignKey(self, self.test.is_indiv)
+    def __unicode__(self):
+		if self.mathlete is not None:
+			who = unicode(self.mathlete)
+		elif self.team is not None:
+			who = unicode(self.team)
+		else:
+			who = '???'
+		return 'Scan ' + unicode(self.id) + ' for ' + who
 
 class Verdict(models.Model):
-    # You might have verdicts for which you don't know any of these
+    problem = models.ForeignKey(Problem) # You should know which problem
+
+    # You might have verdicts for which you don't know whose yet
     # because the verdict is created by a to-be-matched scribble
-    problem = models.ForeignKey(Problem, blank=True, null=True)
     mathlete = models.ForeignKey(reg.AbstractMathlete, blank=True, null=True)
     team = models.ForeignKey(reg.AbstractTeam, blank=True, null=True)
     cached_score = models.IntegerField(blank=True, null=True) # integer, score for the problem
     cached_valid = models.NullBooleanField(default=None, blank=True, null=True) # whether all evidence makes sense
 
     def clean(self):
-        validateForeignKey(self, self.problem.test.is_indiv)
+		if self.problem is not None:
+			validateForeignKey(self, self.problem.test.is_indiv)
+    def __unicode__(self):
+		if self.mathlete is not None:
+			who = unicode(self.mathlete)
+		elif self.team is not None:
+			who = unicode(self.team)
+		else:
+			who = '???'
+		return unicode(self.problem) + ' for ' + who
 
 class ProblemScribble(models.Model):
     problem_number = models.IntegerField()
     testscan = models.ForeignKey(TestScribble)
     verdict = models.OneToOneField(Verdict, on_delete=models.CASCADE)
     # I have no idea what cascade does, lol
+    def __unicode__(self): return unicode(self.verdict)
     
 class Evidence(models.Model):
     verdict = models.ForeignKey(Verdict)
     user = models.ForeignKey(auth.User)
     score = models.IntegerField()
     god_mode = models.BooleanField(default=False)
+    def __unicode__(self): return unicode(self.id)
+
+# vim: expandtab
