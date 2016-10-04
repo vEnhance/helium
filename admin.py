@@ -31,7 +31,7 @@ class VerdictAdmin(admin.ModelAdmin):
 
 @admin.register(he.ProblemScribble)
 class ProblemScribbleAdmin(admin.ModelAdmin):
-    list_display = ('id', 'verdict', 'problem_number', 'testscan')
+    list_display = ('id', 'verdict', 'problem_number', 'testscribble')
 
 @admin.register(he.Evidence)
 class EvidenceAdmin(admin.ModelAdmin):

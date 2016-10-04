@@ -42,7 +42,7 @@ class TestScribble(models.Model):
     test = models.ForeignKey(Test)
     mathlete = models.ForeignKey(reg.AbstractMathlete, blank=True, null=True)
     team = models.ForeignKey(reg.AbstractTeam, blank=True, null=True)
-    scan_image = models.FileField(upload_to='scans/')
+    scan_image = models.ImageField(upload_to='scans/names/')
 
     def clean(self):
         validateForeignKey(self, self.test.is_indiv)
@@ -79,8 +79,10 @@ class Verdict(models.Model):
 
 class ProblemScribble(models.Model):
     problem_number = models.IntegerField()
-    testscan = models.ForeignKey(TestScribble)
+    testscribble = models.ForeignKey(TestScribble)
     verdict = models.OneToOneField(Verdict, on_delete=models.CASCADE)
+    scan_image = models.ImageField(upload_to='scans/problems/')
+
     # I have no idea what cascade does, lol
     def __unicode__(self): return unicode(self.verdict)
     
