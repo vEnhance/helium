@@ -66,16 +66,16 @@ class Verdict(models.Model):
     cached_valid = models.NullBooleanField(default=None, blank=True, null=True) # whether all evidence makes sense
 
     def clean(self):
-		if self.problem is not None:
-			validateForeignKey(self, self.problem.test.is_indiv)
+        if self.problem is not None:
+            validateForeignKey(self, self.problem.test.is_indiv)
     def __unicode__(self):
-		if self.mathlete is not None:
-			who = unicode(self.mathlete)
-		elif self.team is not None:
-			who = unicode(self.team)
-		else:
-			who = '???'
-		return unicode(self.problem) + ' for ' + who
+        if self.mathlete is not None:
+            who = unicode(self.mathlete)
+        elif self.team is not None:
+            who = unicode(self.team)
+        else:
+            who = '???'
+        return unicode(self.problem) + ' for ' + who
 
 class ProblemScribble(models.Model):
     problem_number = models.IntegerField()
