@@ -31,6 +31,7 @@ class Test(models.Model):
 class Problem(models.Model):
     test = models.ForeignKey(Test)
     problem_number = models.IntegerField()
+    answer = models.CharField(max_length=70, default='')
 
     cached_beta = models.FloatField(blank=True, null=True)
     weight = models.IntegerField(blank=True, null=True)
