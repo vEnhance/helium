@@ -62,8 +62,9 @@ class Verdict(models.Model):
     # because the verdict is created by a to-be-matched scribble
     mathlete = models.ForeignKey(reg.AbstractMathlete, blank=True, null=True)
     team = models.ForeignKey(reg.AbstractTeam, blank=True, null=True)
-    cached_score = models.IntegerField(blank=True, null=True) # integer, score for the problem
-    cached_valid = models.NullBooleanField(default=None, blank=True, null=True) # whether all evidence makes sense
+    score = models.IntegerField(blank=True, null=True) # integer, score for the problem
+    is_valid = models.BooleanField(default=True)  # whether all evidence makes sense
+    is_done = models.BooleanField(default=False)  # whether enough evidence to arrive at final verdict
 
     def clean(self):
         if self.problem is not None:

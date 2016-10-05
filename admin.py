@@ -26,7 +26,7 @@ class TestScribbleAdmin(admin.ModelAdmin):
 
 @admin.register(he.Verdict)
 class VerdictAdmin(admin.ModelAdmin):
-    list_display = ('id', 'problem', 'mathlete', 'team', 'cached_score', 'cached_valid')
+    list_display = ('id', 'problem', 'mathlete', 'team', 'score', 'is_valid', 'is_done')
     inlines = (EvidenceInline, ProblemScribbleInline,)
 
 @admin.register(he.ProblemScribble)
