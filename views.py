@@ -8,7 +8,6 @@ import helium.forms as forms
 import json
 
 import logging
-logger = logging.getLogger(__name__)
 
 # Create your views here.
 
@@ -34,7 +33,6 @@ def grade_scans(request):
 @staff_member_required
 def submit_scan(request):
     if request.method == 'POST':
-        print request.POST
         scribble_id = int(request.POST['scribble_id'])
         score = int(request.POST['score'])
         user = request.user
@@ -52,11 +50,16 @@ def submit_scan(request):
 @staff_member_required
 def next_scan(request):
     if request.method == 'POST':
+        logging.warn(request.POST)
         problem_id = int(request.POST['problem_id'])
         problem = He.models.Problem.objects.get(id=problem_id)
         scribbles = He.models.ProblemScribble.objects.filter(
                 verdict__problem=problem, verdict__is_done=False)
         if len(scribbles) > 0:
-            return HttpResponse(str(scribbles), content_type="text/plain")
+            s = scribbles[0] # the next scribble
+            return HttpResponse(json.dumps( [s.id, s.scan_image.image.url] ), 
+                    content_type="application/json")
+        else:
+            return HttpResponse(json.dumps( [0, ''] ), content_type="application/json")
 
 # vim: expandtab

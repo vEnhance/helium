@@ -3,30 +3,54 @@
 
 {% block title %}Helium (HMMT Grader){% endblock %}
 
-{% block extras %}
-    <link href="{% static 'css/reg.css' %}" rel="stylesheet">
-{% endblock %}
 {% block layout-content %}
-
-
 <h3>Grading: {{ problem }}</h3>
 
 <h4>Can submit evidence</h4>
 
+<div id="scan_img"></div>
+
 <form action="/helium/submit-scan" method="post">
 	{% csrf_token %}
-	<input name="scribble_id" />
-	<input name="score" />
+	<input id="scribble_id" name="scribble_id" />
+	<input id="score" name="score" />
 	<input type="submit" />
 </form>
 
-<h4>Get next scan</h4>
+<h4>Get next scan (Debugging)</h4>
 <form action="/helium/next-scan" method="post">
 	{% csrf_token %}
 	<input name="problem_id" type="hidden" value="{{ problem.id }}"/>
 	<input type="submit" value ="Get Scan" />
 </form>
+{% endblock %}
 
+{% block scripts %}
+<script type="text/javascript">
+	// Copied from https://docs.djangoproject.com/en/1.9/ref/csrf/. Blah.
+	function csrfSafeMethod(method) {
+		return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+	}
 
+	$.ajaxSetup({
+		beforeSend: function(xhr, settings) {
+			if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+				xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+			}
+		}
+	});
 
+	function next_scan() {
+		$.ajax({
+			url : "/helium/next-scan",
+			type : "POST",
+			data: { problem_id : {{ problem.id }} },
+		}).done(function(result) {
+			console.log(result);
+			$("#scribble_id").val(result[0]);
+		});
+	}
+
+	next_scan();
+</script>
 {% endblock %}
