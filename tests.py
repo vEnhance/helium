@@ -51,13 +51,36 @@ class GradingTestCase(TestCase):
         self.assertEqual(self.verdict.is_valid, False)
         self.assertEqual(self.verdict.is_done, False)
 
+        # Evan submits a score of 7
+        self.verdict.submitEvidence(self.evan, 7)
+        self.assertEqual(self.verdict.score, 7)
+        self.assertEqual(self.verdict.is_valid, True)
+        self.assertEqual(self.verdict.is_done, True)
+
+
+    def test_doublegrade_2(self):
+        self.assertEqual(self.verdict.score, None)
+
+        # Calvin submits a score of 7
+        self.verdict.submitEvidence(self.calvin, 7)
+        self.assertEqual(self.verdict.score, 7)
+        self.assertEqual(self.verdict.is_valid, True)
+        self.assertEqual(self.verdict.is_done, False)
+        
+        # Kevin submits a score of 5
+        self.verdict.submitEvidence(self.kevin, 5)
+        self.assertEqual(self.verdict.score, None)
+        self.assertEqual(self.verdict.is_valid, False)
+        self.assertEqual(self.verdict.is_done, False)
+
         # Evan submits a score of 0 in God mode
         self.verdict.submitEvidence(self.evan, 0, god_mode = True)
         self.assertEqual(self.verdict.score, 0)
         self.assertEqual(self.verdict.is_valid, True)
         self.assertEqual(self.verdict.is_done, True)
 
-    def test_doublegrade_2(self):
+
+    def test_doublegrade_3(self):
         self.assertEqual(self.verdict.score, None)
 
         # Calvin submits a score of 7

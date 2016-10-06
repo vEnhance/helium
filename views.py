@@ -42,11 +42,7 @@ def submit_scan(request):
         user = request.user
 
         scribble = He.models.ProblemScribble.objects.get(id=scribble_id)
-        try:
-            scribble.submitEvidence(user=user, score=score)
-        except ZeroDivisionError:
-            return HttpResponse("Duplicate " + str(scribble_id), content_type="text/plain")
-
+        scribble.submitEvidence(user=user, score=score, god_mode=False)
     else:
         return HttpResponse("??", content_type="text/plain")
     return HttpResponse("OK", content_type="text/plain")
@@ -54,18 +50,17 @@ def submit_scan(request):
 @staff_member_required
 def next_scan(request):
     if request.method == 'POST':
-        logging.warn(request.POST)
         try:
             problem_id = int(request.POST['problem_id'])
         except ValueError:
             return
-
         if problem_id == 0: 
             return
 
         problem = He.models.Problem.objects.get(id=problem_id)
         scribbles = He.models.ProblemScribble.objects.filter(
-                verdict__problem=problem, verdict__is_done=False)
+                verdict__problem=problem,
+                verdict__is_done=False)
         for s in scribbles:
             # If seen before, toss out
             if s.verdict.evidence_set.filter(user=request.user).exists():

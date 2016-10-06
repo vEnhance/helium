@@ -5,6 +5,8 @@ from django.contrib.auth import models as auth
 from django.core.exceptions import ValidationError
 import registration.models as reg
 
+import collections
+
 def validateMathleteVsTeam(obj, is_indiv, nonempty=False):
     """Takes an object which has both a "team" and "mathlete" column.
     Args is_indiv, nonempty are booleans."""
@@ -92,8 +94,10 @@ class Verdict(models.Model):
     mathlete = models.ForeignKey(reg.AbstractMathlete, blank=True, null=True)
     team = models.ForeignKey(reg.AbstractTeam, blank=True, null=True)
     score = models.IntegerField(blank=True, null=True) # integer, score for the problem
-    is_valid = models.BooleanField(default=True)  # whether all evidence makes sense
-    is_done = models.BooleanField(default=False)  # whether enough evidence to arrive at final verdict
+    is_valid = models.BooleanField(default=True,
+            help_text = "Whether there is an answer consensus")
+    is_done = models.BooleanField(default=False,
+            help_text = "Whether this verdict should be read by more normal users")
 
     def clean(self):
         if self.problem is not None:
@@ -126,7 +130,7 @@ class Verdict(models.Model):
         if len(strong_evidence) > 1:
             # We have more than one "god mode" evidence, this is bad. GIVE UP.
             self.score = None
-            self.is_valid, self.is_done = False, False
+            self.is_valid, self.is_done = False, True
         elif len(strong_evidence) == 1:
             # Follow god mode evidence
             e = strong_evidence[0]
@@ -138,18 +142,20 @@ class Verdict(models.Model):
                 self.score = None
                 self.is_valid, self.is_done = True, False
             elif len(scores) == 1: # have one evidence, but need double grading
-                self.score = scores[0]
+                self.score = scores[0] # TODO dubious --- but fun for prelim results?
                 self.is_valid, self.is_done = True, False
-            elif scores.count(scores[0]) == len(scores): # all >= 2 scores agree
-                self.score = scores[0]
-                self.is_valid, self.is_done = True, True
-            else: # conflict in scores
-                self.score = None
-                self.is_valid, self.is_done = False, False
+            else: # see if we have consensus
+                score, n = collections.Counter(scores).most_common(1)[0]
+                if n > 2 * len(scores) / 3: # need more than 2/3 majority
+                    self.score = score
+                    self.is_valid, self.is_done = True, True
+                else: # not good enough consensus
+                    self.score = None
+                    self.is_valid, self.is_done = False, False
         self.save()
 
     class Meta:
-        unique_together = (('problem', 'mathlete',), ('problem', 'team'))
+        unique_together = (('problem', 'mathlete'), ('problem', 'team'))
 
 class ProblemScribble(models.Model):
     examscribble = models.ForeignKey(ExamScribble)
@@ -168,6 +174,10 @@ class Evidence(models.Model):
     score = models.IntegerField()
     god_mode = models.BooleanField(default=False)
     def __unicode__(self): return unicode(self.id)
+
+    def clean(self):
+        if not self.verdict.problem.allow_partial and not self.score in (0,1):
+            raise ValidationError("All-or-nothing problem with non-binary score")
 
     class Meta:
         unique_together = ('verdict', 'user')
