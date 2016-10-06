@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 {% load static %}
 
-{% block title %}Helium (HMMT Grader){% endblock %}
+{% block title %}Helium | Grade Scans{% endblock %}
 
 {% block layout-content %}
 <h3>Grading: {{ problem }} (Answer {{ problem.answer }})</h3>
@@ -21,6 +21,7 @@ You will then automatically be shown a different scan.</p>
 If enabled, you don't need to press "return".)
 </p>
 </div>
+<a href="/helium">Back to Helium landing page</a>
 
 {% endblock %}
 

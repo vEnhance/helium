@@ -1,18 +1,29 @@
 {% extends 'layout.html' %}
 {% load static %}
 
-{% block title %}Helium (HMMT Grader){% endblock %}
+{% block title %}Helium{% endblock %}
 
 {% block extras %}
     <link href="{% static 'css/reg.css' %}" rel="stylesheet">
 {% endblock %}
 {% block layout-content %}
 
-<h3>Grader</h3>
+<p>
+Welcome to <b>Helium</b>, the new HMMT grading system.
+It is inspired off of Stanford's Atomic Grader, and named in its honor.
+</p>
 
 <form action="/helium/grade-scans" method="get">
+	{% csrf_token %}
     {{ scanform.as_p }}
-	<p><input type="submit" value="Grade"></p>
+	<p><input type="submit" name="from_landing" value="Start Scan Grader" /></p>
+</form>
+
+<form action="/helium/old-grader" method="post">
+	<p>
+	{% csrf_token %}
+    {{ examform.as_p }}
+	<p><input type="submit" name="from_landing" value="Start Old Grader" /></p>
 </form>
 
 {% endblock %}

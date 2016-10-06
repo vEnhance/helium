@@ -11,14 +11,41 @@ import logging
 
 @staff_member_required
 def index(request):
-    scanform = forms.ProblemScanForm()
-    return render(request, "helium-landing.html",
-            {'scanform' : scanform})
+    context = {
+            'scanform' : forms.ProblemSelectForm(),
+            'examform' : forms.ExamSelectForm()
+            }
+    return render(request, "helium-landing.html", context)
+
+@staff_member_required
+def old_grader(request):
+    if not request.method == 'POST':
+        return HttpResponseRedirect('/helium')
+    if request.POST.has_key("from_landing"):
+        # This means we just got here from landing.
+        # No actual grades to process yet
+        form = forms.ExamSelectForm(request.POST)
+        if form.is_valid():
+            exam = form.cleaned_data['exam']
+        else:
+            return HttpResponseRedirect('/helium')
+        context = {
+                'exam' : exam,
+                'oldform' : forms.ExamGradingForm(exam)
+                }
+        logging.warn(context)
+    elif request.POST.has_key("from_grader"):
+        form = forms.ExamGradingForm(request.POST)
+        if form.is_valid():
+            pass
+
+    return render(request, "old-grader.html", context)
+
 
 @staff_member_required
 def grade_scans(request):
     if request.method == 'GET':
-        form = forms.ProblemScanForm(request.GET)
+        form = forms.ProblemSelectForm(request.GET)
         if form.is_valid():
             problem = form.cleaned_data['problem']
             answer = problem.answer
