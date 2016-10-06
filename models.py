@@ -28,6 +28,7 @@ class Exam(models.Model):
             help_text='Hex code for color exam printed on')
     is_indiv = models.BooleanField()
     alg_scoring = models.BooleanField()
+    is_ready = models.BooleanField(default=True, help_text='Mark true if ready to grade this exam')
     def __unicode__(self): return self.name
 
 class Problem(models.Model):
