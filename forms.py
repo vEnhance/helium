@@ -1,6 +1,7 @@
 from django import forms
 import helium as He
 from registration.current import TEAMS, MATHLETES
+import logging
 
 class ProblemSelectForm(forms.Form):
     """Lets you pick a problem marked as ready for grading"""
@@ -15,7 +16,7 @@ class ExamSelectForm(forms.Form):
             queryset = He.models.Exam.objects.filter(is_ready=True))
 
 class ExamGradingForm(forms.Form):
-    def __init__(self, exam, *args, **kwargs):
+    def __init__(self, exam, user, *args, **kwargs):
         super(forms.Form, self).__init__(*args, **kwargs)
         problems = He.models.Problem.objects.filter(exam=exam)
 
@@ -26,9 +27,55 @@ class ExamGradingForm(forms.Form):
             self.fields['team'] = forms.ModelChoiceField(\
                     queryset = TEAMS.all())
         
-        for p in sorted(problems, key = lambda _ : _.problem_number):
-            n = p.problem_number
-            self.fields[p] = forms.IntegerField(\
-                    label = unicode(p),
-					widget = forms.TextInput,
-					help_text = "Answer is %s" %p.answer)
+        logging.warn(problems)
+        for problem in sorted(problems, key = lambda _ : _.problem_number):
+            n = problem.problem_number
+            kwargs = {
+                    'label' : unicode(problem),
+                    'widget' : forms.TextInput,
+                    'required' : False,
+                    # 'help_text' : "Answer is %s" %problem.answer,
+                    }
+            if not problem.allow_partial:
+                kwargs['min_value'] = 0
+                kwargs['max_value'] = 1
+            self.fields['p' + str(n)] = forms.IntegerField(**kwargs)
+
+        self.fields['force'] = forms.BooleanField(
+                label = 'Override',
+                required = False)
+
+        self.exam = exam
+        self.user = user
+        self.problems = problems
+
+    def clean(self):
+        # without "force", throw an error every time we get a bad verdict
+        data = super(ExamGradingForm, self).clean()
+
+        if self.exam.is_indiv and not data.has_key('mathlete'): return
+        if not self.exam.is_indiv and not data.has_key('team'): return
+
+        ret = []
+        for problem in self.problems:
+            field_name = 'p' + str(problem.problem_number)
+
+            # Get verdict corresponding to student/team + problem
+            if self.exam.is_indiv: # indiv exam
+                v, _ = He.models.Verdict.objects.get_or_create(
+                        mathlete=data['mathlete'], problem=problem)
+            else: # team exam
+                v, _ = He.models.Verdict.objects.get_or_create(
+                        team = data['team'], problem=problem)
+
+            user_score = data.get(field_name, None)
+            if user_score is None:
+                continue
+            if v.score is not None:
+                if user_score != v.score and data['force'] is False:
+                    self.add_error(field_name,
+                            "Conflicting score for %s (database has score %d)" \
+                            % (problem, v.score))
+                else:
+                    v.submitEvidence(user = request.user, score = score)
+        return ret

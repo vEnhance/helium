@@ -18,26 +18,34 @@ def index(request):
     return render(request, "helium-landing.html", context)
 
 @staff_member_required
-def old_grader(request):
-    if not request.method == 'POST':
-        return HttpResponseRedirect('/helium')
-    if request.POST.has_key("from_landing"):
-        # This means we just got here from landing.
-        # No actual grades to process yet
+def old_grader(request, exam_id=None):
+    if exam_id is None:
+        # Got here from landing form --- redirect to correct page
         form = forms.ExamSelectForm(request.POST)
         if form.is_valid():
             exam = form.cleaned_data['exam']
+            return HttpResponseRedirect('/helium/old-grader/%d/' %exam.id)
         else:
             return HttpResponseRedirect('/helium')
+
+    exam_id = int(exam_id)
+    exam = He.models.Exam.objects.get(id=exam_id)
+    if request.method == 'POST':
+        form = forms.ExamGradingForm(exam, request.user, request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            form = forms.ExamGradingForm(exam, request.user) # Fresh form to write on
         context = {
                 'exam' : exam,
-                'oldform' : forms.ExamGradingForm(exam)
+                'oldform' : form
                 }
-        logging.warn(context)
-    elif request.POST.has_key("from_grader"):
-        form = forms.ExamGradingForm(request.POST)
-        if form.is_valid():
-            pass
+    else:
+        # This means we just got here from landing.
+        # No actual grades to process yet
+        context = {
+                'exam' : exam,
+                'oldform' : forms.ExamGradingForm(exam, request.user)
+                }
 
     return render(request, "old-grader.html", context)
 
@@ -56,6 +64,8 @@ def grade_scans(request):
 
 @staff_member_required
 def submit_scan(request):
+    # Takes in (from AJAX POST) a scribble id and score
+    # and enters it as evidence into the database
     if request.method == 'POST':
         try:
             scribble_id = int(request.POST['scribble_id'])

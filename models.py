@@ -146,7 +146,7 @@ class Verdict(models.Model):
                 self.is_valid, self.is_done = True, False
             else: # see if we have consensus
                 score, n = collections.Counter(scores).most_common(1)[0]
-                if n > 2 * len(scores) / 3: # need more than 2/3 majority
+                if n >= 2 * len(scores) / 3: # need more than 2/3 majority
                     self.score = score
                     self.is_valid, self.is_done = True, True
                 else: # not good enough consensus
