@@ -10,11 +10,13 @@ def validateMathleteVsTeam(obj, is_indiv, nonempty=False):
     Args is_indiv, nonempty are booleans."""
     if is_indiv:
         if obj.team is not None:
+            obj.team = None
             raise ValidationError("Individual problems can't have teams attached")
         if obj.mathlete is None and nonempty is True:
             raise ValidationError("Individual verdict has no individual attached")
     else:
         if obj.mathlete is not None:
+            obj.mathlete = None
             raise ValidationError("Team problems can't have mathletes attached")
         if obj.team is None and nonempty is True:
             raise ValidationError("Team problems has no team attached")
@@ -56,6 +58,24 @@ class ExamScribble(models.Model):
         else:
             who = '???'
         return 'Scan ' + unicode(self.id) + ' for ' + who
+
+    def assignTeam(self, team):
+        self.team = team
+        self.save()
+        self.clean()
+        self.updateScribbles()
+    def assignMathlete(self, mathlete):
+        self.mathlete = mathlete
+        self.save()
+        self.clean()
+        self.updateScribbles()
+
+    def updateScribbles(self):
+        """Update all child scribbles once mathlete/team identified"""
+        for ps in self.problemscribble_set.all():
+            ps.verdict.mathlete = self.mathlete
+            ps.verdict.team = self.team
+            ps.verdict.save()
 
 class Verdict(models.Model):
     problem = models.ForeignKey(Problem) # You should know which problem
@@ -131,5 +151,10 @@ class Evidence(models.Model):
     score = models.IntegerField()
     god_mode = models.BooleanField(default=False)
     def __unicode__(self): return unicode(self.id)
+
+    def validate_unique(self):
+        query_set = Evidence.objects.filter(verdict=self.verdict, user=self.user)
+        if query_set.exists():
+            raise ValidationError("Attempting to submit multiple evidence, not OK")
 
 # vim: expandtab
