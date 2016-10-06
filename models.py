@@ -80,8 +80,43 @@ class Verdict(models.Model):
             who = '???'
         return unicode(self.problem) + ' for ' + who
 
+    def submitEvidence(self, user, score, god_mode=False):
+        """Creates an evidence object for a given verdict, and updates self."""
+        evidence = Evidence.objects.create(verdict=self, user=user, score=score, god_mode=god_mode)
+        self.updateDecisions()
+        return evidence
+
+    def updateDecisions(self):
+        """Reads through all evidence available to self and gives verdict."""
+        all_evidence = self.evidence_set.all()
+        strong_evidence = [e for e in all_evidence if e.god_mode is True]
+        weak_evidence   = [e for e in all_evidence if e.god_mode is False]
+        if len(strong_evidence) > 1:
+            # We have more than one "god mode" evidence, this is bad. GIVE UP.
+            self.score = None
+            self.is_valid, self.is_done = False, False
+        elif len(strong_evidence) == 1:
+            # Follow god mode evidence
+            e = strong_evidence[0]
+            self.score = e.score
+            self.is_valid, self.is_done = True, True
+        else: # len(strong_evidence) == 0
+            scores = [e.score for e in weak_evidence]
+            if len(scores) == 0: # have no data
+                self.score = None
+                self.is_valid, self.is_done = True, False
+            elif len(scores) == 1: # have one evidence, but need double grading
+                self.score = scores[0]
+                self.is_valid, self.is_done = True, False
+            elif scores.count(scores[0]) == len(scores): # all >= 2 scores agree
+                self.score = scores[0]
+                self.is_valid, self.is_done = True, True
+            else: # conflict in scores
+                self.score = None
+                self.is_valid, self.is_done = False, False
+        self.save()
 class ProblemScribble(models.Model):
-    problem_number = models.IntegerField()
+    problem = models.ForeignKey(Problem)
     examscribble = models.ForeignKey(ExamScribble)
     verdict = models.OneToOneField(Verdict, on_delete=models.CASCADE)
     scan_image = models.ImageField(upload_to='scans/problems/', blank=False, null=True)
