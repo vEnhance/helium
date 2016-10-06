@@ -43,18 +43,19 @@ class TestScribble(models.Model):
     test = models.ForeignKey(Test)
     mathlete = models.ForeignKey(reg.AbstractMathlete, blank=True, null=True)
     team = models.ForeignKey(reg.AbstractTeam, blank=True, null=True)
-    scan_image = models.ImageField(upload_to='scans/names/')
+    scan_image = models.ImageField(upload_to='scans/names/', blank=False, null=True)
+         # blargh. This should really be null=False, but it makes testing hard.
 
     def clean(self):
         validateForeignKey(self, self.test.is_indiv)
     def __unicode__(self):
-		if self.mathlete is not None:
-			who = unicode(self.mathlete)
-		elif self.team is not None:
-			who = unicode(self.team)
-		else:
-			who = '???'
-		return 'Scan ' + unicode(self.id) + ' for ' + who
+        if self.mathlete is not None:
+            who = unicode(self.mathlete)
+        elif self.team is not None:
+            who = unicode(self.team)
+        else:
+            who = '???'
+        return 'Scan ' + unicode(self.id) + ' for ' + who
 
 class Verdict(models.Model):
     problem = models.ForeignKey(Problem) # You should know which problem
@@ -83,7 +84,8 @@ class ProblemScribble(models.Model):
     problem_number = models.IntegerField()
     testscribble = models.ForeignKey(TestScribble)
     verdict = models.OneToOneField(Verdict, on_delete=models.CASCADE)
-    scan_image = models.ImageField(upload_to='scans/problems/')
+    scan_image = models.ImageField(upload_to='scans/problems/', blank=False, null=True)
+         # blargh. This should really be null=False, but it makes testing hard.
 
     # I have no idea what cascade does, lol
     def __unicode__(self): return unicode(self.verdict)
