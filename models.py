@@ -82,7 +82,7 @@ class ExamScribble(models.Model):
             ps.verdict.save()
 
     class Meta:
-        unique_together = ('exam', 'mathlete', 'team')
+        unique_together = (('exam', 'mathlete'), ('exam', 'team'))
 
 class Verdict(models.Model):
     problem = models.ForeignKey(Problem) # You should know which problem
@@ -149,7 +149,7 @@ class Verdict(models.Model):
         self.save()
 
     class Meta:
-        unique_together = ('problem', 'mathlete', 'team')
+        unique_together = (('problem', 'mathlete',), ('problem', 'team'))
 
 class ProblemScribble(models.Model):
     examscribble = models.ForeignKey(ExamScribble)
