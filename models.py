@@ -59,8 +59,8 @@ class ExamScribble(models.Model):
         elif self.team is not None:
             who = unicode(self.team)
         else:
-            who = '???'
-        return 'Scan ' + unicode(self.id) + ' for ' + who
+            who = 'ID %05d' % self.id
+        return unicode(self.exam) + ': ' + who
 
     def assignTeam(self, team):
         self.team = team
@@ -103,8 +103,8 @@ class Verdict(models.Model):
         elif self.team is not None:
             who = unicode(self.team)
         else:
-            who = '???'
-        return unicode(self.problem) + ' for ' + who
+            who = 'ID %05d' % self.id
+        return unicode(self.problem) + ': ' + who
 
     def submitEvidence(self, user, score, god_mode=False):
         """Creates an evidence object for a given verdict, and updates self."""

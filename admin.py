@@ -11,25 +11,25 @@ class ProblemScribbleInline(admin.TabularInline):
 
 @admin.register(He.Exam)
 class ExamAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'color')
+    list_display = ('name', 'id',  'color')
     inlines = (ProblemInline,)
 
 @admin.register(He.Problem)
 class ProblemAdmin(admin.ModelAdmin):
-    list_display = ('id', 'exam', 'problem_number', 'weight', 'allow_partial')
+    list_display = ('__unicode__', 'exam', 'problem_number', 'id',  'weight', 'allow_partial')
 
 @admin.register(He.ExamScribble)
 class ExamScribbleAdmin(admin.ModelAdmin):
-    list_display = ('id', 'exam', 'mathlete', 'team')
+    list_display = ('__unicode__', 'exam', 'mathlete', 'team', 'id')
 
 @admin.register(He.Verdict)
 class VerdictAdmin(admin.ModelAdmin):
-    list_display = ('id', 'problem', 'mathlete', 'team', 'score', 'is_valid', 'is_done')
+    list_display = ('__unicode__', 'id', 'problem', 'mathlete', 'team', 'score', 'is_valid', 'is_done')
     inlines = (EvidenceInline, ProblemScribbleInline,)
 
 @admin.register(He.ProblemScribble)
 class ProblemScribbleAdmin(admin.ModelAdmin):
-    list_display = ('id', 'verdict', 'examscribble')
+    list_display = ('__unicode__', 'id', 'verdict', 'examscribble')
 
 @admin.register(He.Evidence)
 class EvidenceAdmin(admin.ModelAdmin):
