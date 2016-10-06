@@ -14,7 +14,7 @@ class GradingTestCase(TestCase):
         self.kevin  = User.objects.create_user(username='kevin', password='.')
 
         self.exam   = He.models.Exam.objects.create(name="Sample Individual Exam",\
-                is_indiv=True, alg_scoring=True)
+                is_indiv=True, is_alg_scoring=True, is_ready=True)
         self.prob1  = He.models.Problem.objects.create(exam = self.exam, problem_number = 1)
         self.prob2  = He.models.Problem.objects.create(exam = self.exam, problem_number = 2)
         self.prob3  = He.models.Problem.objects.create(exam = self.exam, problem_number = 3)

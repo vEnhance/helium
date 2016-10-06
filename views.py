@@ -35,13 +35,16 @@ def submit_scan(request):
     if request.method == 'POST':
         scribble_id = int(request.POST['scribble_id'])
         score = int(request.POST['score'])
+        logging.warn(scribble_id)
+        logging.warn(score)
+        logging.warn(request.POST)
         user = request.user
 
         scribble = He.models.ProblemScribble.objects.get(id=scribble_id)
         try:
             scribble.submitEvidence(user=user, score=score)
-        except django.db.IntegrityError:
-            return HttpResponse("Duplicate", content_type="text/plain")
+        except ZeroDivisionError:
+            return HttpResponse("Duplicate " + str(scribble_id), content_type="text/plain")
 
     else:
         raise HttpResponse("??", content_type="text/plain")
@@ -55,11 +58,14 @@ def next_scan(request):
         problem = He.models.Problem.objects.get(id=problem_id)
         scribbles = He.models.ProblemScribble.objects.filter(
                 verdict__problem=problem, verdict__is_done=False)
-        if len(scribbles) > 0:
-            s = scribbles[0] # the next scribble
-            return HttpResponse(json.dumps( [s.id, s.scan_image.url] ), 
+        for s in scribbles:
+            # If seen before, toss out
+            if s.verdict.evidence_set.filter(user=request.user).exists():
+                continue
+            else:
+                return HttpResponse(json.dumps( [s.id, s.scan_image.url] ), 
                     content_type="application/json")
-        else:
+        else: # done grading!
             return HttpResponse(json.dumps( [0, ''] ), content_type="application/json")
 
 # vim: expandtab

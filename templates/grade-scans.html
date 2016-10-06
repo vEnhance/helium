@@ -12,29 +12,41 @@
 	<img src="" id="scan_img"/>
 </div>
 
+Score: <input id="score" name="score" />
+
+<input type="checkbox" id="ludicrous_speed">
+
+{% comment %}
 <form action="/helium/submit-scan" method="post">
 	{% csrf_token %}
 	<input id="scribble_id" name="scribble_id" />
 	<input id="score" name="score" />
 	<input type="submit" />
 </form>
+{% endcomment %}
 
+{% comment %}
 <h4>Get next scan (Debugging)</h4>
 <form action="/helium/next-scan" method="post">
 	{% csrf_token %}
 	<input name="problem_id" type="hidden" value="{{ problem.id }}"/>
 	<input type="submit" value ="Get Scan" />
 </form>
+{% endcomment %}
+
 {% endblock %}
 
 {% block scripts %}
 <script type="text/javascript">
-	// Copied from https://docs.djangoproject.com/en/1.9/ref/csrf/. Blah.
+// Copied from https://docs.djangoproject.com/en/1.9/ref/csrf/. Blah.
+$(document).ready(function() {
 	$.ajaxSetup({
 		beforeSend: function(xhr, settings) {
 			if (settings.type == 'POST' && !this.crossDomain) {
 				xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
 			}}});
+
+	var sid = -1; // ID number of scribble we're grading
 
 	function next_scan() {
 		$.ajax({
@@ -43,11 +55,28 @@
 			data: { problem_id : {{ problem.id }} },
 		}).done(function(result) {
 			console.log(result);
-			$("#scribble_id").val(result[0]);
-			$("#scan_img").attr('src', result[1]);
+			sid = result[0];
+			if (sid == 0)
+				alert("All done with this problem!"); // TODO something less terrible
+			else
+				$("#scan_img").attr('src', result[1]);
 		});
 	}
 	next_scan();
 
+	$("#score").keyup(function (e) {
+		if (e.which == 13 || $("#ludicrous_speed").checked) {
+			console.log("Submitting score for " + sid);
+			$.ajax({
+				url : "/helium/submit-scan",
+				type : "POST",
+				data: { scribble_id : sid, score : $("#score").val()},
+			}).done(function(result) {
+				console.log(result);
+			});
+			next_scan();
+		}
+	});
+});
 </script>
 {% endblock %}
