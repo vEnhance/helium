@@ -1,0 +1,39 @@
+{% extends 'layout-helium.html' %}
+{% load static %}
+
+{% block title %}Helium{% endblock %}
+
+{% block extras %}
+    <link href="{% static 'css/reg.css' %}" rel="stylesheet">
+{% endblock %}
+{% block layout-content %}
+
+<p>Welcome to Helium!</p>
+
+<h3>Grade by Scans</h3>
+<form action="/helium/grade-scans" method="get">
+	<div class="row">
+		<div class="col-md-6">
+		{% csrf_token %}
+		{{ scanform.as_p }}
+		</div>
+		<div class="col-md-2">
+		<p><input type="submit" name="from_landing" value="Start Scan Grader" /></p>
+		</div>
+	</div>
+</form>
+
+<h3>Grade by Physical Exam</h3>
+<form action="/helium/old-grader" method="post">
+	<div class="row">
+		<div class="col-md-6">
+		{% csrf_token %}
+		{{ examform.as_p }}
+		</div>
+		<div class="col-md-2">
+		<p><input type="submit" name="from_landing" value="Start Old Grader" /></p>
+		</div>
+	</div>
+</form>
+
+{% endblock %}

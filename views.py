@@ -15,7 +15,7 @@ def index(request):
             'scanform' : forms.ProblemSelectForm(),
             'examform' : forms.ExamSelectForm()
             }
-    return render(request, "helium-landing.html", context)
+    return render(request, "helium.html", context)
 
 @staff_member_required
 def old_grader(request, exam_id=None):

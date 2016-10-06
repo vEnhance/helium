@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block stylesheets %}
+<link href="{% static 'css/layout.css' %}" rel="stylesheet">
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="{% static 'hijack/hijack-styles.css' %}" />
+{% endblock %}
+
+
+{% block content %}
+
+  <div id="page-wrapper">
+  {% include 'includes/navbar.html' %}
+  {% block layout-banner %}
+  <section id="banner"><img src="{% static 'img/balloons.png' %}"/></section>
+  {% endblock layout-banner %}
+
+  <section id="body-form">
+	<hr />
+	<p><a href="/helium">&lt; Back to Helium home</a></p>
+	<hr />
+    {% block layout-content %}
+    {% endblock %}
+	<hr />
+	<p><a href="/helium">&lt; Back to Helium home</a></p>
+	<hr />
+  </section>
+
+  {% block layout-footer %}
+  <section id="footer">
+	<p>
+	Welcome to <b>Helium</b>, the new HMMT grading system.
+	It is inspired off of Stanford's <a href="http://atomicgrader.com/">Atomic Grader</a>,
+	and named in its honor.
+	</p>
+  </section>
+
+  {% endblock %}
+
+{% endblock %}
