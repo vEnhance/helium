@@ -5,7 +5,7 @@ from django.contrib.auth import models as auth
 from django.core.exceptions import ValidationError
 import registration.models as reg
 
-def validateForeignKey(obj, is_indiv, nonempty=False):
+def validateMathleteVsTeam(obj, is_indiv, nonempty=False):
     """Takes an object which has both a "team" and "mathlete" column.
     Args is_indiv, nonempty are booleans."""
     if is_indiv:
@@ -20,34 +20,34 @@ def validateForeignKey(obj, is_indiv, nonempty=False):
             raise ValidationError("Team problems has no team attached")
 
 
-class Test(models.Model):
-    name = models.CharField(max_length=50, help_text='Name of test')
+class Exam(models.Model):
+    name = models.CharField(max_length=50, help_text='Name of exam')
     color = models.CharField(max_length=50, default='000000',\
-            help_text='Hex code for color test printed on')
+            help_text='Hex code for color exam printed on')
     is_indiv = models.BooleanField()
-    algorithm_scoring = models.BooleanField()
+    alg_scoring = models.BooleanField()
     def __unicode__(self): return self.name
 
 class Problem(models.Model):
-    test = models.ForeignKey(Test)
+    exam = models.ForeignKey(Exam)
     problem_number = models.IntegerField()
     answer = models.CharField(max_length=70, default='')
 
     cached_beta = models.FloatField(blank=True, null=True)
     weight = models.IntegerField(blank=True, null=True)
     allow_partial = models.BooleanField(default=False)
-    def __unicode__(self): return self.test.name + " #" + unicode(self.problem_number)
+    def __unicode__(self): return self.exam.name + " #" + unicode(self.problem_number)
 
 # Scribble objects
-class TestScribble(models.Model):
-    test = models.ForeignKey(Test)
+class ExamScribble(models.Model):
+    exam = models.ForeignKey(Exam)
     mathlete = models.ForeignKey(reg.AbstractMathlete, blank=True, null=True)
     team = models.ForeignKey(reg.AbstractTeam, blank=True, null=True)
     scan_image = models.ImageField(upload_to='scans/names/', blank=False, null=True)
          # blargh. This should really be null=False, but it makes testing hard.
 
     def clean(self):
-        validateForeignKey(self, self.test.is_indiv)
+        validateMathleteVsTeam(self, self.exam.is_indiv)
     def __unicode__(self):
         if self.mathlete is not None:
             who = unicode(self.mathlete)
@@ -70,7 +70,7 @@ class Verdict(models.Model):
 
     def clean(self):
         if self.problem is not None:
-            validateForeignKey(self, self.problem.test.is_indiv)
+            validateMathleteVsTeam(self, self.problem.exam.is_indiv)
     def __unicode__(self):
         if self.mathlete is not None:
             who = unicode(self.mathlete)
@@ -82,7 +82,7 @@ class Verdict(models.Model):
 
 class ProblemScribble(models.Model):
     problem_number = models.IntegerField()
-    testscribble = models.ForeignKey(TestScribble)
+    examscribble = models.ForeignKey(ExamScribble)
     verdict = models.OneToOneField(Verdict, on_delete=models.CASCADE)
     scan_image = models.ImageField(upload_to='scans/problems/', blank=False, null=True)
          # blargh. This should really be null=False, but it makes testing hard.

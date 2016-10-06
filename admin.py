@@ -9,18 +9,18 @@ class EvidenceInline(admin.TabularInline):
 class ProblemScribbleInline(admin.TabularInline):
     model = He.ProblemScribble
 
-@admin.register(He.Test)
-class TestAdmin(admin.ModelAdmin):
+@admin.register(He.Exam)
+class ExamAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'color')
     inlines = (ProblemInline,)
 
 @admin.register(He.Problem)
 class ProblemAdmin(admin.ModelAdmin):
-    list_display = ('id', 'test', 'problem_number', 'weight', 'allow_partial')
+    list_display = ('id', 'exam', 'problem_number', 'weight', 'allow_partial')
 
-@admin.register(He.TestScribble)
-class TestScribbleAdmin(admin.ModelAdmin):
-    list_display = ('id', 'test', 'mathlete', 'team')
+@admin.register(He.ExamScribble)
+class ExamScribbleAdmin(admin.ModelAdmin):
+    list_display = ('id', 'exam', 'mathlete', 'team')
 
 @admin.register(He.Verdict)
 class VerdictAdmin(admin.ModelAdmin):
@@ -29,7 +29,7 @@ class VerdictAdmin(admin.ModelAdmin):
 
 @admin.register(He.ProblemScribble)
 class ProblemScribbleAdmin(admin.ModelAdmin):
-    list_display = ('id', 'verdict', 'problem_number', 'testscribble')
+    list_display = ('id', 'verdict', 'problem_number', 'examscribble')
 
 @admin.register(He.Evidence)
 class EvidenceAdmin(admin.ModelAdmin):
