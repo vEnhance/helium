@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
-import helium.models as He
+import helium as He
 import registration.models as reg
 
 class GradingTestCase(TestCase):
@@ -13,13 +13,13 @@ class GradingTestCase(TestCase):
         self.miguel = User.objects.create_user(username='miguel', password='.')
         self.kevin  = User.objects.create_user(username='kevin', password='.')
 
-        self.exam   = He.Exam.objects.create(name="Sample Individual Exam",\
+        self.exam   = He.models.Exam.objects.create(name="Sample Individual Exam",\
                 is_indiv=True, alg_scoring=True)
-        self.prob1  = He.Problem.objects.create(exam = self.exam, problem_number = 1)
-        self.prob2  = He.Problem.objects.create(exam = self.exam, problem_number = 2)
-        self.prob3  = He.Problem.objects.create(exam = self.exam, problem_number = 3)
+        self.prob1  = He.models.Problem.objects.create(exam = self.exam, problem_number = 1)
+        self.prob2  = He.models.Problem.objects.create(exam = self.exam, problem_number = 2)
+        self.prob3  = He.models.Problem.objects.create(exam = self.exam, problem_number = 3)
 
-        self.verdict = He.Verdict.objects.create(problem=self.prob1)
+        self.verdict = He.models.Verdict.objects.create(problem=self.prob1)
 
         # Let's make a black mop team
         self.mop    = reg.Organization.objects.create(name = "MOP",
@@ -73,8 +73,8 @@ class GradingTestCase(TestCase):
         self.assertEqual(self.verdict.is_done, True)
 
     def test_scribble_id(self):
-        es = He.ExamScribble.objects.create(exam=self.exam)
-        ps1 = He.ProblemScribble.objects.create(examscribble = es,\
+        es = He.models.ExamScribble.objects.create(exam=self.exam)
+        ps1 = He.models.ProblemScribble.objects.create(examscribble = es,\
                 verdict = self.verdict)
         self.assertEqual(self.verdict.mathlete, None)
 
