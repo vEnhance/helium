@@ -75,8 +75,7 @@ class GradingTestCase(TestCase):
     def test_scribble_id(self):
         es = He.ExamScribble.objects.create(exam=self.exam)
         ps1 = He.ProblemScribble.objects.create(examscribble = es,\
-                verdict = self.verdict,
-                problem = self.prob1)
+                verdict = self.verdict)
         self.assertEqual(self.verdict.mathlete, None)
 
         try:

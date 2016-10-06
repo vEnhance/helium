@@ -29,7 +29,7 @@ class VerdictAdmin(admin.ModelAdmin):
 
 @admin.register(He.ProblemScribble)
 class ProblemScribbleAdmin(admin.ModelAdmin):
-    list_display = ('id', 'verdict', 'problem', 'examscribble')
+    list_display = ('id', 'verdict', 'examscribble')
 
 @admin.register(He.Evidence)
 class EvidenceAdmin(admin.ModelAdmin):

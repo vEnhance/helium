@@ -40,6 +40,9 @@ class Problem(models.Model):
     allow_partial = models.BooleanField(default=False)
     def __unicode__(self): return self.exam.name + " #" + unicode(self.problem_number)
 
+    class Meta:
+        unique_together = ('exam', 'problem_number')
+
 # Scribble objects
 class ExamScribble(models.Model):
     exam = models.ForeignKey(Exam)
@@ -76,6 +79,9 @@ class ExamScribble(models.Model):
             ps.verdict.mathlete = self.mathlete
             ps.verdict.team = self.team
             ps.verdict.save()
+
+    class Meta:
+        unique_together = ('exam', 'mathlete', 'team')
 
 class Verdict(models.Model):
     problem = models.ForeignKey(Problem) # You should know which problem
@@ -135,8 +141,11 @@ class Verdict(models.Model):
                 self.score = None
                 self.is_valid, self.is_done = False, False
         self.save()
+
+    class Meta:
+        unique_together = ('problem', 'mathlete', 'team')
+
 class ProblemScribble(models.Model):
-    problem = models.ForeignKey(Problem)
     examscribble = models.ForeignKey(ExamScribble)
     verdict = models.OneToOneField(Verdict, on_delete=models.CASCADE)
     scan_image = models.ImageField(upload_to='scans/problems/', blank=False, null=True)
@@ -152,9 +161,7 @@ class Evidence(models.Model):
     god_mode = models.BooleanField(default=False)
     def __unicode__(self): return unicode(self.id)
 
-    def validate_unique(self):
-        query_set = Evidence.objects.filter(verdict=self.verdict, user=self.user)
-        if query_set.exists():
-            raise ValidationError("Attempting to submit multiple evidence, not OK")
+    class Meta:
+        unique_together = ('verdict', 'user')
 
 # vim: expandtab
