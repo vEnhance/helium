@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}Helium (HMMT Grader){% endblock %}
+
+{% block extras %}
+    <link href="{% static 'css/reg.css' %}" rel="stylesheet">
+{% endblock %}
+{% block layout-content %}
+
+<h3>Grader</h3>
+
+<form action="/helium/grade-scans" method="get">
+    {{ scanform.as_p }}
+	<p><input type="submit" value="Grade"></p>
+</form>
+
+{% endblock %}

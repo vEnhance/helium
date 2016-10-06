@@ -27,8 +27,8 @@ class Exam(models.Model):
     color = models.CharField(max_length=50, default='000000',\
             help_text='Hex code for color exam printed on')
     is_indiv = models.BooleanField()
-    alg_scoring = models.BooleanField()
     is_ready = models.BooleanField(default=True, help_text='Mark true if ready to grade this exam')
+    is_alg_scoring = models.BooleanField()
     def __unicode__(self): return self.name
 
 class Problem(models.Model):
@@ -111,6 +111,7 @@ class Verdict(models.Model):
         """Creates an evidence object for a given verdict, and updates self."""
         evidence = Evidence.objects.create(verdict=self, user=user, score=score, god_mode=god_mode)
         self.updateDecisions()
+        evidence.save()
         return evidence
 
     def updateDecisions(self):
@@ -152,8 +153,10 @@ class ProblemScribble(models.Model):
     scan_image = models.ImageField(upload_to='scans/problems/', blank=False, null=True)
          # blargh. This should really be null=False, but it makes testing hard.
 
-    # I have no idea what cascade does, lol
     def __unicode__(self): return unicode(self.verdict)
+
+    def submitEvidence(self, *args, **kwargs):
+        self.verdict.submitEvidence(*args, **kwargs)
     
 class Evidence(models.Model):
     verdict = models.ForeignKey(Verdict)

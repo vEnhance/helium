@@ -1,0 +1,32 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}Helium (HMMT Grader){% endblock %}
+
+{% block extras %}
+    <link href="{% static 'css/reg.css' %}" rel="stylesheet">
+{% endblock %}
+{% block layout-content %}
+
+
+<h3>Grading: {{ problem }}</h3>
+
+<h4>Can submit evidence</h4>
+
+<form action="/helium/submit-scan" method="post">
+	{% csrf_token %}
+	<input name="scribble_id" />
+	<input name="score" />
+	<input type="submit" />
+</form>
+
+<h4>Get next scan</h4>
+<form action="/helium/next-scan" method="post">
+	{% csrf_token %}
+	<input name="problem_id" type="hidden" value="{{ problem.id }}"/>
+	<input type="submit" value ="Get Scan" />
+</form>
+
+
+
+{% endblock %}
