@@ -8,7 +8,9 @@
 
 <h4>Can submit evidence</h4>
 
-<div id="scan_img"></div>
+<div id="scan_img_div">
+	<img src="" id="scan_img"/>
+</div>
 
 <form action="/helium/submit-scan" method="post">
 	{% csrf_token %}
@@ -28,17 +30,11 @@
 {% block scripts %}
 <script type="text/javascript">
 	// Copied from https://docs.djangoproject.com/en/1.9/ref/csrf/. Blah.
-	function csrfSafeMethod(method) {
-		return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-	}
-
 	$.ajaxSetup({
 		beforeSend: function(xhr, settings) {
-			if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+			if (settings.type == 'POST' && !this.crossDomain) {
 				xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
-			}
-		}
-	});
+			}}});
 
 	function next_scan() {
 		$.ajax({
@@ -48,9 +44,10 @@
 		}).done(function(result) {
 			console.log(result);
 			$("#scribble_id").val(result[0]);
+			$("#scan_img").attr('src', result[1]);
 		});
 	}
-
 	next_scan();
+
 </script>
 {% endblock %}

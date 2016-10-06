@@ -109,9 +109,10 @@ class Verdict(models.Model):
 
     def submitEvidence(self, user, score, god_mode=False):
         """Creates an evidence object for a given verdict, and updates self."""
-        evidence = Evidence.objects.create(verdict=self, user=user, score=score, god_mode=god_mode)
-        self.updateDecisions()
+        evidence, _ = Evidence.objects.get_or_create(verdict=self, user=user)
+        evidence.update(score=score, god_mode=god_mode)
         evidence.save()
+        self.updateDecisions()
         return evidence
 
     def updateDecisions(self):

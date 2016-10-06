@@ -57,7 +57,7 @@ def next_scan(request):
                 verdict__problem=problem, verdict__is_done=False)
         if len(scribbles) > 0:
             s = scribbles[0] # the next scribble
-            return HttpResponse(json.dumps( [s.id, s.scan_image.image.url] ), 
+            return HttpResponse(json.dumps( [s.id, s.scan_image.url] ), 
                     content_type="application/json")
         else:
             return HttpResponse(json.dumps( [0, ''] ), content_type="application/json")
