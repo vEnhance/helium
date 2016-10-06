@@ -35,12 +35,7 @@ def submit_scan(request):
             score = int(request.POST['score'])
         except ValueError:
             return HttpResponse("ValueError", content_type="text/plain")
-            
-        logging.warn(scribble_id)
-        logging.warn(score)
-        logging.warn(request.POST)
         user = request.user
-
         scribble = He.models.ProblemScribble.objects.get(id=scribble_id)
         scribble.submitEvidence(user=user, score=score, god_mode=False)
     else:

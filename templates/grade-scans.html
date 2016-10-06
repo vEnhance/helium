@@ -13,12 +13,14 @@ input a score of either 0 or 1 in the textbox below, then press return.
 You will then automatically be shown a different scan.</p>
 
 <div id="scan_img_div"><img src="" id="scan_img"/></div>
+<div id="controls">
 <h4>Input Score</h4>
 <p><input id="score" name="score" /></p>
 <p><b>Ludicrous Speed:</b> <input type="checkbox" id="ludicrous_speed" /></p>
 <p>(Enable ludicrous speed only if you plan to enter one-digit answers only.
 If enabled, you don't need to press "return".)
 </p>
+</div>
 
 {% endblock %}
 
@@ -42,8 +44,10 @@ $(document).ready(function() {
 		}).done(function(result) {
 			console.log(result);
 			sid = result[0];
-			if (sid == 0)
-				alert("All done with this problem!"); // TODO something less terrible
+			if (sid == 0) {
+				$("#scan_img_div").html("<h3>All done with this problem!");
+				$("#controls").html('');
+			}
 			else
 				$("#scan_img").attr('src', result[1]);
 		});
@@ -53,11 +57,16 @@ $(document).ready(function() {
 	$("#score").keyup(function (e) {
 		var ludicrous_speed = $("#ludicrous_speed").is(":checked");
 		if (e.which == 13 || ludicrous_speed) {
+			{% if not problem.allow_partial %}
+			// For non-partial problem require binary scores
+			score = $("#score").val()
+			if (score != "0" && score != "1") return;
+			{% endif %}
 			console.log("Submitting score for " + sid);
 			$.ajax({
 				url : "/helium/submit-scan",
 				type : "POST",
-				data: { scribble_id : sid, score : $("#score").val()},
+				data: { scribble_id : sid, score : score },
 			}).done(function(result) {
 				console.log(result);
 			});
