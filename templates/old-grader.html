@@ -1,0 +1,15 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}Helium | Grade Exams{% endblock %}
+
+{% block layout-content %}
+
+
+<h3>Grading Test {{ exam }}</h3>
+<form action="/old-grader/" method="post">
+{{ oldform.as_p }}
+<input type="submit" name="from_grader" value="Submit">
+</form>
+
+{% endblock %}
