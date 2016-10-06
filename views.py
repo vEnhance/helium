@@ -9,9 +9,6 @@ import json
 
 import logging
 
-# Create your views here.
-
-
 @staff_member_required
 def index(request):
     scanform = forms.ProblemScanForm()
@@ -33,8 +30,12 @@ def grade_scans(request):
 @staff_member_required
 def submit_scan(request):
     if request.method == 'POST':
-        scribble_id = int(request.POST['scribble_id'])
-        score = int(request.POST['score'])
+        try:
+            scribble_id = int(request.POST['scribble_id'])
+            score = int(request.POST['score'])
+        except ValueError:
+            return HttpResponse("ValueError", content_type="text/plain")
+            
         logging.warn(scribble_id)
         logging.warn(score)
         logging.warn(request.POST)
@@ -47,14 +48,21 @@ def submit_scan(request):
             return HttpResponse("Duplicate " + str(scribble_id), content_type="text/plain")
 
     else:
-        raise HttpResponse("??", content_type="text/plain")
+        return HttpResponse("??", content_type="text/plain")
     return HttpResponse("OK", content_type="text/plain")
 
 @staff_member_required
 def next_scan(request):
     if request.method == 'POST':
         logging.warn(request.POST)
-        problem_id = int(request.POST['problem_id'])
+        try:
+            problem_id = int(request.POST['problem_id'])
+        except ValueError:
+            return
+
+        if problem_id == 0: 
+            return
+
         problem = He.models.Problem.objects.get(id=problem_id)
         scribbles = He.models.ProblemScribble.objects.filter(
                 verdict__problem=problem, verdict__is_done=False)
