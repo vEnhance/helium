@@ -87,8 +87,14 @@ class GradingTestCase(TestCase):
         self.assertEqual(self.verdict.is_valid, True)
         self.assertEqual(self.verdict.is_done, False)
         
-        # Kevin submits a score of 7, done
+        # Kevin submits a score of 7
         self.verdict.submitEvidence(self.kevin, 7)
+        self.assertEqual(self.verdict.score, 7)
+        self.assertEqual(self.verdict.is_valid, True)
+        self.assertEqual(self.verdict.is_done, False)
+
+        # Miguel submits a score of 7, done
+        self.verdict.submitEvidence(self.miguel, 7)
         self.assertEqual(self.verdict.score, 7)
         self.assertEqual(self.verdict.is_valid, True)
         self.assertEqual(self.verdict.is_done, True)
