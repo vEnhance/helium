@@ -30,7 +30,7 @@ class ExamGradingRobustForm(forms.Form):
         self.user = user
         self.problems = problems
 
-        if self.exam.is_indiv:
+        if self.is_indiv:
             self.fields['mathlete'] = forms.ModelChoiceField(\
                     queryset = MATHLETES.all())
         else:
@@ -69,7 +69,7 @@ class ExamGradingRobustForm(forms.Form):
         if not self.is_valid():
             return # didn't pass first validation, don't do queries
 
-        whom = data['mathlete'] if self.exam.is_indiv else data['team']
+        whom = data['mathlete'] if self.is_indiv else data['team']
         num_graded = 0
         for problem in self.problems:
             field_name = 'p' + str(problem.problem_number)
@@ -97,7 +97,7 @@ class ExamScribbleMatchRobustForm(forms.Form):
         self.user = user
         self.exam = examscribble.exam
 
-        if self.examscribble.exam.is_indiv:
+        if self.exam.is_indiv:
             self.fields['mathlete'] = forms.ModelChoiceField(\
                     queryset = MATHLETES.all())
         else:

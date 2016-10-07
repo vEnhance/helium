@@ -42,6 +42,10 @@ class Problem(models.Model):
     allow_partial = models.BooleanField(default=False)
     def __unicode__(self): return self.exam.name + " #" + unicode(self.problem_number)
 
+    @property
+    def is_indiv(self):
+        return self.exam.is_indiv
+
     class Meta:
         unique_together = ('exam', 'problem_number')
 
@@ -64,8 +68,16 @@ class ExamScribble(models.Model):
             who = 'ID %05d' % self.id
         return unicode(self.exam) + ': ' + who
 
+
+    @property
+    def whom(self):
+        return self.mathlete if self.is_indiv else self.team
+    @property
+    def is_indiv(self):
+        return self.exam.is_indiv
+
     def assign(self, whom):
-        if self.exam.is_indiv: # indiv exam
+        if self.is_indiv: # indiv exam
             self.assignMathlete(whom)
         else: # team exam
             self.assignMathlete(whom)
@@ -139,7 +151,7 @@ class Verdict(models.Model):
 
     def clean(self):
         if self.problem is not None:
-            validateMathleteVsTeam(self, self.problem.exam.is_indiv)
+            validateMathleteVsTeam(self, self.is_indiv)
     def __unicode__(self):
         if self.mathlete is not None:
             who = unicode(self.mathlete)
@@ -204,6 +216,14 @@ class Verdict(models.Model):
 
     def evidence_count(self):
         return self.evidence_set.count()
+
+    @property
+    def is_indiv(self):
+        return self.problem.is_indiv
+    @property
+    def whom(self):
+        return self.mathlete if self.is_indiv else self.team
+
     class Meta:
         unique_together = (('problem', 'mathlete'), ('problem', 'team'))
 
