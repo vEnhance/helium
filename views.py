@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
+from django.contrib.staticfiles.templatetags.staticfiles import static
 import django.db
 from registration import current as reg
 import helium as He
@@ -9,6 +10,8 @@ import json
 import logging
 import itertools
 import collections
+
+DONE_IMAGE_URL = static('img/done.jpg')
 
 @staff_member_required
 def index(request):
@@ -19,23 +22,26 @@ def index(request):
             }
     return render(request, "helium.html", context)
 
-def redir_exam_id(request, target):
-    """To be used with ExamSelectForm. Redirects to page with correct exam ID."""
+def redir_obj_id(request, target, key, form_type):
+    """To be used with a select form. Redirects to page with correct ID."""
     if not request.method == "POST":
         return HttpResponseRedirect('/helium')
-    form = forms.ExamSelectForm(request.POST)
+    form = form_type(request.POST)
     if form.is_valid():
-        exam = form.cleaned_data['exam']
-        logging.warn(exam)
-        logging.warn(exam.id)
-        return HttpResponseRedirect(target + str(exam.id))
+        obj = form.cleaned_data[key]
+        logging.warn(obj)
+        logging.warn(obj.id)
+        return HttpResponseRedirect(target + str(obj.id))
     else:
-        return HttpResponseNotFound("Invalid exam provided", content_type="text/plain")
+        return HttpResponseNotFound("Invalid object ID provided", content_type="text/plain")
 
 ### OLD GRADER VIEWS
 @staff_member_required
 def old_grader_redir(request):
-    return redir_exam_id(request, target = '/helium/old-grader/')
+    return redir_obj_id(request,
+            target = '/helium/old-grader/',
+            key = 'exam',
+            form_type = forms.ExamSelectForm)
 def old_grader(request, exam_id):
     exam_id = int(exam_id)
     try:
@@ -76,7 +82,10 @@ def old_grader(request, exam_id):
 
 @staff_member_required
 def match_exam_scans_redir(request):
-    return redir_exam_id(request, target = '/helium/match-exam-scans/')
+    return redir_obj_id(request,
+            target = '/helium/match-exam-scans/',
+            key = 'exam',
+            form_type = forms.ExamSelectForm)
 def match_exam_scans(request, exam_id):
     try:
         exam = He.models.Exam.objects.get(id=exam_id)
@@ -96,7 +105,7 @@ def match_exam_scans(request, exam_id):
                     'matchform' : form,
                     'previous_whom' : None,
                     'scribble_url' : examscribble.scan_image.url,
-                    'exam_id' : exam_id,
+                    'exam' : exam,
                     }
             return render(request, "match-exam-scans.html", context)
         else:
@@ -107,30 +116,35 @@ def match_exam_scans(request, exam_id):
     # Now we're set, so get the next scribble, or alert none left
     queryset = He.models.ExamScribble.objects.filter(mathlete=None, team=None, exam=exam)
     examscribble = queryset.first()
-    if examscribble is None:
-        return HttpResponse("All scanned exams have been matched", content_type="text/plain")
-    form = forms.ExamScribbleMatchRobustForm(examscribble, request.user)
-    context = {
-            'matchform' : form,
-            'previous_whom' : None,
-            'scribble_url' : examscribble.scan_image.url,
-            'exam_id' : exam_id,
-            }
+    if examscribble is None: # all done
+        context = {
+                'matchform' : None,
+                'previous_whom' : None,
+                'scribble_url' : DONE_IMAGE_URL,
+                'exam' : exam,
+                }
+    else:
+        context = {
+                'matchform' : None,
+                'previous_whom' : None,
+                'scribble_url' : examscribble.scan_image.url,
+                'exam' : exam,
+                }
+        form = forms.ExamScribbleMatchRobustForm(examscribble, request.user)
     return render(request, "match-exam-scans.html", context)
 
 
 ### SCAN GRADER VIEWS
 @staff_member_required
-def grade_scans(request):
-    if request.method == 'GET':
-        form = forms.ProblemSelectForm(request.GET)
-        if form.is_valid():
-            problem = form.cleaned_data['problem']
-            answer = problem.answer
-            return render(request, "grade-scans.html",
-                    {'problem':problem})
-    else:
-        return render(request, "grade-scans.html", {'problem':''})
+def grade_scans_redir(request):
+    return redir_obj_id(request,
+            target = '/helium/grade-scans/',
+            key = 'problem',
+            form_type = forms.ProblemSelectForm)
+@staff_member_required
+def grade_scans(request, problem_id):
+    problem = He.models.Problem.objects.get(id=problem_id)
+    return render(request, "grade-scans.html", {'problem':problem})
 
 @staff_member_required
 def submit_scan(request):
@@ -171,10 +185,11 @@ def next_scan(request):
                 return HttpResponse(json.dumps( [s.id, s.scan_image.url] ), 
                     content_type="application/json")
         else: # done grading!
-            return HttpResponse(json.dumps( [0, ''] ), content_type="application/json")
+            return HttpResponse(json.dumps( [0, DONE_IMAGE_URL] ),
+                    content_type="application/json")
 
 @staff_member_required
-def progress(request):
+def progress_problems(request):
     verdicts = He.models.Verdict.objects.filter(problem__exam__is_ready=True)
     verdicts = list(verdicts)
     verdicts.sort(key = lambda v : v.problem.id)
@@ -195,8 +210,30 @@ def progress(request):
         tr['Missing']  = len(reg.MATHLETES) - len(group)
         table.append(tr)
 
-    context = {'columns' : columns, 'table' : table}
+    context = {'columns' : columns, 'table' : table, 'pagetitle' : 'Scans Progress'}
     logging.warn(table)
-    return render(request, "progress.html", context)
+    return render(request, "gentable.html", context)
+
+@staff_member_required
+def progress_scans(request):
+    examscribbles = He.models.ExamScribble.objects.filter(exam__is_ready=True)
+    examscribbles = list(examscribbles)
+    examscribbles.sort(key = lambda es : es.exam.id)
+
+    table = []
+    columns = ['Exam', 'Done', 'Left']
+
+    for exam, group in itertools.groupby(examscribbles, key = lambda es : es.exam):
+        group = list(group) # dangit, this gotcha
+        tr = collections.OrderedDict()
+        tr['Exam'] = str(exam)
+        tr['Done'] = len([es for es in group if es.whom is not None])
+        tr['Left'] = len(group) - tr['Done']
+        table.append(tr)
+
+    context = {'columns' : columns, 'table' : table, 'pagetitle' : 'Scans Progress'}
+    logging.warn(table)
+    return render(request, "gentable.html", context)
+
 
 # vim: expandtab fdm=indent foldnestmax=1

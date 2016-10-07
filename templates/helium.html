@@ -17,45 +17,46 @@
 <hr />
 
 <h4>Grade by Scans</h4>
-<form action="/helium/grade-scans-redir/" method="get">
+<form action="/helium/grade-scans-redir/" method="post">
 	<div class="row">
-		<div class="col-md-8">
+		<div class="col-xs-6">
 		{% csrf_token %}
 		{{ scanform.as_p }}
 		</div>
-		<div class="col-md-4">
-		<p><input type="submit" name="from_landing" value="Start Scan Grader" /></p>
+		<div class="col-xs-6">
+		<input type="submit" name="from_landing" value="Start Scan Grader" />
 		</div>
 	</div>
 </form>
 <form action="/helium/match-exam-scans-redir/" method="post">
 	<div class="row">
-		<div class="col-md-8">
+		<div class="col-xs-6">
 		{% csrf_token %}
 		{{ matchform.as_p }}
 		</div>
-		<div class="col-md-4">
-		<p><input type="submit" name="from_landing" value="Match Scans to Students" /></p>
+		<div class="col-xs-6">
+		<input type="submit" name="from_landing" value="Match Scans" />
 		</div>
 	</div>
 </form>
 
 <h4>Grade by Physical Papers</h4>
-<form action="/helium/old-grader/" method="post">
+<form action="/helium/old-grader-redir/" method="post">
 	<div class="row">
-		<div class="col-md-8">
+		<div class="col-xs-6">
 		{% csrf_token %}
 		{{ examform.as_p }}
 		</div>
-		<div class="col-md-4">
-		<p><input type="submit" name="from_landing" value="Start Old Grader" /></p>
+		<div class="col-xs-6">
+		<input type="submit" name="from_landing" value="Old Grader" />
 		</div>
 	</div>
 </form>
 
 <h4>Information</h4>
 <ul>
-	<li><a href="/helium/progress">Progress</a></li>
+	<li><a href="/helium/progress-problems">Progress Grading</a></li>
+	<li><a href="/helium/progress-scans">Progress Matching Scans</a></li>
 	<li><a href="/admin/helium">Django Admin</a></li>
 </ul>
 </div>
