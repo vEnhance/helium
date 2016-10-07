@@ -14,32 +14,42 @@ import collections
 def index(request):
     context = {
             'scanform' : forms.ProblemSelectForm(),
-            'examform' : forms.ExamSelectForm()
+            'examform' : forms.ExamSelectForm(),
+            'matchform' : forms.ExamSelectForm(),
             }
     return render(request, "helium.html", context)
 
+def redir_exam_id(request, target):
+    """To be used with ExamSelectForm. Redirects to page with correct exam ID."""
+    if not request.method == "POST":
+        return HttpResponseRedirect('/helium')
+    form = forms.ExamSelectForm(request.POST)
+    if form.is_valid():
+        exam = form.cleaned_data['exam']
+        logging.warn(exam)
+        logging.warn(exam.id)
+        return HttpResponseRedirect(target + str(exam.id))
+    else:
+        return HttpResponseNotFound("Invalid exam provided", content_type="text/plain")
+
 ### OLD GRADER VIEWS
 @staff_member_required
-def old_grader(request, exam_id=None):
-    if exam_id is None:
-        # Got here from landing form --- redirect to correct page
-        form = forms.ExamSelectForm(request.POST)
-        if form.is_valid():
-            exam = form.cleaned_data['exam']
-            return HttpResponseRedirect('/helium/old-grader/%d/' %exam.id)
-        else:
-            return HttpResponseRedirect('/helium') # bad request
-
+def old_grader_redir(request):
+    return redir_exam_id(request, target = '/helium/old-grader/')
+def old_grader(request, exam_id):
     exam_id = int(exam_id)
-    exam = He.models.Exam.objects.get(id=exam_id)
+    try:
+        exam = He.models.Exam.objects.get(id=exam_id)
+    except He.models.Exam.DoesNotExist:
+        return HttpResponseNotFound("Exam does not exist", content_type="text/plain")
     if request.method == 'POST':
-        form = forms.ExamGradingForm(exam, request.user, request.POST)
+        form = forms.ExamGradingRobustForm(exam, request.user, request.POST)
         if form.is_valid():
             num_graded = form.cleaned_data['num_graded']
             whom = form.cleaned_data['whom']
             # the form cleanup actually does the processing for us,
             # so just hand the user a fresh form if no validation errors
-            form = forms.ExamGradingForm(exam, request.user)
+            form = forms.ExamGradingRobustForm(exam, request.user)
             context = {
                     'exam' : exam,
                     'oldform' : form,
@@ -58,11 +68,56 @@ def old_grader(request, exam_id=None):
         # No actual grades to process yet
         context = {
                 'exam' : exam,
-                'oldform' : forms.ExamGradingForm(exam, request.user),
+                'oldform' : forms.ExamGradingRobustForm(exam, request.user),
                 'num_graded' : 0,
                 'whom' : None,
                 }
     return render(request, "old-grader.html", context)
+
+@staff_member_required
+def match_exam_scans_redir(request):
+    return redir_exam_id(request, target = '/helium/match-exam-scans/')
+def match_exam_scans(request, exam_id):
+    try:
+        exam = He.models.Exam.objects.get(id=exam_id)
+    except He.models.Exam.DoesNotExist:
+        return HttpResponseNotFound("Exam does not exist", content_type="text/plain")
+
+    if request.method == 'POST':
+        try:
+            examscribble_id = int(request.POST['examscribble_id'])
+            examscribble = He.models.ExamScribble.objects.get(id=examscribble_id)
+        except ValueError, He.models.ExamScribble.DoesNotExist:
+            return HttpResponse("What did you DO?", content_type="text/plain")
+
+        form = forms.ExamScribbleMatchRobustForm(examscribble, request.user, request.POST)
+        if not form.is_valid(): # validation errors
+            context = {
+                    'matchform' : form,
+                    'previous_whom' : None,
+                    'scribble_url' : examscribble.scan_image.url,
+                    'exam_id' : exam_id,
+                    }
+            return render(request, "match-exam-scans.html", context)
+        else:
+            previous_whom = form.cleaned_data['whom']
+    else:
+        previous_whom = None
+
+    # Now we're set, so get the next scribble, or alert none left
+    queryset = He.models.ExamScribble.objects.filter(mathlete=None, team=None, exam=exam)
+    examscribble = queryset.first()
+    if examscribble is None:
+        return HttpResponse("All scanned exams have been matched", content_type="text/plain")
+    form = forms.ExamScribbleMatchRobustForm(examscribble, request.user)
+    context = {
+            'matchform' : form,
+            'previous_whom' : None,
+            'scribble_url' : examscribble.scan_image.url,
+            'exam_id' : exam_id,
+            }
+    return render(request, "match-exam-scans.html", context)
+
 
 ### SCAN GRADER VIEWS
 @staff_member_required
@@ -143,6 +198,5 @@ def progress(request):
     context = {'columns' : columns, 'table' : table}
     logging.warn(table)
     return render(request, "progress.html", context)
-
 
 # vim: expandtab fdm=indent foldnestmax=1

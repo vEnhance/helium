@@ -1,0 +1,36 @@
+{% extends 'layout-helium.html' %}
+{% load static %}
+
+{% block title %}Helium | Match Scans to Names{% endblock %}
+
+{% block layout-content %}
+
+
+<h3>Name Matching System</h3>
+
+<p>TODO help text</p>
+
+{% if previous_whom %}
+<p class="text-success">Successfully identified exam for {{ previous_whom }}.</p>
+{% endif %}
+
+<div id="scan_img_div"><img src="{{ scribble_url }}" id="scan_img"/></div>
+
+<form action="/helium/match-exam-scans/{{exam_id}}/" method="post">
+{% csrf_token %}
+<table class="table">
+{{ matchform.as_table }}
+</table>
+<input type="submit" value="Match">
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="{% static 'js/autoselect.js' %}"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#id_mathlete').selectToAutocomplete();
+	$('#id_team').selectToAutocomplete();
+});
+</script>
+{% endblock %}

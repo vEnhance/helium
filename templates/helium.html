@@ -17,7 +17,7 @@
 <hr />
 
 <h4>Grade by Scans</h4>
-<form action="/helium/grade-scans" method="get">
+<form action="/helium/grade-scans-redir/" method="get">
 	<div class="row">
 		<div class="col-md-8">
 		{% csrf_token %}
@@ -28,9 +28,20 @@
 		</div>
 	</div>
 </form>
+<form action="/helium/match-exam-scans-redir/" method="post">
+	<div class="row">
+		<div class="col-md-8">
+		{% csrf_token %}
+		{{ matchform.as_p }}
+		</div>
+		<div class="col-md-4">
+		<p><input type="submit" name="from_landing" value="Match Scans to Students" /></p>
+		</div>
+	</div>
+</form>
 
-<h4>Grade by Physical Exam</h4>
-<form action="/helium/old-grader" method="post">
+<h4>Grade by Physical Papers</h4>
+<form action="/helium/old-grader/" method="post">
 	<div class="row">
 		<div class="col-md-8">
 		{% csrf_token %}

@@ -64,6 +64,12 @@ class ExamScribble(models.Model):
             who = 'ID %05d' % self.id
         return unicode(self.exam) + ': ' + who
 
+    def assign(self, whom):
+        if self.exam.is_indiv: # indiv exam
+            self.assignMathlete(whom)
+        else: # team exam
+            self.assignMathlete(whom)
+
     def assignTeam(self, team):
         self.team = team
         self.save()
@@ -192,5 +198,13 @@ class Evidence(models.Model):
 
     class Meta:
         unique_together = ('verdict', 'user')
+
+def query_verdict(method, whom, problem, *args, **kwargs):
+    """Wrapper function to get a verdict for either mathlete or team"""
+    method_func = getattr(Verdict.objects, method)
+    if problem.exam.is_indiv:
+        return method_func(*args, mathlete = whom, problem = problem, **kwargs)
+    else:
+        return method_func(*args, team = whom, problem = problem, **kwargs)
 
 # vim: expandtab fdm=indent foldnestmax=1

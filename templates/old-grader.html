@@ -21,13 +21,13 @@ and then hand it to a third person to triple grade.</p>
 <p class="text-success">Successfully graded {{ num_graded }} problems for {{ whom }}.</p>
 {% endif %}
 
-<form action="/helium/old-grader/{{exam.id}}" method="post">
+<form action="/helium/old-grader/{{exam.id}}/" method="post">
 {% csrf_token %}
 <table class="table"e>
 {{ oldform.as_table }}
 </table>
 <input type="hidden" name="exam_id" value="{{ exam.id }}">
-<input type="submit" name="from_grader" value="Submit">
+<input type="submit" value="Enter Scores">
 </form>
 {% endblock %}
 

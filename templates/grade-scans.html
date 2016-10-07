@@ -81,7 +81,7 @@ $(document).ready(function() {
 
 
 {% comment %}
-<form action="/helium/submit-scan" method="post">
+<form action="/helium/submit-scan/" method="post">
 	{% csrf_token %}
 	<input id="scribble_id" name="scribble_id" />
 	<input id="score" name="score" />
@@ -91,7 +91,7 @@ $(document).ready(function() {
 
 {% comment %}
 <h4>Get next scan (Debugging)</h4>
-<form action="/helium/next-scan" method="post">
+<form action="/helium/next-scan/" method="post">
 	{% csrf_token %}
 	<input name="problem_id" type="hidden" value="{{ problem.id }}"/>
 	<input type="submit" value ="Get Scan" />
