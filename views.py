@@ -33,8 +33,9 @@ def old_grader(request, exam_id=None):
     if request.method == 'POST':
         form = forms.ExamGradingForm(exam, request.user, request.POST)
         if form.is_valid():
-            data = form.cleaned_data
-            form = forms.ExamGradingForm(exam, request.user) # Fresh form to write on
+            # the form cleanup actually does the processing for us,
+            # so just hand the user a fresh form if no validation errors
+            form = forms.ExamGradingForm(exam, request.user)
         context = {
                 'exam' : exam,
                 'oldform' : form
