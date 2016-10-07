@@ -46,7 +46,8 @@ $(document).ready(function() {
 			console.log(result);
 			sid = result[0];
 			if (sid == 0) {
-				$("#scan_img_div").html("<h3>All done with this problem!");
+				$("#scan_img_div").html("All done with this problem!");
+				$("#scan_img_div").addClass("success");
 				$("#controls").html('');
 			}
 			else
