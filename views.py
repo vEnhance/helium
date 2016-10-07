@@ -32,22 +32,35 @@ def old_grader(request, exam_id=None):
     if request.method == 'POST':
         form = forms.ExamGradingForm(exam, request.user, request.POST)
         if form.is_valid():
+            num_graded = form.cleaned_data['num_graded']
+            whom = form.cleaned_data['whom']
             # the form cleanup actually does the processing for us,
             # so just hand the user a fresh form if no validation errors
             form = forms.ExamGradingForm(exam, request.user)
-        context = {
-                'exam' : exam,
-                'oldform' : form
-                }
+            context = {
+                    'exam' : exam,
+                    'oldform' : form,
+                    'num_graded' : num_graded,
+                    'whom' : whom,
+                    }
+        else:
+            context = {
+                    'exam' : exam,
+                    'oldform' : form,
+                    'num_graded' : 0,
+                    'whom' : None
+                    }
     else:
         # This means we just got here from landing.
         # No actual grades to process yet
         context = {
                 'exam' : exam,
-                'oldform' : forms.ExamGradingForm(exam, request.user)
+                'oldform' : forms.ExamGradingForm(exam, request.user),
+                'num_graded' : 0,
+                'whom' : None,
                 }
-
     return render(request, "old-grader.html", context)
+
 
 ### SCAN GRADER VIEWSN
 @staff_member_required

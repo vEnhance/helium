@@ -17,12 +17,26 @@ If you are confident your own entered entry is correct,
 you should use the "override" button below,
 and then hand it to a third person to triple grade.</p>
 
+{% if whom %}
+<p class="success">Successfully graded {{ num_graded }} problems for {{ whom }}.</p>
+{% endif %}
+
 <form action="/helium/old-grader/{{exam.id}}" method="post">
 {% csrf_token %}
-{{ oldform.as_p }}
+<table class="table"e>
+{{ oldform.as_table }}
+</table>
 <input type="hidden" name="exam_id" value="{{ exam.id }}">
 <input type="submit" name="from_grader" value="Submit">
 </form>
+{% endblock %}
 
-
+{% block scripts %}
+<script type="text/javascript" src="{% static 'js/autoselect.js' %}">
+</script>
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#id_mathlete').selectToAutocomplete();
+});
+</script>
 {% endblock %}

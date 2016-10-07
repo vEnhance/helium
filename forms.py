@@ -20,43 +20,62 @@ class ExamGradingForm(forms.Form):
         super(forms.Form, self).__init__(*args, **kwargs)
         problems = He.models.Problem.objects.filter(exam=exam)
 
-        if exam.is_indiv:
+        self.exam = exam
+        self.user = user
+        self.problems = problems
+
+        if self.exam.is_indiv:
             self.fields['mathlete'] = forms.ModelChoiceField(\
                     queryset = MATHLETES.all())
         else:
             self.fields['team'] = forms.ModelChoiceField(\
                     queryset = TEAMS.all())
         
-        logging.warn(problems)
-        for problem in sorted(problems, key = lambda _ : _.problem_number):
+        logging.warn(self.problems)
+        for problem in sorted(self.problems, key = lambda _ : _.problem_number):
             n = problem.problem_number
             kwargs = {
                     'label' : unicode(problem),
                     'widget' : forms.TextInput,
                     'required' : False,
+                    'min_value' : 0,
                     # 'help_text' : "Answer is %s" %problem.answer,
                     }
             if not problem.allow_partial:
-                kwargs['min_value'] = 0
                 kwargs['max_value'] = 1
+                kwargs['help_text'] = "Input 0 or 1"
+            elif hasattr(problem, "weight"):
+                kwargs['max_value'] = problem.weight
+                kwargs['help_text'] = "Input an integer from 0 to %d" %problem.weight
+            else:
+                kwargs['help_text'] = "Input a nonnegative integer"
+
             self.fields['p' + str(n)] = forms.IntegerField(**kwargs)
 
         self.fields['force'] = forms.BooleanField(
                 label = 'Override',
                 required = False)
 
-        self.exam = exam
-        self.user = user
-        self.problems = problems
-
     def clean(self):
         # without "force", throw an error every time we get a bad verdict
         data = super(ExamGradingForm, self).clean()
 
-        if self.exam.is_indiv and not data.has_key('mathlete'): return
-        if not self.exam.is_indiv and not data.has_key('team'): return
+        if self.exam.is_indiv:
+            if not data.has_key('mathlete'):
+                # NOT NEEDED: validation will do this for us
+                # self.add_error('mathlete', 'No mathlete specified!?')
+                return
+            else:
+                whom = data['mathlete']
+        if not self.exam.is_indiv and not data.has_key('team'):
+            if not data.has_key('team'):
+                # NOT NEEDED: validation will do this for us
+                # self.add_error('team', 'No team specified!?')
+                return
+            else:
+                whom = data['team']
 
-        ret = []
+        num_graded = 0
         for problem in self.problems:
             field_name = 'p' + str(problem.problem_number)
 
@@ -76,6 +95,9 @@ class ExamGradingForm(forms.Form):
                     self.add_error(field_name,
                             "Conflicting score for %s (database has score %d)" \
                             % (problem, v.score))
-                else:
-                    v.submitEvidence(user = request.user, score = score)
-        return ret
+                    continue
+            v.submitEvidence(user = self.user, score = user_score)
+            num_graded += 1
+        return { 'num_graded' : num_graded, 'whom' :  whom}
+
+# vim: expandtab fdm=indent foldnestmax=1
