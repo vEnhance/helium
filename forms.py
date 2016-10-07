@@ -124,39 +124,21 @@ class ExamScribbleMatchRobustForm(forms.Form):
         if not self.exam.is_indiv and not data.has_key('team'):
             if not data.has_key('team'): return
             else: whom = data['team']
-        data['whom'] = whom
 
         # Now for each attached ProblemScribble...
         # check if it's okay to update
-        for ps in self.examscribble.problemscribble_set.all():
-            verdict = ps.verdict
-            problem = verdict.problem
-            try: # search for conflicts
-                bad_v = He.models.query_verdict("get", whom, problem)
-            except He.models.Verdict.DoesNotExist: 
-                pass
-            else: # UH-OH, there's already a verdict attached
-                if not data.get('force', False): # we can just fail and leave now
-                    admin_url = "/admin/helium/verdict/" + str(bad_v.id) + "/change/"
-                    self.add_error(None, django.utils.safestring.mark_safe(
-                            'A verdict already exists for a problem/user pair. '
-                            'Something is very wrong. Consult '
-                            '<a href="%s">%s</a>. ' %(admin_url, bad_v)))
-                    return data
-                else: # forcefully grab all evidence form v then delete it
-                    for e in bad_v.evidence_set.all():
-                        if e.user == self.user and He.models.Evidence.objects.filter\
-                                (verdict=verdict, user=self.user).exists():
-                            # geez this is so bad
-                            logging.warn("Deleting " + str(e.id) + " = " + str(e))
-                            e.delete()
-                        else:
-                            e.verdict = verdict
-                            e.save()
-                    logging.warn("Deleting " + str(bad_v.id) + " = " + str(bad_v))
-                    bad_v.delete()
-            verdict.updateDecisions()
-        self.examscribble.assign(whom) # Now update all the verdicts attached to the exam scribble
+        bad_v = self.examscribble.checkConflictVerdict(
+                whom, purge = data.get('force', False))
+        if bad_v is None:
+            data['whom'] = whom
+            self.examscribble.assign(whom)
+            # Now update all the verdicts attached to the exam scribble
+        else:
+            admin_url = "/admin/helium/verdict/" + str(bad_v.id) + "/change/"
+            self.add_error(None, django.utils.safestring.mark_safe(
+                    'A verdict already exists for a problem/user pair. '
+                    'Something is very wrong. Consult '
+                    '<a href="%s">%s</a>. ' %(admin_url, bad_v)))
         return data
 
 # vim: expandtab fdm=indent foldnestmax=2

@@ -4,7 +4,7 @@ from django.db import models
 from django.contrib.auth import models as auth
 from django.core.exceptions import ValidationError
 import registration.models as reg
-
+import logging
 import collections
 
 def validateMathleteVsTeam(obj, is_indiv, nonempty=False):
@@ -87,6 +87,39 @@ class ExamScribble(models.Model):
             ps.verdict.mathlete = self.mathlete
             ps.verdict.team = self.team
             ps.verdict.save()
+
+    def checkConflictVerdict(self, whom, purge=False):
+        """Check that no collisions will arise before updateScribbles.
+        Note that purge is DANGEROUS and should use with judgment."""
+        for ps in self.problemscribble_set.all():
+            verdict = ps.verdict
+            problem = verdict.problem
+            try: # search for conflicts
+                bad_v = query_verdict("get", whom, problem)
+            except Verdict.DoesNotExist: 
+                pass
+            else:
+                if bad_v == verdict:
+                    # wef, these are the same?
+                    # OK, something really screwy must have happened,
+                    # but this is fine
+                    continue
+                # UH-OH, there's already a verdict attached
+                if not purge: return bad_v # return counterexample and exit
+                else: # forcefully grab all evidence form v then delete it
+                    for e in bad_v.evidence_set.all():
+                        if e.user == self.user and Evidence.objects.filter\
+                                (verdict=verdict, user=self.user).exists():
+                            # geez this is so bad
+                            logging.warn("Deleting " + str(e.id))
+                            e.delete()
+                        else:
+                            e.verdict = verdict
+                            e.save()
+                    logging.warn("Deleting " + str(bad_v.id) + " = " + str(bad_v))
+                    bad_v.delete()
+                    verdict.updateDecisions()
+        return None # no conflicts
 
     class Meta:
         unique_together = (('exam', 'mathlete'), ('exam', 'team'))
