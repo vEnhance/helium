@@ -2,11 +2,9 @@ from django.shortcuts import render
 from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 import django.db
-
 import helium as He
 import helium.forms as forms
 import json
-
 import logging
 
 @staff_member_required
@@ -17,6 +15,7 @@ def index(request):
             }
     return render(request, "helium.html", context)
 
+### OLD GRADER VIEWS
 @staff_member_required
 def old_grader(request, exam_id=None):
     if exam_id is None:
@@ -50,7 +49,7 @@ def old_grader(request, exam_id=None):
 
     return render(request, "old-grader.html", context)
 
-
+### SCAN GRADER VIEWSN
 @staff_member_required
 def grade_scans(request):
     if request.method == 'GET':
@@ -104,4 +103,4 @@ def next_scan(request):
         else: # done grading!
             return HttpResponse(json.dumps( [0, ''] ), content_type="application/json")
 
-# vim: expandtab
+# vim: expandtab fdm=indent foldnestmax=1

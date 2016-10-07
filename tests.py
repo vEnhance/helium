@@ -57,7 +57,6 @@ class GradingTestCase(TestCase):
         self.assertEqual(self.verdict.is_valid, True)
         self.assertEqual(self.verdict.is_done, True)
 
-
     def test_doublegrade_2(self):
         self.assertEqual(self.verdict.score, None)
 
@@ -78,7 +77,6 @@ class GradingTestCase(TestCase):
         self.assertEqual(self.verdict.score, 0)
         self.assertEqual(self.verdict.is_valid, True)
         self.assertEqual(self.verdict.is_done, True)
-
 
     def test_doublegrade_3(self):
         self.assertEqual(self.verdict.score, None)
@@ -112,3 +110,5 @@ class GradingTestCase(TestCase):
         self.assertEqual(es.mathlete, self.mathlete)
         self.verdict.refresh_from_db()
         self.assertEqual(self.verdict.mathlete.id, self.mathlete.id)
+
+# vim: fdm=indent foldnestmax=2 foldlevel=1
