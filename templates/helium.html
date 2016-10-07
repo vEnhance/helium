@@ -10,7 +10,7 @@
 <div id="content-container">
 <h2>Helium</h2>
 <p>
-	This is <b>Helium</b>, brought to you by HMMT 2016 Scripts Team.
+	This is <b>Helium</b>, brought to you by HMMT 2016-2017 Scripts Team.
 	It is inspired off of Stanford's <a href="http://atomicgrader.com/">Atomic Grader</a>,
 	and named in its honor.
 </p>
@@ -19,22 +19,22 @@
 <h4>Grade by Scans</h4>
 <form action="/helium/grade-scans-redir/" method="post">
 	<div class="row">
-		<div class="col-xs-6">
+		<div class="col-xs-8">
 		{% csrf_token %}
 		{{ scanform.as_p }}
 		</div>
-		<div class="col-xs-6">
+		<div class="col-xs-4">
 		<input type="submit" name="from_landing" value="Start Scan Grader" />
 		</div>
 	</div>
 </form>
 <form action="/helium/match-exam-scans-redir/" method="post">
 	<div class="row">
-		<div class="col-xs-6">
+		<div class="col-xs-8">
 		{% csrf_token %}
 		{{ matchform.as_p }}
 		</div>
-		<div class="col-xs-6">
+		<div class="col-xs-4">
 		<input type="submit" name="from_landing" value="Match Scans" />
 		</div>
 	</div>
@@ -43,11 +43,11 @@
 <h4>Grade by Physical Papers</h4>
 <form action="/helium/old-grader-redir/" method="post">
 	<div class="row">
-		<div class="col-xs-6">
+		<div class="col-xs-8">
 		{% csrf_token %}
 		{{ examform.as_p }}
 		</div>
-		<div class="col-xs-6">
+		<div class="col-xs-4">
 		<input type="submit" name="from_landing" value="Old Grader" />
 		</div>
 	</div>
@@ -63,6 +63,5 @@
 {% endblock %}
 
 {% block layout-footer %}
-<hr />
 <section id="banner"><img src="{% static 'img/balloons.png' %}"/></section>
 {% endblock %}
