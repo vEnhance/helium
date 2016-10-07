@@ -21,6 +21,7 @@ class ProblemAdmin(admin.ModelAdmin):
 @admin.register(He.models.ExamScribble)
 class ExamScribbleAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'exam', 'mathlete', 'team', 'id')
+    inlines = (ProblemScribbleInline,)
 
 @admin.register(He.models.Verdict)
 class VerdictAdmin(admin.ModelAdmin):
