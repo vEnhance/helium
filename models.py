@@ -23,7 +23,6 @@ def validateMathleteVsTeam(obj, is_indiv, nonempty=False):
         if obj.team is None and nonempty is True:
             raise ValidationError("Team problems has no team attached")
 
-
 class Exam(models.Model):
     name = models.CharField(max_length=50, help_text='Name of exam')
     color = models.CharField(max_length=50, default='000000',\
@@ -122,11 +121,14 @@ class Verdict(models.Model):
         e.save()
         self.updateDecisions()
 
-    def updateDecisions(self):
-        """Reads through all evidence available to self and gives verdict."""
-        all_evidence = self.evidence_set.all()
-        strong_evidence = [e for e in all_evidence if e.god_mode is True]
-        weak_evidence   = [e for e in all_evidence if e.god_mode is False]
+    def updateDecisions(self, queryset = None):
+        """Reads through all evidence available to self and gives verdict.
+        Can restrict search to a particular queryset.
+        NOTE: queryset should NOT be a generator"""
+        if queryset is None:
+            queryset = self.evidence_set.all()
+        strong_evidence = [e for e in queryset if e.god_mode is True]
+        weak_evidence   = [e for e in queryset if e.god_mode is False]
         if len(strong_evidence) > 1:
             # We have more than one "god mode" evidence, this is bad. GIVE UP.
             self.score = None
@@ -141,19 +143,28 @@ class Verdict(models.Model):
             if len(scores) == 0: # have no data
                 self.score = None
                 self.is_valid, self.is_done = True, False
-            elif len(scores) == 1: # have one evidence, but need double grading
+            elif len(scores) == 1:
                 self.score = scores[0] # TODO dubious --- but fun for prelim results?
                 self.is_valid, self.is_done = True, False
+            elif len(scores) == 2 :
+                if scores[0] == scores[1]:
+                    self.score = scores[0]
+                    self.is_valid, self.is_done = True, False
+                else:
+                    self.score = None
+                    self.is_valid, self.is_done = False, False
             else: # see if we have consensus
-                score, n = collections.Counter(scores).most_common(1)[0]
-                if n >= 2 * len(scores) / 3: # need more than 2/3 majority
-                    self.score = score
+                mode_score, n = collections.Counter(scores).most_common(1)[0]
+                if 4 * n >= 3 * len(scores): # need at least 3/4 majority
+                    self.score = mode_score
                     self.is_valid, self.is_done = True, True
                 else: # not good enough consensus
                     self.score = None
                     self.is_valid, self.is_done = False, False
         self.save()
 
+    def evidence_count(self):
+        return self.evidence_set.count()
     class Meta:
         unique_together = (('problem', 'mathlete'), ('problem', 'team'))
 
@@ -182,4 +193,4 @@ class Evidence(models.Model):
     class Meta:
         unique_together = ('verdict', 'user')
 
-# vim: expandtab
+# vim: expandtab fdm=indent foldnestmax=1
