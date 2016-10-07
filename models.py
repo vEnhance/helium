@@ -25,8 +25,8 @@ def validateMathleteVsTeam(obj, is_indiv, nonempty=False):
 
 class Exam(models.Model):
     name = models.CharField(max_length=50, help_text='Name of exam')
-    color = models.CharField(max_length=50, default='000000',\
-            help_text='Hex code for color exam printed on')
+    color = models.CharField(max_length=50, default='#FFFFFF',\
+            help_text='Color which exam is printed on (shows up when grading)')
     is_indiv = models.BooleanField()
     is_ready = models.BooleanField(default=True, help_text='Mark true if ready to grade this exam')
     is_alg_scoring = models.BooleanField()

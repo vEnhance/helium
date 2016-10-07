@@ -144,7 +144,8 @@ def grade_scans_redir(request):
 @staff_member_required
 def grade_scans(request, problem_id):
     problem = He.models.Problem.objects.get(id=problem_id)
-    return render(request, "grade-scans.html", {'problem':problem})
+    return render(request, "grade-scans.html",
+            {'problem' : problem, 'exam': problem.exam})
 
 @staff_member_required
 def submit_scan(request):

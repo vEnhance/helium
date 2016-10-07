@@ -5,6 +5,11 @@
 {% block stylesheets %}
 <link href="{% static 'css/layout.css' %}" rel="stylesheet">
 <link href="{% static 'css/helium.css' %}" rel="stylesheet">
+{% if exam %}
+<style type="text/css">
+body { background-color: {{ exam.color }}; }
+</style>
+{% endif %}
 {% endblock %}
 
 {% block content %}
