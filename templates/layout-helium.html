@@ -4,13 +4,10 @@
 
 {% block stylesheets %}
 <link href="{% static 'css/layout.css' %}" rel="stylesheet">
-<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="{% static 'hijack/hijack-styles.css' %}" />
+<link href="{% static 'css/helium.css' %}" rel="stylesheet">
 {% endblock %}
 
-
 {% block content %}
-
   <div id="page-wrapper">
   {% include 'includes/navbar.html' %}
   {% block layout-banner %}
@@ -36,7 +33,5 @@
 	and named in its honor.
 	</p>
   </section>
-
   {% endblock %}
-
 {% endblock %}
