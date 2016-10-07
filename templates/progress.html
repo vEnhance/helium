@@ -1,0 +1,24 @@
+{% extends 'layout-helium.html' %}
+{% load static %}
+
+{% block title %}Helium | Grading Progress{% endblock %}
+
+{% block layout-content %}
+<h3>Exam Grading Progress</h3>
+
+<table class="table">
+	<tr>
+		{% for col in columns %}
+		<th>{{ col }}</th>
+		{% endfor %}
+	</tr>
+	{% for tr in table %}
+		<tr>
+			{% for k, n in tr.items  %}
+			<td>{{ n }}</td>
+			{% endfor %}
+		</tr>
+	{% endfor %}
+</table>
+
+{% endblock %}

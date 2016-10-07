@@ -2,10 +2,13 @@ from django.shortcuts import render
 from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 import django.db
+from registration import current as reg
 import helium as He
 import helium.forms as forms
 import json
 import logging
+import itertools
+import collections
 
 @staff_member_required
 def index(request):
@@ -25,7 +28,7 @@ def old_grader(request, exam_id=None):
             exam = form.cleaned_data['exam']
             return HttpResponseRedirect('/helium/old-grader/%d/' %exam.id)
         else:
-            return HttpResponseRedirect('/helium')
+            return HttpResponseRedirect('/helium') # bad request
 
     exam_id = int(exam_id)
     exam = He.models.Exam.objects.get(id=exam_id)
@@ -61,8 +64,7 @@ def old_grader(request, exam_id=None):
                 }
     return render(request, "old-grader.html", context)
 
-
-### SCAN GRADER VIEWSN
+### SCAN GRADER VIEWS
 @staff_member_required
 def grade_scans(request):
     if request.method == 'GET':
@@ -115,5 +117,32 @@ def next_scan(request):
                     content_type="application/json")
         else: # done grading!
             return HttpResponse(json.dumps( [0, ''] ), content_type="application/json")
+
+@staff_member_required
+def progress(request):
+    verdicts = He.models.Verdict.objects.filter(problem__exam__is_ready=True)
+    verdicts = list(verdicts)
+    verdicts.sort(key = lambda v : v.problem.id)
+
+    table = []
+    columns = ['Problem', 'Done', 'Pending', 'Unread', 'Conflict', 'Missing']
+
+    for problem, group in itertools.groupby(verdicts, key = lambda v : v.problem):
+        group = list(group) # dangit, this gotcha
+        tr = collections.OrderedDict()
+        tr['Problem']  = str(problem)
+        tr['Done']     = len([v for v in group if v.is_valid and v.is_done])
+        tr['Pending']  = len([v for v in group if v.is_valid \
+                and not v.is_done and v.evidence_count() > 0])
+        tr['Unread']  = len([v for v in group if v.is_valid \
+                and not v.is_done and v.evidence_count() == 0])
+        tr['Conflict'] = len([v for v in group if not v.is_valid])
+        tr['Missing']  = len(reg.MATHLETES) - len(group)
+        table.append(tr)
+
+    context = {'columns' : columns, 'table' : table}
+    logging.warn(table)
+    return render(request, "progress.html", context)
+
 
 # vim: expandtab fdm=indent foldnestmax=1
