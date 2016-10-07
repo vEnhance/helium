@@ -119,18 +119,18 @@ def match_exam_scans(request, exam_id):
     if examscribble is None: # all done
         context = {
                 'matchform' : None,
-                'previous_whom' : None,
+                'previous_whom' : previous_whom,
                 'scribble_url' : DONE_IMAGE_URL,
                 'exam' : exam,
                 }
     else:
+        form = forms.ExamScribbleMatchRobustForm(examscribble, request.user)
         context = {
-                'matchform' : None,
-                'previous_whom' : None,
+                'matchform' : form,
+                'previous_whom' : previous_whom,
                 'scribble_url' : examscribble.scan_image.url,
                 'exam' : exam,
                 }
-        form = forms.ExamScribbleMatchRobustForm(examscribble, request.user)
     return render(request, "match-exam-scans.html", context)
 
 
