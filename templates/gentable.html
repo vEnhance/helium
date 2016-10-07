@@ -1,0 +1,23 @@
+{% extends 'layout-helium.html' %}
+{% load static %}
+
+{% block title %}Helium | {{ pagetitle }}{% endblock %}
+
+{% block layout-content %}
+<h3>{{ pagetitle }}</h3>
+<table class="table">
+	<tr>
+		{% for col in columns %}
+		<th>{{ col }}</th>
+		{% endfor %}
+	</tr>
+	{% for tr in problem_table %}
+		<tr>
+			{% for k, n in tr.items  %}
+			<td>{{ n }}</td>
+			{% endfor %}
+		</tr>
+	{% endfor %}
+</table>
+
+{% endblock %}

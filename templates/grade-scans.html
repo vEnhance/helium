@@ -37,19 +37,14 @@ $(document).ready(function() {
 
 	function next_scan() {
 		$.ajax({
-			url : "/helium/next-scan",
+			url : "/helium/next-scan/",
 			type : "POST",
 			data: { problem_id : {{ problem.id }} },
 		}).done(function(result) {
 			console.log(result);
 			sid = result[0];
-			if (sid == 0) {
-				$("#scan_img_div").html("All done with this problem!");
-				$("#scan_img_div").addClass("text-success");
-				$("#controls").html('');
-			}
-			else
-				$("#scan_img").attr('src', result[1]);
+			if (sid == 0) $("#controls").html('');
+			$("#scan_img").attr('src', result[1]);
 		});
 	}
 	next_scan();
@@ -64,7 +59,7 @@ $(document).ready(function() {
 			{% endif %}
 			console.log("Submitting score for " + sid);
 			$.ajax({
-				url : "/helium/submit-scan",
+				url : "/helium/submit-scan/",
 				type : "POST",
 				data: { scribble_id : sid, score : score },
 			}).done(function(result) {

@@ -6,23 +6,23 @@
 {% block layout-content %}
 
 
-<h3>Name Matching System</h3>
-
-<p>TODO help text</p>
+<h3>Name Matching System for {{ exam }}</h3>
 
 {% if previous_whom %}
-<p class="text-success">Successfully identified exam for {{ previous_whom }}.</p>
+<p class="text-success">Successfully identified {{ exam }} exam for {{ previous_whom }}.</p>
 {% endif %}
 
 <div id="scan_img_div"><img src="{{ scribble_url }}" id="scan_img"/></div>
 
-<form action="/helium/match-exam-scans/{{exam_id}}/" method="post">
+{% if matchform %}
+<form action="/helium/match-exam-scans/{{exam.id}}/" method="post">
 {% csrf_token %}
 <table class="table">
 {{ matchform.as_table }}
 </table>
 <input type="submit" value="Match">
 </form>
+{% endif %}
 {% endblock %}
 
 {% block scripts %}
