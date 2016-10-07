@@ -1,39 +1,56 @@
-{% extends 'layout-helium.html' %}
+{% extends 'layout.html' %}
 {% load static %}
 
-{% block title %}Helium{% endblock %}
+{% block title %}Helium | Dashboard{% endblock %}
 
-{% block extras %}
-    <link href="{% static 'css/reg.css' %}" rel="stylesheet">
-{% endblock %}
+{% block layout-banner %}
+<section id="banner"><img src="{% static 'img/balloons.png' %}"/></section>
+{% endblock layout-banner %}
+
 {% block layout-content %}
+<h2>Helium</h2>
 
-<p>Welcome to Helium!</p>
-
-<h3>Grade by Scans</h3>
+<h4>Grade by Scans</h4>
 <form action="/helium/grade-scans" method="get">
 	<div class="row">
-		<div class="col-md-6">
+		<div class="col-md-3"></div>
+		<div class="col-md-4">
 		{% csrf_token %}
 		{{ scanform.as_p }}
 		</div>
 		<div class="col-md-2">
 		<p><input type="submit" name="from_landing" value="Start Scan Grader" /></p>
 		</div>
+		<div class="col-md-3"></div>
 	</div>
 </form>
 
-<h3>Grade by Physical Exam</h3>
+<h4>Grade by Physical Exam</h4>
 <form action="/helium/old-grader" method="post">
 	<div class="row">
-		<div class="col-md-6">
+		<div class="col-md-3"></div>
+		<div class="col-md-4">
 		{% csrf_token %}
 		{{ examform.as_p }}
 		</div>
 		<div class="col-md-2">
 		<p><input type="submit" name="from_landing" value="Start Old Grader" /></p>
 		</div>
+		<div class="col-md-3"></div>
 	</div>
 </form>
 
+<h4>Statistics</h4>
+<ul>
+	<li><a href="/helium/progress">Progress</a></li>
+</ul>
+
+{% endblock %}
+
+{% block layout-footer %}
+  <section id="footer">
+	This is <b>Helium</b>, brought to you by HMMT 2016 Scripts Team.
+	It is inspired off of Stanford's <a href="http://atomicgrader.com/">Atomic Grader</a>,
+	and named in its honor.
+  </section>
 {% endblock %}

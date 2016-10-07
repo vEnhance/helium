@@ -3,8 +3,3 @@ ul.errorlist {
 	list-style-type: none;
 	font-weight: bold;
 }
-
-div.success, p.success {
-	color: green;
-	font-weight: bold;
-}

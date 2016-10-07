@@ -18,7 +18,7 @@ you should use the "override" button below,
 and then hand it to a third person to triple grade.</p>
 
 {% if whom %}
-<p class="success">Successfully graded {{ num_graded }} problems for {{ whom }}.</p>
+<p class="text-success">Successfully graded {{ num_graded }} problems for {{ whom }}.</p>
 {% endif %}
 
 <form action="/helium/old-grader/{{exam.id}}" method="post">

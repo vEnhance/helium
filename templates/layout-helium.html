@@ -15,23 +15,15 @@
   {% endblock layout-banner %}
 
   <section id="body-form">
-	<hr />
-	<p><a href="/helium">&lt; Back to Helium home</a></p>
-	<hr />
+	<div class="btn-toolbar"><a href="/helium">&lt; Back to Helium home</a></div>
     {% block layout-content %}
     {% endblock %}
-	<hr />
-	<p><a href="/helium">&lt; Back to Helium home</a></p>
 	<hr />
   </section>
 
   {% block layout-footer %}
   <section id="footer">
-	<p>
-	Welcome to <b>Helium</b>, the new HMMT grading system.
-	It is inspired off of Stanford's <a href="http://atomicgrader.com/">Atomic Grader</a>,
-	and named in its honor.
-	</p>
+	<p><a href="/helium">&lt; Back to Helium home</a></p>
   </section>
   {% endblock %}
 {% endblock %}

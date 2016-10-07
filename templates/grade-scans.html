@@ -21,8 +21,6 @@ You will then automatically be shown a different scan.</p>
 If enabled, you don't need to press "return".)
 </p>
 </div>
-<a href="/helium">Back to Helium landing page</a>
-
 {% endblock %}
 
 {% block scripts %}
@@ -47,7 +45,7 @@ $(document).ready(function() {
 			sid = result[0];
 			if (sid == 0) {
 				$("#scan_img_div").html("All done with this problem!");
-				$("#scan_img_div").addClass("success");
+				$("#scan_img_div").addClass("text-success");
 				$("#controls").html('');
 			}
 			else
