@@ -49,7 +49,7 @@ class ExamGradingRobustForm(forms.Form):
             if not problem.allow_partial:
                 kwargs['max_value'] = 1
                 kwargs['help_text'] = "Input 0 or 1"
-            elif hasattr(problem, "weight"):
+            elif problem.weight is not None:
                 kwargs['max_value'] = problem.weight
                 kwargs['help_text'] = "Input an integer from 0 to %d" %problem.weight
             else:
