@@ -27,14 +27,7 @@ If enabled, you don't need to press "return".)
 <script type="text/javascript">
 // Copied from https://docs.djangoproject.com/en/1.9/ref/csrf/. Blah.
 $(document).ready(function() {
-	$.ajaxSetup({
-		beforeSend: function(xhr, settings) {
-			if (settings.type == 'POST' && !this.crossDomain) {
-				xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
-			}}});
-
 	var sid = -1; // ID number of scribble we're grading
-
 	function next_scan() {
 		$.ajax({
 			url : "/helium/next-scan/",
@@ -48,7 +41,6 @@ $(document).ready(function() {
 		});
 	}
 	next_scan();
-
 	$("#score").keyup(function (e) {
 		var ludicrous_speed = $("#ludicrous_speed").is(":checked");
 		if (e.which == 13 || ludicrous_speed) {

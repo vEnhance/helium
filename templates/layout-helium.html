@@ -34,3 +34,15 @@ body { background-color: {{ exam.color }}; }
   <section id="banner"><img src="{% static 'img/balloons.png' %}"/></section>
   {% endblock %}
 {% endblock %}
+
+{% block helium-scripts %}
+<script type="text/javascript">
+$(document).ready(function() {
+	$.ajaxSetup({
+	beforeSend: function(xhr, settings) {
+		if (settings.type == 'POST' && !this.crossDomain) {
+			xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+		}}});
+});
+</script>
+{% endblock %} 

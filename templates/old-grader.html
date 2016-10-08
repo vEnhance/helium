@@ -6,7 +6,7 @@
 {% block layout-content %}
 
 
-<h3>Old Grader: {{ exam }}</h3>
+<h3>Classical Grader: {{ exam }}</h3>
 
 <p>Enter scores below, using binary scores for all-or-nothing problems.
 Ideally, you should enter all of data,
@@ -35,8 +35,9 @@ and then hand it to a third person to triple grade.</p>
 <script type="text/javascript" src="{% static 'js/autoselect.js' %}"></script>
 <script type="text/javascript">
 $(document).ready(function() {
-	$('#id_mathlete').selectToAutocomplete();
-	$('#id_team').selectToAutocomplete();
+	$('#id_mathlete,#id_team').change(function(){
+		alert($(this).val());
+	}).selectToAutocomplete();
 });
 </script>
 {% endblock %}
