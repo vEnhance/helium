@@ -35,9 +35,32 @@ and then hand it to a third person to triple grade.</p>
 <script type="text/javascript" src="{% static 'js/autoselect.js' %}"></script>
 <script type="text/javascript">
 $(document).ready(function() {
-	$('#id_mathlete,#id_team').change(function(){
-		console.log($(this).val());
-	}).selectToAutocomplete();
+	function update(){
+		if ( $("#id_mathlete").val() || $("#id_team").val() ) {
+			$.ajax({
+				url  : "/helium/ajax/prev-evidence/",
+				type : "POST",
+				data : {
+					mathlete_id : $("#id_mathlete").val(),
+					team_id : $("#id_team").val(),
+					exam_id : {{ exam.id }}
+				},
+			}).done( function(result) {
+				var encountered_null = false;
+				for (var i=0; i<result.length; ++i) {
+					var n = result[i][0];
+					var s = result[i][1];
+					$("#id_p" + n).val(s);
+					if (s == null && !encountered_null) {
+						$("#id_p" + n).focus(); // Focus on that one
+						encountered_null = true;
+					}
+				}
+			})
+		}
+	}
+	$('#id_mathlete,#id_team').change(update).selectToAutocomplete();
+	update(); // Run initial update
 });
 </script>
 {% endblock %}

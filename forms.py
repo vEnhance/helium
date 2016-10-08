@@ -24,11 +24,11 @@ class ExamGradingRobustForm(forms.Form):
         if not user.is_staff:
             raise ValueError("User is not staff")
         super(forms.Form, self).__init__(*args, **kwargs)
-        problems = He.models.Problem.objects.filter(exam=exam)
+        problems = exam.problem_set.all().order_by('problem_number')
 
         self.exam = exam
         self.user = user
-        self.problems = problems
+        self.problems = list(problems)
 
         if self.exam.is_indiv:
             self.fields['mathlete'] = forms.ModelChoiceField(\
@@ -37,7 +37,7 @@ class ExamGradingRobustForm(forms.Form):
             self.fields['team'] = forms.ModelChoiceField(\
                     queryset = TEAMS.all())
         
-        for problem in sorted(self.problems, key = lambda _ : _.problem_number):
+        for problem in problems:
             n = problem.problem_number
             kwargs = {
                     'label' : unicode(problem),

@@ -15,7 +15,7 @@ import random
 
 DONE_IMAGE_URL = static('img/done.jpg')
 
-def redir_obj_id(request, target, key, form_type):
+def _redir_obj_id(request, target, key, form_type):
     """To be used with a select form. Redirects to page with correct ID."""
     if not request.method == "POST":
         return HttpResponseRedirect('/helium')
@@ -27,6 +27,8 @@ def redir_obj_id(request, target, key, form_type):
         return HttpResponseRedirect(target + str(obj.id))
     else:
         return HttpResponseNotFound("Invalid object ID provided", content_type="text/plain")
+def _json(obj):
+    return HttpResponse(json.dumps(obj), content_type='application/json')
 
 @staff_member_required
 def index(request):
@@ -39,7 +41,7 @@ def index(request):
 
 @staff_member_required
 def old_grader_redir(request):
-    return redir_obj_id(request,
+    return _redir_obj_id(request,
             target = '/helium/old-grader/',
             key = 'exam',
             form_type = forms.ExamSelectForm)
@@ -84,7 +86,7 @@ def old_grader(request, exam_id):
 
 @staff_member_required
 def match_exam_scans_redir(request):
-    return redir_obj_id(request,
+    return _redir_obj_id(request,
             target = '/helium/match-exam-scans/',
             key = 'exam',
             form_type = forms.ExamSelectForm)
@@ -139,7 +141,7 @@ def match_exam_scans(request, exam_id):
 
 @staff_member_required
 def grade_scans_redir(request):
-    return redir_obj_id(request,
+    return _redir_obj_id(request,
             target = '/helium/grade-scans/',
             key = 'problem',
             form_type = forms.ProblemSelectForm)
@@ -183,23 +185,43 @@ def ajax_next_scan(request):
         if s.verdict.evidence_set.filter(user=request.user).exists():
             continue
         else:
-            return HttpResponse(json.dumps( [s.id, s.scan_image.url] ), 
-                content_type="application/json")
+            return _json( [s.id, s.scan_image.url] ),
     else: # done grading!
-        return HttpResponse(json.dumps( [0, DONE_IMAGE_URL] ),
-                content_type="application/json")
+        return _json( [0, DONE_IMAGE_URL ] )
 @staff_member_required
 @require_POST
 def ajax_prev_evidence(request):
     """POST arguments: problem_id, and either id_mathlete / id_team.
-    RETURN: a tuple of previous responses (starting with None)."""
+    RETURN: a list of pairs (num, answer) where answer may be None"""
+    print request.POST
     try:
-        exam_id = int(request.POST['problem_id'])
+        exam_id     = int(request.POST['exam_id'])
+        exam = He.models.Exam.objects.get(id = exam_id)
+        if exam.is_indiv:
+            mathlete_id = int(request.POST['mathlete_id'])
+        else:
+            team_id     = int(request.POST['team_id'])
     except ValueError:
         return
-    
-
-
+    output = []
+    for problem in exam.problem_set.all().order_by('problem_number'):
+        n = problem.problem_number
+        try:
+            if exam.is_indiv:
+                e = He.models.Evidence.objects.get(
+                        user = request.user,
+                        verdict__problem = problem,
+                        verdict__mathlete_id = mathlete_id)
+            else:
+                e = He.models.Evidence.objects.get(
+                        user = request.user,
+                        verdict__problem = problem,
+                        verdict__team_id = team_id)
+        except He.models.Evidence.DoesNotExist:
+            output.append( (n, None) )
+        else:
+            output.append( (n, e.score) )
+    return _json( output )
 
 @staff_member_required
 def progress_problems(request):
