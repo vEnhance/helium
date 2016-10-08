@@ -6,14 +6,6 @@ class Command(BaseCommand):
     help = "For every verdict, runs updateDecisions on it"
 
     def handle(self, *args, **kwargs):
-        # Naive version
-#        for verdict in He.models.Verdict.objects.all():
-#            verdict.updateDecisions()
-
-        all_evidence = list(He.models.Evidence.objects.all())
-        all_evidence.sort(key = lambda e : e.verdict.id)
-        for verdict, evidences in itertools.groupby(all_evidence,
-                key = lambda e : e.verdict):
-            verdict.updateDecisions(list(evidences))
-        # TODO write tests for this
-
+		verdicts = He.models.Verdict.objects.all().prefetch_related('evidence_set')
+		for verdict in verdicts:
+			verdict.updateDecisions(verdict.evidence_set.all())
