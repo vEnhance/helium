@@ -14,5 +14,6 @@ urlpatterns = [
     url(r'^ajax/submit-scan/$', views.ajax_submit_scan), 
     url(r'^ajax/next-scan/$', views.ajax_next_scan),
     url(r'^ajax/prev-evidence/$', views.ajax_prev_evidence),
+    url(r'^reports/individual/$', views.reports_individual),
     url(r'^$', views.index),
 ]

@@ -284,13 +284,13 @@ class MathleteAlpha(models.Model):
     cached_alpha = models.FloatField(blank=True, null=True)
 
 # Auxiliary functions
-def sumExamScore(exam, whom):
-    queryset = query_verdict_by_exam('filter',
-            whom, exam, is_valid=True)
+def get_exam_scores(exam, whom):
+    queryset = query_verdict_by_exam('filter', whom, exam, is_valid=True)\
+                    .order_by('problem__problem_number')
     if exam.is_alg_scoring:
-        return queryset.filter(score=1).aggregate(Sum('problem__cached_beta'))
+        return [v.problem.cached_beta * v.score for v in queryset]
     else:
-        return sum([
-            v.problem.weight if not v.problem.allow_partial else v.score \
-            for v in queryset.exclude(score=0)])
+        return [v.problem.weight*v.score
+            if not v.problem.allow_partial else v.score
+            for v in queryset]
 
