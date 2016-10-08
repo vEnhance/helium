@@ -52,9 +52,9 @@ $(document).ready(function() {
 	$("#score").keyup(function (e) {
 		var ludicrous_speed = $("#ludicrous_speed").is(":checked");
 		if (e.which == 13 || ludicrous_speed) {
+			score = $("#score").val()
 			{% if not problem.allow_partial %}
 			// For non-partial problem require binary scores
-			score = $("#score").val()
 			if (score != "0" && score != "1") return;
 			{% endif %}
 			console.log("Submitting score for " + sid);
