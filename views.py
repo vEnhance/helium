@@ -10,6 +10,7 @@ import json
 import logging
 import itertools
 import collections
+import random
 
 DONE_IMAGE_URL = static('img/done.jpg')
 
@@ -115,8 +116,8 @@ def match_exam_scans(request, exam_id):
 
     # Now we're set, so get the next scribble, or alert none left
     queryset = He.models.ExamScribble.objects.filter(mathlete=None, team=None, exam=exam)
-    examscribble = queryset.first()
-    if examscribble is None: # all done
+
+    if len(queryset) == 0:
         context = {
                 'matchform' : None,
                 'previous_whom' : previous_whom,
@@ -124,6 +125,7 @@ def match_exam_scans(request, exam_id):
                 'exam' : exam,
                 }
     else:
+        examscribble = queryset[random.randrange(queryset.count())]
         form = forms.ExamScribbleMatchRobustForm(examscribble, request.user)
         context = {
                 'matchform' : form,
@@ -178,7 +180,10 @@ def next_scan(request):
         scribbles = He.models.ProblemScribble.objects.filter(
                 verdict__problem=problem,
                 verdict__is_done=False)
-        for s in scribbles:
+        random_indices = range(0,scribbles.count())
+        random.shuffle(random_indices)
+        for i in random_indices:
+            s = scribbles[i]
             # If seen before, toss out
             if s.verdict.evidence_set.filter(user=request.user).exists():
                 continue
