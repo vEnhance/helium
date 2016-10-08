@@ -16,7 +16,7 @@ class ExamAdmin(admin.ModelAdmin):
 
 @admin.register(He.models.Problem)
 class ProblemAdmin(admin.ModelAdmin):
-    list_display = ('__unicode__', 'exam', 'problem_number', 'id',  'weight', 'allow_partial')
+    list_display = ('__unicode__', 'cached_beta', 'id',  'weight', 'allow_partial')
 
 @admin.register(He.models.ExamScribble)
 class ExamScribbleAdmin(admin.ModelAdmin):
@@ -35,3 +35,8 @@ class ProblemScribbleAdmin(admin.ModelAdmin):
 @admin.register(He.models.Evidence)
 class EvidenceAdmin(admin.ModelAdmin):
     list_display = ('id', 'verdict', 'user', 'score', 'god_mode')
+
+
+@admin.register(He.models.MathleteAlpha)
+class AlphaAdmin(admin.ModelAdmin):
+    list_display = ('mathlete', 'cached_alpha', 'id')

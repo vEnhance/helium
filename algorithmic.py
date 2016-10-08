@@ -24,7 +24,7 @@ def main(problems, mathletes, scores):
   
   for record in scores:
     problem, mathlete, result = record
-    if mathlete not in math_took:
+    if not mathlete in math_took:
         continue
     math_took[mathlete].append(problem)
     prob_took[problem].append(mathlete)
@@ -44,7 +44,6 @@ def main(problems, mathletes, scores):
     
     for problem in prev_beta.keys():
       betas[problem] = binary_search_beta(alphas, prob_took[problem], prob_solv[problem])
-    print norm(prev_alpha, alphas)
     
   return alphas, betas
 
