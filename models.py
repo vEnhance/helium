@@ -12,7 +12,6 @@ import collections
 MODEL_TEAM = registration.models.AbstractTeam
 MODEL_MATHLETE = registration.models.AbstractMathlete
 
-
 def validateMathleteVsTeam(obj, is_indiv, nonempty=False):
     """Takes an object which has both a "team" and "mathlete" column.
     Args is_indiv, nonempty are booleans."""
@@ -36,6 +35,11 @@ class Exam(models.Model):
     is_indiv = models.BooleanField()
     is_ready = models.BooleanField(default=True, help_text='Mark true if ready to grade this exam')
     is_alg_scoring = models.BooleanField()
+
+    min_grades = models.IntegerField(default=3, help_text='Minimum number of graders per problem')
+    min_override = models.IntegerField(default=3,
+            help_text='Number of graders required to override a grading conflict.')
+
     def __unicode__(self): return self.name
 
 class Problem(models.Model):
@@ -113,24 +117,21 @@ class Verdict(models.Model):
             if len(scores) == 0: # have no data
                 self.score = None
                 self.is_valid, self.is_done = True, False
-            elif len(scores) == 1:
-                self.score = scores[0] # TODO dubious --- but fun for prelim results?
-                self.is_valid, self.is_done = True, False
-            elif len(scores) == 2 :
-                if scores[0] == scores[1]:
-                    self.score = scores[0]
-                    self.is_valid, self.is_done = True, False
+            else:
+                mode_score, n = collections.Counter(scores).most_common(1)[0]
+                ratio = self.problem.exam.min_override
+                min_grades = self.problem.exam.min_grades
+
+                # Test validity: if we have the correct ratio
+                if (ratio+1) * n >= ratio * len(scores):
+                    self.score = mode_score
+                    self.is_valid = True
                 else:
                     self.score = None
-                    self.is_valid, self.is_done = False, False
-            else: # see if we have consensus
-                mode_score, n = collections.Counter(scores).most_common(1)[0]
-                if 4 * n >= 3 * len(scores): # need at least 3/4 majority
-                    self.score = mode_score
-                    self.is_valid, self.is_done = True, True
-                else: # not good enough consensus
-                    self.score = None
-                    self.is_valid, self.is_done = False, False
+                    self.is_valid = False
+
+                # Now mark as done if valid and long
+                self.is_done = (self.is_valid and len(scores) >= min_grades)
         self.save()
 
     def evidence_count(self):

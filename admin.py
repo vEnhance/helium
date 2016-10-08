@@ -11,7 +11,7 @@ class ProblemScribbleInline(admin.TabularInline):
 
 @admin.register(He.models.Exam)
 class ExamAdmin(admin.ModelAdmin):
-    list_display = ('name', 'id',  'color', 'is_alg_scoring', 'is_ready')
+    list_display = ('name', 'id',  'color', 'is_alg_scoring', 'is_ready', 'min_grades', 'min_override')
     inlines = (ProblemInline,)
 
 @admin.register(He.models.Problem)
