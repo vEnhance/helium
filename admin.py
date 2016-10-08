@@ -20,7 +20,7 @@ class ProblemAdmin(admin.ModelAdmin):
 
 @admin.register(He.models.ExamScribble)
 class ExamScribbleAdmin(admin.ModelAdmin):
-    list_display = ('__unicode__', 'exam', 'mathlete', 'team', 'id')
+    list_display = ('__unicode__', 'exam', 'mathlete', 'team', 'id', 'scan_image')
     inlines = (ProblemScribbleInline,)
 
 @admin.register(He.models.Verdict)
@@ -30,7 +30,7 @@ class VerdictAdmin(admin.ModelAdmin):
 
 @admin.register(He.models.ProblemScribble)
 class ProblemScribbleAdmin(admin.ModelAdmin):
-    list_display = ('__unicode__', 'id', 'verdict', 'examscribble')
+    list_display = ('__unicode__', 'id', 'verdict', 'examscribble', 'scan_image')
 
 @admin.register(He.models.Evidence)
 class EvidenceAdmin(admin.ModelAdmin):
