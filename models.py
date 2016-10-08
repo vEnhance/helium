@@ -3,9 +3,15 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth import models as auth
 from django.core.exceptions import ValidationError
-import registration.models as reg
+import registration
 import logging
 import collections
+
+# These are foreign, in registration
+# So isolate them here, if you are writing for nonHMMT
+MODEL_TEAM = registration.models.AbstractTeam
+MODEL_MATHLETE = registration.models.AbstractMathlete
+
 
 def validateMathleteVsTeam(obj, is_indiv, nonempty=False):
     """Takes an object which has both a "team" and "mathlete" column.
@@ -49,100 +55,13 @@ class Problem(models.Model):
     class Meta:
         unique_together = ('exam', 'problem_number')
 
-# Scribble objects
-class ExamScribble(models.Model):
-    exam = models.ForeignKey(Exam)
-    mathlete = models.ForeignKey(reg.AbstractMathlete, blank=True, null=True)
-    team = models.ForeignKey(reg.AbstractTeam, blank=True, null=True)
-    scan_image = models.ImageField(upload_to='scans/names/', blank=False, null=True)
-         # blargh. This should really be null=False, but it makes testing hard.
-
-    def clean(self):
-        validateMathleteVsTeam(self, self.exam.is_indiv)
-    def __unicode__(self):
-        if self.mathlete is not None:
-            who = unicode(self.mathlete)
-        elif self.team is not None:
-            who = unicode(self.team)
-        else:
-            who = 'ID %05d' % self.id
-        return unicode(self.exam) + ': ' + who
-
-
-    @property
-    def whom(self):
-        return self.mathlete if self.is_indiv else self.team
-    @property
-    def is_indiv(self):
-        return self.exam.is_indiv
-
-    def assign(self, whom):
-        if self.is_indiv: # indiv exam
-            self.assignMathlete(whom)
-        else: # team exam
-            self.assignMathlete(whom)
-
-    def assignTeam(self, team):
-        self.team = team
-        self.save()
-        self.clean()
-        self.updateScribbles()
-    def assignMathlete(self, mathlete):
-        self.mathlete = mathlete
-        self.save()
-        self.clean()
-        self.updateScribbles()
-
-    def updateScribbles(self):
-        """Update all child scribbles once mathlete/team identified"""
-        for ps in self.problemscribble_set.all():
-            ps.verdict.mathlete = self.mathlete
-            ps.verdict.team = self.team
-            ps.verdict.save()
-
-    def checkConflictVerdict(self, whom, purge=False):
-        """Check that no collisions will arise before updateScribbles.
-        Note that purge is DANGEROUS and should use with judgment."""
-        for ps in self.problemscribble_set.all():
-            verdict = ps.verdict
-            problem = verdict.problem
-            try: # search for conflicts
-                bad_v = query_verdict("get", whom, problem)
-            except Verdict.DoesNotExist: 
-                pass
-            else:
-                if bad_v == verdict:
-                    # wef, these are the same?
-                    # OK, something really screwy must have happened,
-                    # but this is fine
-                    continue
-                # UH-OH, there's already a verdict attached
-                if not purge: return bad_v # return counterexample and exit
-                else: # forcefully grab all evidence form v then delete it
-                    for e in bad_v.evidence_set.all():
-                        if e.user == self.user and Evidence.objects.filter\
-                                (verdict=verdict, user=self.user).exists():
-                            # geez this is so bad
-                            logging.warn("Deleting " + str(e.id))
-                            e.delete()
-                        else:
-                            e.verdict = verdict
-                            e.save()
-                    logging.warn("Deleting " + str(bad_v.id) + " = " + str(bad_v))
-                    bad_v.delete()
-                    verdict.updateDecisions()
-        return None # no conflicts
-
-    class Meta:
-        unique_together = (('exam', 'mathlete'), ('exam', 'team'))
-
 class Verdict(models.Model):
     problem = models.ForeignKey(Problem) # You should know which problem
 
     # You might have verdicts for which you don't know whose yet
     # because the verdict is created by a to-be-matched scribble
-    mathlete = models.ForeignKey(reg.AbstractMathlete, blank=True, null=True)
-    team = models.ForeignKey(reg.AbstractTeam, blank=True, null=True)
+    mathlete = models.ForeignKey(MODEL_MATHLETE, blank=True, null=True)
+    team = models.ForeignKey(MODEL_TEAM, blank=True, null=True)
     score = models.IntegerField(blank=True, null=True) # integer, score for the problem
     is_valid = models.BooleanField(default=True,
             help_text = "Whether there is an answer consensus")
@@ -226,7 +145,104 @@ class Verdict(models.Model):
 
     class Meta:
         unique_together = (('problem', 'mathlete'), ('problem', 'team'))
+def query_verdict(method, whom, problem, *args, **kwargs):
+    """Wrapper function to get a verdict for either mathlete or team"""
+    method_func = getattr(Verdict.objects, method)
+    if problem.exam.is_indiv:
+        return method_func(*args, mathlete = whom, problem = problem, **kwargs)
+    else:
+        return method_func(*args, team = whom, problem = problem, **kwargs)
+    
+# Scribble objects
+class ExamScribble(models.Model):
+    exam = models.ForeignKey(Exam)
+    mathlete = models.ForeignKey(MODEL_MATHLETE, blank=True, null=True)
+    team = models.ForeignKey(MODEL_TEAM, blank=True, null=True)
+    scan_image = models.ImageField(upload_to='scans/names/', blank=False, null=True)
+         # blargh. This should really be null=False, but it makes testing hard.
 
+    def clean(self):
+        validateMathleteVsTeam(self, self.exam.is_indiv)
+    def __unicode__(self):
+        if self.mathlete is not None:
+            who = unicode(self.mathlete)
+        elif self.team is not None:
+            who = unicode(self.team)
+        else:
+            who = 'ID %05d' % self.id
+        return unicode(self.exam) + ': ' + who
+
+
+    @property
+    def whom(self):
+        return self.mathlete if self.is_indiv else self.team
+    @property
+    def is_indiv(self):
+        return self.exam.is_indiv
+
+    def assign(self, whom):
+        if self.is_indiv: # indiv exam
+            self.assignMathlete(whom)
+        else: # team exam
+            self.assignMathlete(whom)
+
+    def assignTeam(self, team):
+        self.team = team
+        self.save()
+        self.clean()
+        self.updateScribbles()
+    def assignMathlete(self, mathlete):
+        self.mathlete = mathlete
+        self.save()
+        self.clean()
+        self.updateScribbles()
+
+    def updateScribbles(self, queryset = None):
+        """Update all child scribbles once mathlete/team identified"""
+        if queryset is None:
+            queryset = self.problemscribble_set.all()
+        for ps in queryset:
+            ps.verdict.mathlete = self.mathlete
+            ps.verdict.team = self.team
+            ps.verdict.save()
+
+    def checkConflictVerdict(self, whom=None, purge=False):
+        """Check that no collisions will arise before updateScribbles.
+        Note that purge is DANGEROUS and should use with judgment."""
+        if whom is None:
+            whom = self.whom
+        for ps in self.problemscribble_set.all():
+            verdict = ps.verdict
+            problem = verdict.problem
+            try: # search for conflicts
+                bad_v = query_verdict("get", whom, problem)
+            except Verdict.DoesNotExist: 
+                pass
+            else:
+                if bad_v == verdict:
+                    # wef, these are the same?
+                    # OK, something really screwy must have happened,
+                    # but this is fine
+                    continue
+                # UH-OH, there's already a verdict attached
+                if not purge: return bad_v # return counterexample and exit
+                else: # forcefully grab all evidence form v then delete it
+                    for e in bad_v.evidence_set.all():
+                        if e.user == self.user and Evidence.objects.filter\
+                                (verdict=verdict, user=self.user).exists():
+                            # geez this is so bad
+                            logging.warn("Deleting " + str(e.id))
+                            e.delete()
+                        else:
+                            e.verdict = verdict
+                            e.save()
+                    logging.warn("Deleting " + str(bad_v.id) + " = " + str(bad_v))
+                    bad_v.delete()
+                    verdict.updateDecisions()
+        return None # no conflicts
+
+    class Meta:
+        unique_together = (('exam', 'mathlete'), ('exam', 'team'))
 class ProblemScribble(models.Model):
     examscribble = models.ForeignKey(ExamScribble)
     verdict = models.OneToOneField(Verdict, on_delete=models.CASCADE)
@@ -237,7 +253,7 @@ class ProblemScribble(models.Model):
 
     def submitEvidence(self, *args, **kwargs):
         self.verdict.submitEvidence(*args, **kwargs)
-    
+
 class Evidence(models.Model):
     verdict = models.ForeignKey(Verdict)
     user = models.ForeignKey(auth.User)
@@ -252,12 +268,9 @@ class Evidence(models.Model):
     class Meta:
         unique_together = ('verdict', 'user')
 
-def query_verdict(method, whom, problem, *args, **kwargs):
-    """Wrapper function to get a verdict for either mathlete or team"""
-    method_func = getattr(Verdict.objects, method)
-    if problem.exam.is_indiv:
-        return method_func(*args, mathlete = whom, problem = problem, **kwargs)
-    else:
-        return method_func(*args, team = whom, problem = problem, **kwargs)
+# HMMT object to store pairs of alpha and mathlete
+class MathleteAlpha(models.Model):
+    mathlete = models.OneToOneField(MODEL_MATHLETE, on_delete=models.CASCADE)
+    cached_alpha = models.FloatField(blank=True, null=True)
 
 # vim: expandtab fdm=indent foldnestmax=1
