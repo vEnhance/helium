@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.contrib.staticfiles.templatetags.staticfiles import static
+from django.views.decorators.http import require_POST
 import django.db
 from registration import current as reg
 import helium as He
@@ -149,46 +150,56 @@ def grade_scans(request, problem_id):
             {'problem' : problem, 'exam': problem.exam})
 
 @staff_member_required
+@require_POST
 def ajax_submit_scan(request):
-    if request.method == 'POST':
-        try:
-            scribble_id = int(request.POST['scribble_id'])
-            score = int(request.POST['score'])
-        except ValueError:
-            return HttpResponse("ValueError", content_type="text/plain")
-        user = request.user
-        scribble = He.models.ProblemScribble.objects.get(id=scribble_id)
-        scribble.submitEvidence(user=user, score=score, god_mode=False)
-    else:
-        return HttpResponse("??", content_type="text/plain")
+    """POST arguments: scribble_id, score. RETURN: nothing useful"""
+    try:
+        scribble_id = int(request.POST['scribble_id'])
+        score = int(request.POST['score'])
+    except ValueError: return
+    user = request.user
+    scribble = He.models.ProblemScribble.objects.get(id=scribble_id)
+    scribble.submitEvidence(user=user, score=score, god_mode=False)
     return HttpResponse("OK", content_type="text/plain")
 @staff_member_required
+@require_POST
 def ajax_next_scan(request):
-    if request.method == 'POST':
-        try:
-            problem_id = int(request.POST['problem_id'])
-        except ValueError:
-            return
-        if problem_id == 0: 
-            return
+    """POST arguments: problem_id. RETURN: (scribble id, scribble url)"""
+    try:
+        problem_id = int(request.POST['problem_id'])
+    except ValueError:
+        return
+    if problem_id == 0: return
 
-        problem = He.models.Problem.objects.get(id=problem_id)
-        scribbles = He.models.ProblemScribble.objects.filter(
-                verdict__problem=problem,
-                verdict__is_done=False)
-        random_indices = range(0,scribbles.count())
-        random.shuffle(random_indices)
-        for i in random_indices:
-            s = scribbles[i]
-            # If seen before, toss out
-            if s.verdict.evidence_set.filter(user=request.user).exists():
-                continue
-            else:
-                return HttpResponse(json.dumps( [s.id, s.scan_image.url] ), 
-                    content_type="application/json")
-        else: # done grading!
-            return HttpResponse(json.dumps( [0, DONE_IMAGE_URL] ),
-                    content_type="application/json")
+    problem = He.models.Problem.objects.get(id=problem_id)
+    scribbles = He.models.ProblemScribble.objects.filter(
+            verdict__problem=problem,
+            verdict__is_done=False)
+    random_indices = range(0,scribbles.count())
+    random.shuffle(random_indices)
+    for i in random_indices:
+        s = scribbles[i]
+        # If seen before, toss out
+        if s.verdict.evidence_set.filter(user=request.user).exists():
+            continue
+        else:
+            return HttpResponse(json.dumps( [s.id, s.scan_image.url] ), 
+                content_type="application/json")
+    else: # done grading!
+        return HttpResponse(json.dumps( [0, DONE_IMAGE_URL] ),
+                content_type="application/json")
+@staff_member_required
+@require_POST
+def ajax_prev_evidence(request):
+    """POST arguments: problem_id, and either id_mathlete / id_team.
+    RETURN: a tuple of previous responses (starting with None)."""
+    try:
+        exam_id = int(request.POST['problem_id'])
+    except ValueError:
+        return
+    
+
+
 
 @staff_member_required
 def progress_problems(request):

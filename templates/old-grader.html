@@ -23,8 +23,8 @@ and then hand it to a third person to triple grade.</p>
 
 <form action="/helium/old-grader/{{exam.id}}/" method="post">
 {% csrf_token %}
-<table class="table"e>
-{{ oldform.as_table }}
+<table class="table">
+	{% include "base_form.html" with form=oldform %}
 </table>
 <input type="hidden" name="exam_id" value="{{ exam.id }}">
 <input type="submit" value="Enter Scores">
@@ -36,7 +36,7 @@ and then hand it to a third person to triple grade.</p>
 <script type="text/javascript">
 $(document).ready(function() {
 	$('#id_mathlete,#id_team').change(function(){
-		alert($(this).val());
+		console.log($(this).val());
 	}).selectToAutocomplete();
 });
 </script>

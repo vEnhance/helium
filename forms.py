@@ -41,19 +41,20 @@ class ExamGradingRobustForm(forms.Form):
             n = problem.problem_number
             kwargs = {
                     'label' : unicode(problem),
-                    'widget' : forms.TextInput,
+                    # 'widget' : forms.TextInput,
                     'required' : False,
                     'min_value' : 0,
-                    # 'help_text' : "Answer is %s" %problem.answer,
                     }
             if not problem.allow_partial:
                 kwargs['max_value'] = 1
-                kwargs['help_text'] = "Input 0 or 1"
+                kwargs['help_text'] = "Input 0 or 1."
             elif problem.weight is not None:
                 kwargs['max_value'] = problem.weight
-                kwargs['help_text'] = "Input an integer from 0 to %d" %problem.weight
+                kwargs['help_text'] = "Input an integer from 0 to %d." %problem.weight
             else:
-                kwargs['help_text'] = "Input a nonnegative integer"
+                kwargs['help_text'] = "Input a nonnegative integer."
+            if problem.answer.strip() != '':
+                kwargs['help_text'] += '  (Answer is %s.)' %problem.answer
 
             self.fields['p' + str(n)] = forms.IntegerField(**kwargs)
 
@@ -80,8 +81,7 @@ class ExamGradingRobustForm(forms.Form):
             if v.score is not None:
                 if user_score != v.score and data['force'] is False:
                     self.add_error(field_name,
-                            "Conflicting score for %s (database has score %d)" \
-                            % (problem, v.score))
+                            "Conflict: Database has score %d" % v.score)
                     continue
             v.submitEvidence(user = self.user, score = user_score)
             num_graded += 1

@@ -2,4 +2,23 @@ ul.errorlist {
 	color : red;
 	list-style-type: none;
 	font-weight: bold;
+	padding-left: 0pt;
+}
+
+.helptext {
+	color : blue;
+	font: Trebuchet MS;
+	font-size: 8pt;
+}
+
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+	.webkit-appearance: none;
+	margin: 0;
+}
+input[type='number'] {
+	-moz-appearance: textfield;
+	width: 60px;
+	height: 9px;
 }
