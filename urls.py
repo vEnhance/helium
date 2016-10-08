@@ -11,7 +11,7 @@ urlpatterns = [
     url(r'^old-grader/$', views.old_grader),
     url(r'^progress-problems/$', views.progress_problems),
     url(r'^progress-scans/$', views.progress_scans),
-    url(r'^submit-scan/$', views.submit_scan), # JSON, for Ajax
-    url(r'^next-scan/$', views.next_scan),     # JSON, for Ajax
+    url(r'^ajax/submit-scan/$', views.ajax_submit_scan), # JSON, for Ajax
+    url(r'^ajax/next-scan/$', views.ajax_next_scan),     # JSON, for Ajax
     url(r'^$', views.index),
 ]

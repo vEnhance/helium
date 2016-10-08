@@ -14,15 +14,6 @@ import random
 
 DONE_IMAGE_URL = static('img/done.jpg')
 
-@staff_member_required
-def index(request):
-    context = {
-            'scanform' : forms.ProblemSelectForm(),
-            'examform' : forms.ExamSelectForm(),
-            'matchform' : forms.ExamSelectForm(),
-            }
-    return render(request, "helium.html", context)
-
 def redir_obj_id(request, target, key, form_type):
     """To be used with a select form. Redirects to page with correct ID."""
     if not request.method == "POST":
@@ -36,13 +27,22 @@ def redir_obj_id(request, target, key, form_type):
     else:
         return HttpResponseNotFound("Invalid object ID provided", content_type="text/plain")
 
-### OLD GRADER VIEWS
+@staff_member_required
+def index(request):
+    context = {
+            'scanform' : forms.ProblemSelectForm(),
+            'examform' : forms.ExamSelectForm(),
+            'matchform' : forms.ExamSelectForm(),
+            }
+    return render(request, "helium.html", context)
+
 @staff_member_required
 def old_grader_redir(request):
     return redir_obj_id(request,
             target = '/helium/old-grader/',
             key = 'exam',
             form_type = forms.ExamSelectForm)
+@staff_member_required
 def old_grader(request, exam_id):
     exam_id = int(exam_id)
     try:
@@ -87,6 +87,7 @@ def match_exam_scans_redir(request):
             target = '/helium/match-exam-scans/',
             key = 'exam',
             form_type = forms.ExamSelectForm)
+@staff_member_required
 def match_exam_scans(request, exam_id):
     try:
         exam = He.models.Exam.objects.get(id=exam_id)
@@ -135,8 +136,6 @@ def match_exam_scans(request, exam_id):
                 }
     return render(request, "match-exam-scans.html", context)
 
-
-### SCAN GRADER VIEWS
 @staff_member_required
 def grade_scans_redir(request):
     return redir_obj_id(request,
@@ -150,9 +149,7 @@ def grade_scans(request, problem_id):
             {'problem' : problem, 'exam': problem.exam})
 
 @staff_member_required
-def submit_scan(request):
-    # Takes in (from AJAX POST) a scribble id and score
-    # and enters it as evidence into the database
+def ajax_submit_scan(request):
     if request.method == 'POST':
         try:
             scribble_id = int(request.POST['scribble_id'])
@@ -165,9 +162,8 @@ def submit_scan(request):
     else:
         return HttpResponse("??", content_type="text/plain")
     return HttpResponse("OK", content_type="text/plain")
-
 @staff_member_required
-def next_scan(request):
+def ajax_next_scan(request):
     if request.method == 'POST':
         try:
             problem_id = int(request.POST['problem_id'])
@@ -219,7 +215,6 @@ def progress_problems(request):
     context = {'columns' : columns, 'table' : table, 'pagetitle' : 'Scans Progress'}
     logging.warn(table)
     return render(request, "gentable.html", context)
-
 @staff_member_required
 def progress_scans(request):
     examscribbles = He.models.ExamScribble.objects.filter(exam__is_ready=True)

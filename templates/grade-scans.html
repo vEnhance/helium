@@ -30,7 +30,7 @@ $(document).ready(function() {
 	var sid = -1; // ID number of scribble we're grading
 	function next_scan() {
 		$.ajax({
-			url : "/helium/next-scan/",
+			url : "/helium/ajax/next-scan/",
 			type : "POST",
 			data: { problem_id : {{ problem.id }} },
 		}).done(function(result) {
@@ -51,7 +51,7 @@ $(document).ready(function() {
 			{% endif %}
 			console.log("Submitting score for " + sid);
 			$.ajax({
-				url : "/helium/submit-scan/",
+				url : "/helium/ajax/submit-scan/",
 				type : "POST",
 				data: { scribble_id : sid, score : score },
 			}).done(function(result) {
