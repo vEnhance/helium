@@ -12,14 +12,14 @@ For an all-or-nothing problem,
 input a score of either 0 or 1 in the textbox below, then press return.
 You will then automatically be shown a different scan.</p>
 
-<div id="scan_img_div"><img src="" id="scan_img"/></div>
-<div id="controls">
-<h4>Input Score</h4>
-<p><input id="score" name="score" /></p>
 <p><b>Ludicrous Speed:</b> <input type="checkbox" id="ludicrous_speed" /></p>
 <p>(Enable ludicrous speed only if you plan to enter one-digit answers only.
 If enabled, you don't need to press "return".)
 </p>
+<div id="scan_img_div"><img src="" id="scan_img"/></div>
+<div id="controls">
+<h4>Input Score</h4>
+<p><input id="score" name="score" /></p>
 </div>
 {% endblock %}
 
@@ -66,7 +66,7 @@ $(document).ready(function() {
 				console.log(result);
 			});
 			next_scan();
-			if (ludicrous_speed) $("#score").val(''); // reset
+			$("#score").val(''); // reset
 		}
 	});
 });
