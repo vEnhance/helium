@@ -100,11 +100,9 @@ class ExamScribbleMatchRobustForm(forms.Form):
         if self.exam.is_indiv:
             self.fields['mathlete'] = forms.ModelChoiceField(\
                     queryset = MATHLETES.all())
-            self.fields['mathlete'].widget.attrs.update({'autofocus': 'autofocus'})
         else:
             self.fields['team'] = forms.ModelChoiceField(\
                     queryset = TEAMS.all())
-            self.fields['team'].widget.attrs.update({'autofocus': 'autofocus'})
 
         # TODO it would be nice if there was an easy way
         # to filter for mathletes / teams which aren't already matched
