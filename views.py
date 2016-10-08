@@ -22,8 +22,6 @@ def _redir_obj_id(request, target, key, form_type):
     form = form_type(request.POST)
     if form.is_valid():
         obj = form.cleaned_data[key]
-        logging.warn(obj)
-        logging.warn(obj.id)
         return HttpResponseRedirect(target + str(obj.id))
     else:
         return HttpResponseNotFound("Invalid object ID provided", content_type="text/plain")
@@ -193,7 +191,6 @@ def ajax_next_scan(request):
 def ajax_prev_evidence(request):
     """POST arguments: problem_id, and either id_mathlete / id_team.
     RETURN: a list of pairs (num, answer) where answer may be None"""
-    print request.POST
     try:
         exam_id     = int(request.POST['exam_id'])
         exam = He.models.Exam.objects.get(id = exam_id)
@@ -246,7 +243,6 @@ def progress_problems(request):
         table.append(tr)
 
     context = {'columns' : columns, 'table' : table, 'pagetitle' : 'Scans Progress'}
-    logging.warn(table)
     return render(request, "gentable.html", context)
 @staff_member_required
 def progress_scans(request):
@@ -266,7 +262,6 @@ def progress_scans(request):
         table.append(tr)
 
     context = {'columns' : columns, 'table' : table, 'pagetitle' : 'Scans Progress'}
-    logging.warn(table)
     return render(request, "gentable.html", context)
 
 
