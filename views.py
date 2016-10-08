@@ -37,6 +37,7 @@ def index(request):
             }
     return render(request, "helium.html", context)
 
+
 @staff_member_required
 def old_grader_redir(request):
     return _redir_obj_id(request,
@@ -81,6 +82,7 @@ def old_grader(request, exam_id):
                 'whom' : None,
                 }
     return render(request, "old-grader.html", context)
+
 
 @staff_member_required
 def match_exam_scans_redir(request):
@@ -137,6 +139,7 @@ def match_exam_scans(request, exam_id):
                 }
     return render(request, "match-exam-scans.html", context)
 
+
 @staff_member_required
 def grade_scans_redir(request):
     return _redir_obj_id(request,
@@ -148,6 +151,7 @@ def grade_scans(request, problem_id):
     problem = He.models.Problem.objects.get(id=problem_id)
     return render(request, "grade-scans.html",
             {'problem' : problem, 'exam': problem.exam})
+
 
 @staff_member_required
 @require_POST
@@ -220,6 +224,7 @@ def ajax_prev_evidence(request):
             output.append( (n, e.score) )
     return _json( output )
 
+
 @staff_member_required
 def progress_problems(request):
     verdicts = He.models.Verdict.objects.filter(problem__exam__is_ready=True)
@@ -263,6 +268,5 @@ def progress_scans(request):
 
     context = {'columns' : columns, 'table' : table, 'pagetitle' : 'Scans Progress'}
     return render(request, "gentable.html", context)
-
 
 # vim: expandtab fdm=indent foldnestmax=1

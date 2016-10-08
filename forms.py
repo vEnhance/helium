@@ -74,7 +74,7 @@ class ExamGradingRobustForm(forms.Form):
         num_graded = 0
         for problem in self.problems:
             field_name = 'p' + str(problem.problem_number)
-            v, _ = He.models.query_verdict('get_or_create', whom, problem)
+            v, _ = He.models.query_verdict_by_problem('get_or_create', whom, problem)
             user_score = data.get(field_name, None)
             if user_score is None:
                 continue

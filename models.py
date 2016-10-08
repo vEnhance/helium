@@ -6,6 +6,7 @@ from django.core.exceptions import ValidationError
 import registration
 import logging
 import collections
+from django.db.models import Sum
 
 # These are foreign, in registration
 # So isolate them here, if you are writing for nonHMMT
@@ -146,13 +147,20 @@ class Verdict(models.Model):
 
     class Meta:
         unique_together = (('problem', 'mathlete'), ('problem', 'team'))
-def query_verdict(method, whom, problem, *args, **kwargs):
+def query_verdict_by_problem(method, whom, problem, *args, **kwargs):
     """Wrapper function to get a verdict for either mathlete or team"""
     method_func = getattr(Verdict.objects, method)
     if problem.exam.is_indiv:
         return method_func(*args, mathlete = whom, problem = problem, **kwargs)
     else:
         return method_func(*args, team = whom, problem = problem, **kwargs)
+def query_verdict_by_exam(method, whom, exam, *args, **kwargs):
+    """Wrapper function to get a verdict for either mathlete or team"""
+    method_func = getattr(Verdict.objects, method)
+    if exam.is_indiv:
+        return method_func(*args, mathlete = whom, problem__exam = exam, **kwargs)
+    else:
+        return method_func(*args, team = whom, problem__exam = exam, **kwargs)
     
 # Scribble objects
 class ExamScribble(models.Model):
@@ -216,7 +224,7 @@ class ExamScribble(models.Model):
             verdict = ps.verdict
             problem = verdict.problem
             try: # search for conflicts
-                bad_v = query_verdict("get", whom, problem)
+                bad_v = query_verdict_by_problem("get", whom, problem)
             except Verdict.DoesNotExist: 
                 pass
             else:
@@ -275,4 +283,14 @@ class MathleteAlpha(models.Model):
     mathlete = models.OneToOneField(MODEL_MATHLETE, on_delete=models.CASCADE)
     cached_alpha = models.FloatField(blank=True, null=True)
 
-# vim: expandtab fdm=indent foldnestmax=1
+# Auxiliary functions
+def sumExamScore(exam, whom):
+    queryset = query_verdict_by_exam('filter',
+            whom, exam, is_valid=True)
+    if exam.is_alg_scoring:
+        return queryset.filter(score=1).aggregate(Sum('problem__cached_beta'))
+    else:
+        return sum([
+            v.problem.weight if not v.problem.allow_partial else v.score \
+            for v in queryset.exclude(score=0)])
+
