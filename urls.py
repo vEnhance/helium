@@ -2,7 +2,7 @@ from django.conf.urls import url
 import helium.views as views
 
 urlpatterns = [
-    url(r'^grade-scans/([0-9])+$', views.grade_scans),
+    url(r'^grade-scans/([0-9]+)$', views.grade_scans),
     url(r'^grade-scans-redir/$', views.grade_scans_redir),
     url(r'^old-grader/([0-9]+)/$', views.old_grader),
     url(r'^old-grader-redir/$', views.old_grader_redir),
