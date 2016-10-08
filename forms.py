@@ -61,7 +61,7 @@ class ExamGradingRobustForm(forms.Form):
         self.fields['force'] = forms.BooleanField(
                 label = 'Override',
                 required = False,
-                help_text = "Use this to override a merge conflict")
+                help_text = "Use this to override a merge conflict (including with yourself!)")
 
     def clean(self):
         if not self.user.is_staff:
@@ -139,7 +139,7 @@ class ExamScribbleMatchRobustForm(forms.Form):
             admin_url = "/admin/helium/verdict/" + str(bad_v.id) + "/change/"
             self.add_error(None, django.utils.safestring.mark_safe(
                     'A verdict already exists for a problem/user pair. '
-                    'Something is very wrong. Consult '
+                    'Something is wrong! Consult '
                     '<a href="%s">%s</a>. ' %(admin_url, bad_v)))
         return data
 

@@ -227,14 +227,15 @@ class ExamScribble(models.Model):
                     continue
                 # UH-OH, there's already a verdict attached
                 if not purge: return bad_v # return counterexample and exit
-                else: # forcefully grab all evidence form v then delete it
+                else: # forcefully grab all evidence from v then delete it
                     for e in bad_v.evidence_set.all():
-                        if e.user == self.user and Evidence.objects.filter\
-                                (verdict=verdict, user=self.user).exists():
-                            # geez this is so bad
+                        if Evidence.objects.filter(verdict=verdict, user=e.user).exists():
+                            # geez this is so bad --- we'd get a uniqueness integrity error
+                            # on move so delete the offending e
                             logging.warn("Deleting " + str(e.id))
                             e.delete()
                         else:
+                            # No integrity
                             e.verdict = verdict
                             e.save()
                     logging.warn("Deleting " + str(bad_v.id) + " = " + str(bad_v))
