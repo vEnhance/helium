@@ -24,7 +24,7 @@ class ExamGradingRobustForm(forms.Form):
         if not user.is_staff:
             raise ValueError("User is not staff")
         super(forms.Form, self).__init__(*args, **kwargs)
-        problems = exam.problem_set.all().order_by('problem_number')
+        problems = exam.problems.all()
 
         self.exam = exam
         self.user = user

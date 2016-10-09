@@ -42,6 +42,9 @@ class Exam(models.Model):
             help_text='Number of graders required to override a grading conflict.')
 
     def __unicode__(self): return self.name
+    @property
+    def problems(self):
+        return self.problem_set.order_by('problem_number')
 
 class Problem(models.Model):
     exam = models.ForeignKey(Exam)
@@ -288,9 +291,11 @@ def get_exam_scores(exam, whom):
     queryset = query_verdict_by_exam('filter', whom, exam, is_valid=True)\
                     .order_by('problem__problem_number')
     if exam.is_alg_scoring:
-        return [v.problem.cached_beta * v.score for v in queryset]
+        return [v.problem.cached_beta * v.score \
+                if v.score != 0 else 0 for v in queryset]
     else:
         return [v.problem.weight*v.score
             if not v.problem.allow_partial else v.score
             for v in queryset]
 
+# vim: expandtab
