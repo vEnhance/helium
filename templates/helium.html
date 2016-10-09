@@ -18,7 +18,7 @@
 
 <h4>Grade by Scans</h4>
 <form action="/helium/grade-scans-redir/" method="post">
-	<div class="row">
+	<div class="clearfix">
 		<div class="col-xs-8">
 		{% csrf_token %}
 		{{ scanform.as_p }}
@@ -29,7 +29,7 @@
 	</div>
 </form>
 <form action="/helium/match-exam-scans-redir/" method="post">
-	<div class="row">
+	<div class="clearfix">
 		<div class="col-xs-8">
 		{% csrf_token %}
 		{{ matchform.as_p }}
@@ -42,7 +42,7 @@
 
 <h4>Grade by Physical Papers</h4>
 <form action="/helium/old-grader-redir/" method="post">
-	<div class="row">
+	<div class="clearfix">
 		<div class="col-xs-8">
 		{% csrf_token %}
 		{{ examform.as_p }}
