@@ -57,8 +57,16 @@
 <ul>
 	<li><a href="/helium/progress-problems/">Progress Grading</a></li>
 	<li><a href="/helium/progress-scans/">Progress Matching Scans</a></li>
-	<li><a href="/helium/reports/individual/">Print Individual Results</a></li>
 	<li><a href="/admin/helium/">Django Admin</a></li>
+</ul>
+<h4>Results</h4>
+Note that these are not updated in realtime.
+<ul>
+	<li><a href="/helium/reports/short/">Print Short Results</a></li>
+	<li><a href="/helium/reports/extended/">Print Extended Results</a></li>
+	{% if request.user.is_superuser %}
+	<li><a href="/helium/reports/full/">Print Full Results</a></li>
+	{% endif %}
 </ul>
 
 <h4>Administration</h4>
