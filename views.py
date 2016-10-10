@@ -56,8 +56,6 @@ def _redir_obj_id(request, target, key, form_type):
         return HttpResponseRedirect(target + str(obj.id))
     else:
         return HttpResponseNotFound("Invalid object ID provided", content_type="text/plain")
-def _json(obj):
-    return HttpResponse(json.dumps(obj), content_type='application/json')
 
 @staff_member_required
 def index(request):
@@ -200,27 +198,30 @@ def ajax_submit_scan(request):
 @require_POST
 def ajax_next_scan(request):
     """POST arguments: problem_id. RETURN: (scribble id, scribble url)"""
-    try:
-        problem_id = int(request.POST['problem_id'])
-    except ValueError:
-        return
+    problem_id = int(request.POST['problem_id'])
+    print problem_id
     if problem_id == 0: return
 
     problem = He.models.Problem.objects.get(id=problem_id)
     scribbles = He.models.ProblemScribble.objects.filter(
             verdict__problem=problem,
             verdict__is_done=False)
+    print scribbles
     random_indices = range(0,scribbles.count())
     random.shuffle(random_indices)
     for i in random_indices:
+        print i
         s = scribbles[i]
+        print s
         # If seen before, toss out
         if s.verdict.evidence_set.filter(user=request.user).exists():
             continue
         else:
-            return _json( [s.id, s.scan_image.url] ),
+            return HttpResponse( json.dumps([s.id, s.scan_image.url]), \
+                    content_type = 'application/json' )
     else: # done grading!
-        return _json( [0, DONE_IMAGE_URL ] )
+        return HttpResponse( json.dumps([0, DONE_IMAGE_URL]), \
+                content_type = 'application/json' )
 @staff_member_required
 @require_POST
 def ajax_prev_evidence(request):
@@ -253,7 +254,7 @@ def ajax_prev_evidence(request):
             output.append( (n, None) )
         else:
             output.append( (n, e.score) )
-    return _json( output )
+    return HttpResponse( json.dumps(output), content_type='application/json' )
 
 
 @staff_member_required
