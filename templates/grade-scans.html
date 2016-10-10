@@ -4,7 +4,7 @@
 {% block title %}Helium | Grade Scans{% endblock %}
 
 {% block layout-content %}
-<h3>Grading: {{ problem }} (Answer {{ problem.answer }})</h3>
+<h3>Grading: {{ problem }}</h3>
 
 <p><i>Instructions:</i> 
 Compare the answer for the given problem with the image shown below.
@@ -18,7 +18,7 @@ If enabled, you don't need to press "return".)
 </p>
 <div id="scan_img_div"><img src="" id="scan_img"/></div>
 <div id="controls">
-<h4>Input Score</h4>
+<h4>Input Score (Answer {{problem.answer }})</h4>
 <p><input id="score" name="score" type="number" /></p>
 </div>
 {% endblock %}
