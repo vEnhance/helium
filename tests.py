@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
 import helium as He
-import registration.models as reg
 
 class GradingTestCase(TestCase):
     def setUp(self):
