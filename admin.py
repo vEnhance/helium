@@ -2,12 +2,19 @@ from django.contrib import admin
 import helium as He
 
 # Inline classes, so you can e.g. edit weight
+class EntityInline(admin.TabularInline):
+    model = He.models.Entity
 class ProblemInline(admin.TabularInline):
     model = He.models.Problem
 class EvidenceInline(admin.TabularInline):
     model = He.models.Evidence
 class ProblemScribbleInline(admin.TabularInline):
     model = He.models.ProblemScribble
+
+@admin.register(He.models.Entity)
+class ExamAdmin(admin.ModelAdmin):
+    list_display = ('name', 'team', 'is_team')
+    inlines = (EntityInline,)
 
 @admin.register(He.models.Exam)
 class ExamAdmin(admin.ModelAdmin):
