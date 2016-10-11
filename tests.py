@@ -20,15 +20,7 @@ class GradingTestCase(TestCase):
         self.prob3  = He.models.Problem.objects.create(exam = self.exam, problem_number = 3)
 
         self.verdict = He.models.Verdict.objects.create(problem=self.prob1)
-
-        # Let's make a black mop team
-        self.mop    = reg.Organization.objects.create(name = "MOP",
-                address="Lincoln, NE", coach = self.evan)
-        self.team   = reg.TeamFeb.objects.create(name = "Black MOP 1",
-                shortname = "MOP K1", organization = self.mop)
-        self.mathlete = reg.MathleteFeb.objects.create(
-                first = "Example", last = "Student",
-                organization = self.mop, team = self.team)
+        self.mathlete = He.models.Entity.objects.create(name="Student Name", is_team=False)
 
     def test_doublegrade_1(self):
         self.assertEqual(self.verdict.score, None)
@@ -103,18 +95,11 @@ class GradingTestCase(TestCase):
         es = He.models.ExamScribble.objects.create(exam=self.exam)
         ps1 = He.models.ProblemScribble.objects.create(examscribble = es,\
                 verdict = self.verdict)
-        self.assertEqual(self.verdict.mathlete, None)
+        self.assertEqual(self.verdict.entity, None)
 
-        try:
-            es.assignTeam(self.team) # should fail
-        except ValidationError:
-            pass
-        else:
-            self.fail("System allowed assigning team to individual test")
-
-        es.assignMathlete(self.mathlete) # This is better
-        self.assertEqual(es.mathlete, self.mathlete)
+        es.assign(self.mathlete)
+        self.assertEqual(es.entity, self.mathlete)
         self.verdict.refresh_from_db()
-        self.assertEqual(self.verdict.mathlete.id, self.mathlete.id)
+        self.assertEqual(self.verdict.entity.id, self.mathlete.id)
 
-# vim: fdm=indent foldnestmax=2 foldlevel=1
+# vim: fdm=indent foldnestmax=2 foldlevel=1 expandtab
