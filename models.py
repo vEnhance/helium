@@ -8,6 +8,7 @@ import logging
 import collections
 from django.db.models import Sum
 
+
 # These are foreign, in registration
 # So isolate them here, if you are writing for nonHMMT
 MODEL_TEAM = registration.models.AbstractTeam
@@ -294,8 +295,11 @@ def get_exam_scores(exam, whom):
         return [v.problem.cached_beta * v.score \
                 if v.score != 0 else 0 for v in queryset]
     else:
-        return [v.problem.weight*v.score
+        return [v.problem.weight * v.score
             if not v.problem.allow_partial else v.score
             for v in queryset]
+def get_alpha(mathlete):
+    return MathleteAlpha.objects.get(mathlete=mathlete).cached_alpha
+
 
 # vim: expandtab

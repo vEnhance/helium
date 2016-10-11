@@ -309,13 +309,10 @@ def _heading(s):
     return s.upper() + "\n" + "=" * 60 + "\n"
 class NameResultRow:
     rank = None # assigned by parent ExamPrinter
-    def __init__(self, name, scores = None, total = None):
+    def __init__(self, name, scores):
         self.name = name
-        if scores is not None:
-            self.scores = scores
-            self.total = sum(scores)
-        else:
-            self.total = total
+        self.scores = scores
+        self.total = sum(scores)
 class ResultPrinter:
     def __init__(self, results):
         results.sort(key = lambda r : -r.total)
@@ -325,17 +322,17 @@ class ResultPrinter:
             elif results[n-1].total != result.total: r = n+1
             result.rank = r
         self.results = results
-    def get_table(self, exam = None, num_show = None, num_named = None):
-        output = _heading(unicode(exam)) if exam is not None else ""
+    def get_table(self, heading = None, num_show = None, num_named = None):
+        output = _heading(heading) if heading is not None else ''
         for result in self.results:
             if num_show is not None and result.rank > num_show:
                 break
             output += "%4d. " % result.rank
             output += "%6.3f"  % result.total if type(result.total) == float \
                     else "%6d" % result.total
-            if exam is not None:
+            if len(result.scores) > 1: # sum of more than one thing
                 output += "  |  "
-                output += " ".join(["%4.1f"%x if type(x)==float else "%4d"%x \
+                output += " ".join(["%4.2f"%x if type(x)==float else "%4d"%x \
                         for x in result.scores])
             output += "  |  "
             if num_named is None or result.rank <= num_named:
@@ -345,21 +342,21 @@ class ResultPrinter:
         return output
 
 def _report(print_alphas = True, num_show = None, num_named = None):
-    indiv_exams = He.models.Exam.objects.filter(is_indiv=True, is_ready=True)
     output = '<!DOCTYPE html>' + "\n"
     output += '<html><head></head><body>' + "\n"
     output += '<pre style="font-family:dejavu sans mono;">' + "\n"
     output += INIT_TEXT_BANNER + "\n\n"
  
-    # Individual
+    ## Individual Results
+    indiv_exams = He.models.Exam.objects.filter(is_indiv=True)
     if print_alphas:
-        output += _heading("Top Individuals (Alpha Values)")
         results = [NameResultRow(name = mathlete.name_with_team,
-                    total = He.models.MathleteAlpha.objects\
-                            .get(mathlete=mathlete).cached_alpha)
+                    scores = [He.models.get_alpha(mathlete)])
                     for mathlete in reg.MATHLETES.all()]
-        output += ResultPrinter(results).get_table\
-                (exam = None, num_show = num_show, num_named = num_named)
+        output += ResultPrinter(results)\
+                .get_table("Overall Individuals (Alphas)", \
+                num_show = num_show, num_named = num_named)
+    output += "\n"
 
     for exam in indiv_exams:
         results = [NameResultRow(
@@ -367,8 +364,47 @@ def _report(print_alphas = True, num_show = None, num_named = None):
                 scores = He.models.get_exam_scores(exam, mathlete)) \
                 for mathlete in reg.MATHLETES.all()]
         result_printer = ResultPrinter(results)
-        output += result_printer.get_table(exam, num_show = num_show, num_named = num_named)
-        output += "\n"*2
+        output += result_printer.get_table(heading = exam.name, \
+                num_show = num_show, num_named = num_named)
+    output += "\n"
+
+    ## Team Results
+    team_exams = He.models.Exam.objects.filter(is_indiv=False)
+    team_exam_scores = collections.defaultdict(list) # team.name -> list of scores
+
+    for exam in team_exams:
+        results = [NameResultRow(
+            name = team.name,
+            scores = He.models.get_exam_scores(exam, team)) \
+            for team in reg.TEAMS.all()]
+        result_printer = ResultPrinter(results)
+        output += result_printer.get_table(heading = exam.name, \
+                num_show = num_show, num_named = num_named)
+        # Use for sweeps
+        this_exam_weight = 400.0/max([r.total for r in results])
+        for r in results:
+            team_exam_scores[r.name].append(this_exam_weight * r.total)
+
+    # Now compute individual scores
+    results = []
+    for team in reg.TEAMS.all():
+        scores = [He.models.get_alpha(m) for m in reg.MATHLETES.filter(team = team)]
+        scores.sort(reverse=True)
+        results.append(NameResultRow(name = team.name, scores = scores))
+    output += ResultPrinter(results).get_table(heading = "Team Individual Aggregate", \
+            num_show = num_show, num_named = num_named)
+    indiv_weight = 800.0/max([r.total for r in results])
+    team_exam_scores[0] = {} # for indiv
+    for r in results:
+        team_exam_scores[r.name].append(indiv_weight * r.total)
+
+    output += "\n"
+    # Finally, sweepstakes
+    results = [NameResultRow(name = team.name,
+        scores = team_exam_scores[team.name])
+        for team in reg.TEAMS.all()]
+    output += ResultPrinter(results).get_table(heading = "Sweepstakes", \
+            num_show = num_show, num_named = num_named)
    
     output += "This report was generated by Helium at " + time.strftime('%c') + "."
     output += "\n\n"
