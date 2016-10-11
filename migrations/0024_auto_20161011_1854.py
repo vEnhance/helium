@@ -30,6 +30,24 @@ class Migration(migrations.Migration):
                 ('entity', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='helium.Entity')),
             ],
         ),
+        migrations.AddField(
+            model_name='examscribble',
+            name='entity',
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='helium.Entity'),
+        ),
+        migrations.AddField(
+            model_name='verdict',
+            name='entity',
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='helium.Entity'),
+        ),
+        migrations.AlterUniqueTogether(
+            name='verdict',
+            unique_together=set([('problem', 'entity')]),
+        ),
+        migrations.AlterUniqueTogether(
+            name='examscribble',
+            unique_together=set([('exam', 'entity')]),
+        ),
         migrations.RemoveField(
             model_name='mathletealpha',
             name='mathlete',
@@ -42,10 +60,6 @@ class Migration(migrations.Migration):
             model_name='examscribble',
             name='team',
         ),
-        migrations.AlterUniqueTogether(
-            name='examscribble',
-            unique_together=set([('exam', 'entity')]),
-        ),
         migrations.RemoveField(
             model_name='verdict',
             name='mathlete',
@@ -54,21 +68,7 @@ class Migration(migrations.Migration):
             model_name='verdict',
             name='team',
         ),
-        migrations.AlterUniqueTogether(
-            name='verdict',
-            unique_together=set([('problem', 'entity')]),
-        ),
         migrations.DeleteModel(
             name='MathleteAlpha',
-        ),
-        migrations.AddField(
-            model_name='examscribble',
-            name='entity',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='helium.Entity'),
-        ),
-        migrations.AddField(
-            model_name='verdict',
-            name='entity',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='helium.Entity'),
         ),
     ]
