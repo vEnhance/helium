@@ -3,32 +3,46 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth import models as auth
 from django.core.exceptions import ValidationError
-import registration
 import logging
 import collections
 from django.db.models import Sum
 
 
-# These are foreign, in registration
-# So isolate them here, if you are writing for nonHMMT
-MODEL_TEAM = registration.models.AbstractTeam
-MODEL_MATHLETE = registration.models.AbstractMathlete
+# Originally referenced registration models,
+# but it seemed cleaner to just create a copy of the data here,
+# so that (i) Helium is entirely divorced from registration,
+# (ii) makes it easier to use Helium externally,
+# (iii) reg models not written by me and all code not by me is bad.
+# Actually re (iii) the whole {Mathlete/Team}{Nov/Feb} is bad
+# and I think it should go die in a burning hole
 
-def validateMathleteVsTeam(obj, is_indiv, nonempty=False):
-    """Takes an object which has both a "team" and "mathlete" column.
-    Args is_indiv, nonempty are booleans."""
-    if is_indiv:
-        if obj.team is not None:
-            obj.team = None
-            raise ValidationError("Individual problems can't have teams attached")
-        if obj.mathlete is None and nonempty is True:
-            raise ValidationError("Individual verdict has no individual attached")
-    else:
-        if obj.mathlete is not None:
-            obj.mathlete = None
-            raise ValidationError("Team problems can't have mathletes attached")
-        if obj.team is None and nonempty is True:
-            raise ValidationError("Team problems has no team attached")
+# Moreover, teams and mathletes really should be the same object
+# (namely, "contest takers")
+
+# Contestant objects
+class Entity(models.Model): # This is EITHER a team or mathlete (i.e. exam taker)
+    name = models.CharField(max_length=80)
+    team = models.ForeignKey('self', null=True, blank=True)
+    is_team = models.BooleanField(default=False)
+
+    def clean(self):
+        if self.team is not None and not self.is_team:
+            raise ValidationError("LOL what?")
+
+    def __unicode__(self):
+        return self.name
+    @property
+    def verbose_name(self):
+        if self.is_team:
+            return '%s [%s]' %(self.name, self.team.name)
+        else:
+            return self.team.name
+
+    objects = models.Manager() # why do I have to repeat this?
+    teams = TeamManager()
+    mathletes = MathleteManager()
+
+# Exam/problem objects
 
 class Exam(models.Model):
     name = models.CharField(max_length=50, help_text='Name of exam')
@@ -64,27 +78,23 @@ class Problem(models.Model):
     class Meta:
         unique_together = ('exam', 'problem_number')
 
+# Grading Objects
+
 class Verdict(models.Model):
     problem = models.ForeignKey(Problem) # You should know which problem
 
     # You might have verdicts for which you don't know whose yet
     # because the verdict is created by a to-be-matched scribble
-    mathlete = models.ForeignKey(MODEL_MATHLETE, blank=True, null=True)
-    team = models.ForeignKey(MODEL_TEAM, blank=True, null=True)
+    entity = models.ForeignKey(Entity, blank=True, null=True)
     score = models.IntegerField(blank=True, null=True) # integer, score for the problem
     is_valid = models.BooleanField(default=True,
             help_text = "Whether there is an answer consensus")
     is_done = models.BooleanField(default=False,
             help_text = "Whether this verdict should be read by more normal users")
 
-    def clean(self):
-        if self.problem is not None:
-            validateMathleteVsTeam(self, self.is_indiv)
     def __unicode__(self):
-        if self.mathlete is not None:
-            who = unicode(self.mathlete)
-        elif self.team is not None:
-            who = unicode(self.team)
+        if self.entity is not None:
+            who = unicode(self.entity)
         else:
             who = 'ID %05d' % self.id
         return unicode(self.problem) + ': ' + who
@@ -145,78 +155,40 @@ class Verdict(models.Model):
     @property
     def is_indiv(self):
         return self.problem.is_indiv
-    @property
-    def whom(self):
-        return self.mathlete if self.is_indiv else self.team
 
     class Meta:
-        unique_together = (('problem', 'mathlete'), ('problem', 'team'))
-def query_verdict_by_problem(method, whom, problem, *args, **kwargs):
-    """Wrapper function to get a verdict for either mathlete or team"""
-    method_func = getattr(Verdict.objects, method)
-    if problem.exam.is_indiv:
-        return method_func(*args, mathlete = whom, problem = problem, **kwargs)
-    else:
-        return method_func(*args, team = whom, problem = problem, **kwargs)
-def query_verdict_by_exam(method, whom, exam, *args, **kwargs):
-    """Wrapper function to get a verdict for either mathlete or team"""
-    method_func = getattr(Verdict.objects, method)
-    if exam.is_indiv:
-        return method_func(*args, mathlete = whom, problem__exam = exam, **kwargs)
-    else:
-        return method_func(*args, team = whom, problem__exam = exam, **kwargs)
+        unique_together = ('problem', 'entity')
     
 # Scribble objects
 class ExamScribble(models.Model):
     exam = models.ForeignKey(Exam)
-    mathlete = models.ForeignKey(MODEL_MATHLETE, blank=True, null=True)
-    team = models.ForeignKey(MODEL_TEAM, blank=True, null=True)
+    entity = models.ForeignKey(Entity, blank=True, null=True)
     scan_image = models.ImageField(upload_to='scans/names/', blank=False, null=True)
          # blargh. This should really be null=False, but it makes testing hard.
 
-    def clean(self):
-        validateMathleteVsTeam(self, self.exam.is_indiv)
     def __unicode__(self):
-        if self.mathlete is not None:
-            who = unicode(self.mathlete)
-        elif self.team is not None:
-            who = unicode(self.team)
+        if self.entity is not None:
+            who = unicode(self.entity)
         else:
             who = 'ID %05d' % self.id
         return unicode(self.exam) + ': ' + who
 
-
-    @property
-    def whom(self):
-        return self.mathlete if self.is_indiv else self.team
     @property
     def is_indiv(self):
         return self.exam.is_indiv
 
-    def assign(self, whom):
-        if self.is_indiv: # indiv exam
-            self.assignMathlete(whom)
-        else: # team exam
-            self.assignMathlete(whom)
-
-    def assignTeam(self, team):
-        self.team = team
-        self.save()
-        self.clean()
+    def assign(self, entity):
+        assert entity.is_team != self.exam.is_indiv
+        self.entity = entity
         self.updateScribbles()
-    def assignMathlete(self, mathlete):
-        self.mathlete = mathlete
         self.save()
-        self.clean()
-        self.updateScribbles()
 
     def updateScribbles(self, queryset = None):
         """Update all child scribbles once mathlete/team identified"""
         if queryset is None:
             queryset = self.problemscribble_set.all()
         for ps in queryset:
-            ps.verdict.mathlete = self.mathlete
-            ps.verdict.team = self.team
+            ps.verdict.entity = self.entity
             ps.verdict.save()
 
     def checkConflictVerdict(self, whom=None, purge=False):
@@ -256,7 +228,8 @@ class ExamScribble(models.Model):
         return None # no conflicts
 
     class Meta:
-        unique_together = (('exam', 'mathlete'), ('exam', 'team'))
+        unique_together = ('exam', 'entity')
+
 class ProblemScribble(models.Model):
     examscribble = models.ForeignKey(ExamScribble)
     verdict = models.OneToOneField(Verdict, on_delete=models.CASCADE)
@@ -282,14 +255,15 @@ class Evidence(models.Model):
     class Meta:
         unique_together = ('verdict', 'user')
 
-# HMMT object to store pairs of alpha and mathlete
-class MathleteAlpha(models.Model):
-    mathlete = models.OneToOneField(MODEL_MATHLETE, on_delete=models.CASCADE)
+# HMMT object to store pairs of alpha and entity
+
+class EntityAlpha(models.Model):
+    entity = models.OneToOneField(Entity, on_delete=models.CASCADE)
     cached_alpha = models.FloatField(blank=True, null=True)
 
 # Auxiliary functions
-def get_exam_scores(exam, whom):
-    queryset = query_verdict_by_exam('filter', whom, exam, is_valid=True)\
+def get_exam_scores(exam, entity):
+    queryset = Exam.objects.filter(entity=entity, exam=exam, is_valid=True)\
                     .order_by('problem__problem_number')
     if exam.is_alg_scoring:
         return [v.problem.cached_beta * v.score \
@@ -298,9 +272,10 @@ def get_exam_scores(exam, whom):
         return [v.problem.weight * (v.score or 0)
             if not v.problem.allow_partial else (v.score or 0)
             for v in queryset]
-def get_alpha(mathlete):
-    m, _ =  MathleteAlpha.objects.get_or_create(mathlete=mathlete)
-    return m.cached_alpha or 0
 
+def get_alpha(entity):
+    assert not mathlete.is_team
+    m, _ =  EntityAlpha.objects.get_or_create(entity=entity)
+    return m.cached_alpha or 0
 
 # vim: expandtab
