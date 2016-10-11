@@ -140,6 +140,7 @@ def match_exam_scans(request, exam_id):
             context = {
                     'matchform' : form,
                     'previous_whom' : None,
+                    'scribble' : examscribble,
                     'scribble_url' : examscribble.scan_image.url,
                     'exam' : exam,
                     }
@@ -156,6 +157,7 @@ def match_exam_scans(request, exam_id):
         context = {
                 'matchform' : None,
                 'previous_whom' : previous_whom,
+                'scribble' : None,
                 'scribble_url' : DONE_IMAGE_URL,
                 'exam' : exam,
                 }
@@ -165,6 +167,7 @@ def match_exam_scans(request, exam_id):
         context = {
                 'matchform' : form,
                 'previous_whom' : previous_whom,
+                'scribble' : examscribble,
                 'scribble_url' : examscribble.scan_image.url,
                 'exam' : exam,
                 }
@@ -381,7 +384,10 @@ def _report(num_show = None, num_named = None, teaser = False):
         output += result_printer.get_table(heading = exam.name, \
                 num_show = num_show, num_named = num_named)
         # Use for sweeps
-        this_exam_weight = 400.0/max([r.total for r in results])
+        if len(results) > 0 and any([r.total for r in results]):
+            this_exam_weight = 400.0/max([r.total for r in results])
+        else:
+            this_exam_weight = 0 # nothing yet
         for r in results:
             team_exam_scores[r.name].append(this_exam_weight * r.total)
 
@@ -394,8 +400,10 @@ def _report(num_show = None, num_named = None, teaser = False):
             results.append(NameResultRow(name = team.name, scores = scores))
         output += ResultPrinter(results).get_table(heading = "Team Individual Aggregate", \
                 num_show = num_show, num_named = num_named)
-        indiv_weight = 800.0/max([r.total for r in results])
-        team_exam_scores[0] = {} # for indiv
+        if len(results) > 0 and any([r.total for r in results]):
+            indiv_weight = 400.0/max([r.total for r in results])
+        else:
+            indiv_weight = 0 # nothing yet
         for r in results:
             team_exam_scores[r.name].append(indiv_weight * r.total)
 

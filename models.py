@@ -299,7 +299,8 @@ def get_exam_scores(exam, whom):
             if not v.problem.allow_partial else v.score
             for v in queryset]
 def get_alpha(mathlete):
-    return MathleteAlpha.objects.get(mathlete=mathlete).cached_alpha
+    m, _ =  MathleteAlpha.objects.get_or_create(mathlete=mathlete)
+    return m.cached_alpha or 0
 
 
 # vim: expandtab
