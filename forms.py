@@ -1,7 +1,6 @@
 from django import forms
 import django.utils.safestring
 import helium as He
-from registration.current import TEAMS, MATHLETES
 import logging
 
 class MathleteModelChoiceField(forms.ModelChoiceField):
@@ -36,10 +35,10 @@ class ExamGradingRobustForm(forms.Form):
 
         if self.exam.is_indiv:
             self.fields['mathlete'] = MathleteModelChoiceField(\
-                    queryset = MATHLETES.all())
+                    queryset = He.models.ALLMATHLETES())
         else:
             self.fields['team'] = forms.ModelChoiceField(\
-                    queryset = TEAMS.all())
+                    queryset = He.models.ALLTEAMS())
         
         for problem in problems:
             n = problem.problem_number
@@ -104,10 +103,10 @@ class ExamScribbleMatchRobustForm(forms.Form):
 
         if self.exam.is_indiv:
             self.fields['mathlete'] = MathleteModelChoiceField(\
-                    queryset = MATHLETES.all())
+                    queryset = He.models.ALLMATHLETES())
         else:
             self.fields['team'] = forms.ModelChoiceField(\
-                    queryset = TEAMS.all())
+                    queryset = He.models.ALLTEAMS())
 
         # TODO it would be nice if there was an easy way
         # to filter for mathletes / teams which aren't already matched
