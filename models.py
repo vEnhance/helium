@@ -34,7 +34,7 @@ class Entity(models.Model): # This is EITHER a team or mathlete (i.e. exam taker
     is_team = models.BooleanField(default=False)
 
     def clean(self):
-        if self.team is not None and not self.is_team:
+        if self.team is not None and self.is_team:
             raise ValidationError("LOL what?")
 
     def __unicode__(self):
