@@ -18,5 +18,6 @@ urlpatterns = [
     url(r'^reports/extended/$', views.reports_extended),
     url(r'^reports/full/$', views.reports_full), # super-user only
     url(r'^reports/teaser/$', views.teaser),
+    url(r'^management/([a-zA-Z]+)/$', views.run_management),
     url(r'^$', views.index),
 ]

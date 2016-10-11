@@ -10,7 +10,8 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         problems = [p.id for p in He.models.Problem.objects\
                 .filter(exam__is_alg_scoring=True)]
-        mathletes = [m.id for m in MATHLETES]
+        mathlete_lookup = { m.id : m for m in MATHLETES }
+        mathletes = mathlete_lookup.keys()
         
         verdicts = He.models.Verdict.objects.filter(\
                 problem__exam__is_alg_scoring = True)
@@ -24,7 +25,7 @@ class Command(BaseCommand):
 
         for mathlete_id, alpha in alphas.iteritems():
             a, _ = He.models.MathleteAlpha.objects\
-                    .get_or_create(mathlete__id = mathlete_id)
+                    .get_or_create(mathlete = mathlete_lookup[mathlete_id])
             a.cached_alpha = alpha
             a.save()
 

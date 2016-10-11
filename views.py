@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import user_passes_test
+import django.core.management
 import django.db
 from registration import current as reg
 import helium as He
@@ -14,6 +15,7 @@ import itertools
 import collections
 import random
 import time
+import threading
 
 DONE_IMAGE_URL = static('img/done.jpg')
 
@@ -386,5 +388,15 @@ def reports_full(request):
 def teaser(request):
     """ACCESSIBLE TO NON-STAFF!"""
     return _report(print_alphas = False, num_show = 15, num_named = 0)
+
+@user_passes_test(lambda u: u.is_superuser)
+def run_management(request, command_name):
+    def target_function():
+        django.core.management.call_command(command_name)
+    t = threading.Thread(target = target_function)
+    t.daemon = True
+    t.start()
+    return HttpResponseNotFound("Command %s started" %command_name,\
+            content_type="text/plain")
 
 # vim: expandtab fdm=indent foldnestmax=1

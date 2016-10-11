@@ -59,6 +59,16 @@
 	<li><a href="/helium/progress-scans/">Progress Matching Scans</a></li>
 	<li><a href="/admin/helium/">Django Admin</a></li>
 </ul>
+
+{% if request.user.is_superuser %}
+<h4>Management Commands</h4>
+<ul>
+	<li><a href="/helium/management/algscore/">Run Algorithmic Scoring</a></li>
+	<li><a href="/helium/management/computeverdicts/">Compute Verdicts</a></li>
+	<li><a href="/helium/management/updatescribbles/">Update Scribbles</a></li>
+</ul>
+{% endif %}
+
 <h4>Results</h4>
 Note that these are not updated in realtime.
 <ul>
