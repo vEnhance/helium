@@ -16,7 +16,8 @@ You will then automatically be shown a different scan.</p>
 <p>(Enable ludicrous speed only if you plan to enter one-digit answers only.
 If enabled, you don't need to press "return".)
 </p>
-<div id="scan_img_div"><img src="" id="scan_img"/></div>
+<div id="scan_img_div"><h5>Scan ID <span id="scan_id"></span></h5>
+	<img src="" id="scan_img"/></div>
 <div id="controls">
 <h4>Input Score (Answer {{problem.answer }})</h4>
 <p><input id="score" name="score" type="number" /></p>
@@ -37,6 +38,7 @@ $(document).ready(function() {
 			console.log(result);
 			sid = result[0];
 			if (sid == 0) $("#controls").html('');
+			else $("#scan_id").html(sid);
 			$("#scan_img").attr('src', result[1]);
 		});
 	}

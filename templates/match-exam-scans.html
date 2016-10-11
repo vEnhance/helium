@@ -12,7 +12,10 @@
 <p class="text-success">Successfully identified {{ exam }} exam for {{ previous_whom }}.</p>
 {% endif %}
 
-<div id="scan_img_div"><img src="{{ scribble_url }}" id="scan_img"/></div>
+<div id="scan_img_div">
+	<h5>Scribble ID {{ scribble.id }}</h5>
+	<img src="{{ scribble_url }}" id="scan_img"/>
+</div>
 
 {% if matchform %}
 <form action="/helium/match-exam-scans/{{exam.id}}/" method="post">
