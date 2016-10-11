@@ -11,9 +11,24 @@ class EvidenceInline(admin.TabularInline):
 class ProblemScribbleInline(admin.TabularInline):
     model = He.models.ProblemScribble
 
+
+class TeamFilter(admin.SimpleListFilter):
+    title = "Individual vs Team"
+    parameter_name = 'type'
+    def lookups(self, request, model_admin):
+        return (("indiv", "Individual"), ("team", "Team"),)
+    def queryset(self, request, queryset):
+        if self.value() is None:
+            return queryset
+        elif self.value() == "indiv":
+            return queryset.filter(is_team=False)
+        elif self.value() == "team":
+            return queryset.filter(is_team=True)
+
 @admin.register(He.models.Entity)
-class ExamAdmin(admin.ModelAdmin):
+class EntityAdmin(admin.ModelAdmin):
     list_display = ('name', 'team', 'is_team')
+    list_filter = (TeamFilter,)
     inlines = (EntityInline,)
 
 @admin.register(He.models.Exam)
@@ -46,3 +61,5 @@ class EvidenceAdmin(admin.ModelAdmin):
 @admin.register(He.models.EntityAlpha)
 class AlphaAdmin(admin.ModelAdmin):
     list_display = ('entity', 'cached_alpha', 'id')
+
+# vim: expandtab
