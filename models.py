@@ -52,7 +52,7 @@ class Problem(models.Model):
     problem_number = models.IntegerField()
     answer = models.CharField(max_length=70, default='')
 
-    cached_beta = models.FloatField(blank=True, null=True)
+    cached_beta = models.FloatField(default=1, blank=True)
     weight = models.IntegerField(blank=True, null=True)
     allow_partial = models.BooleanField(default=False)
     def __unicode__(self): return self.exam.name + " #" + unicode(self.problem_number)
@@ -293,10 +293,10 @@ def get_exam_scores(exam, whom):
                     .order_by('problem__problem_number')
     if exam.is_alg_scoring:
         return [v.problem.cached_beta * v.score \
-                if v.score != 0 else 0 for v in queryset]
+                if v.score else 0 for v in queryset]
     else:
-        return [v.problem.weight * v.score
-            if not v.problem.allow_partial else v.score
+        return [v.problem.weight * (v.score or 0)
+            if not v.problem.allow_partial else (v.score or 0)
             for v in queryset]
 def get_alpha(mathlete):
     m, _ =  MathleteAlpha.objects.get_or_create(mathlete=mathlete)
