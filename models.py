@@ -286,4 +286,4 @@ def get_alpha(entity):
     m, _ =  EntityAlpha.objects.get_or_create(entity=entity)
     return m.cached_alpha or 0
 
-# vim: expandtab
+# vim: expandtab foldnestmax=1 foldlevel=1 fdm=indent
