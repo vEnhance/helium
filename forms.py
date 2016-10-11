@@ -4,6 +4,10 @@ import helium as He
 from registration.current import TEAMS, MATHLETES
 import logging
 
+class MathleteModelChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, mathlete):
+        return mathlete.name_with_team
+
 class ProblemSelectForm(forms.Form):
     """Lets you pick a problem marked as ready for grading"""
     problem = forms.ModelChoiceField(
@@ -31,7 +35,7 @@ class ExamGradingRobustForm(forms.Form):
         self.problems = list(problems)
 
         if self.exam.is_indiv:
-            self.fields['mathlete'] = forms.ModelChoiceField(\
+            self.fields['mathlete'] = MathleteModelChoiceField(\
                     queryset = MATHLETES.all())
         else:
             self.fields['team'] = forms.ModelChoiceField(\
@@ -87,6 +91,7 @@ class ExamGradingRobustForm(forms.Form):
             num_graded += 1
         return { 'num_graded' : num_graded, 'whom' :  whom}
 
+
 class ExamScribbleMatchRobustForm(forms.Form):
     """Creates a form for matching scribbles to teams/mathletes.
     Note this form is *robust*: on submission (actually in the clean() method),
@@ -98,7 +103,7 @@ class ExamScribbleMatchRobustForm(forms.Form):
         self.exam = examscribble.exam
 
         if self.exam.is_indiv:
-            self.fields['mathlete'] = forms.ModelChoiceField(\
+            self.fields['mathlete'] = MathleteModelChoiceField(\
                     queryset = MATHLETES.all())
         else:
             self.fields['team'] = forms.ModelChoiceField(\
