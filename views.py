@@ -6,7 +6,6 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import user_passes_test
 import django.core.management
 import django.db
-from registration import current as reg
 import helium as He
 import helium.forms as forms
 import json
@@ -86,7 +85,7 @@ def old_grader(request, exam_id):
         form = forms.ExamGradingRobustForm(exam, request.user, request.POST)
         if form.is_valid():
             num_graded = form.cleaned_data['num_graded']
-            whom = form.cleaned_data['whom']
+            entity = form.cleaned_data['entity']
             # the form cleanup actually does the processing for us,
             # so just hand the user a fresh form if no validation errors
             form = forms.ExamGradingRobustForm(exam, request.user)
@@ -94,14 +93,14 @@ def old_grader(request, exam_id):
                     'exam' : exam,
                     'oldform' : form,
                     'num_graded' : num_graded,
-                    'whom' : whom,
+                    'entity' : entity,
                     }
         else:
             context = {
                     'exam' : exam,
                     'oldform' : form,
                     'num_graded' : 0,
-                    'whom' : None
+                    'entity' : None
                     }
     else:
         # This means we just got here from landing.
@@ -110,7 +109,7 @@ def old_grader(request, exam_id):
                 'exam' : exam,
                 'oldform' : forms.ExamGradingRobustForm(exam, request.user),
                 'num_graded' : 0,
-                'whom' : None,
+                'entity' : None,
                 }
     return render(request, "old-grader.html", context)
 
@@ -139,24 +138,24 @@ def match_exam_scans(request, exam_id):
         if not form.is_valid(): # validation errors
             context = {
                     'matchform' : form,
-                    'previous_whom' : None,
+                    'previous_entity' : None,
                     'scribble' : examscribble,
                     'scribble_url' : examscribble.scan_image.url,
                     'exam' : exam,
                     }
             return render(request, "match-exam-scans.html", context)
         else:
-            previous_whom = form.cleaned_data['whom']
+            previous_entity = form.cleaned_data['entity']
     else:
-        previous_whom = None
+        previous_entity = None
 
     # Now we're set, so get the next scribble, or alert none left
-    queryset = He.models.ExamScribble.objects.filter(mathlete=None, team=None, exam=exam)
+    queryset = He.models.ExamScribble.objects.filter(entity=None, exam=exam)
 
     if len(queryset) == 0:
         context = {
                 'matchform' : None,
-                'previous_whom' : previous_whom,
+                'previous_entity' : previous_entity,
                 'scribble' : None,
                 'scribble_url' : DONE_IMAGE_URL,
                 'exam' : exam,
@@ -166,7 +165,7 @@ def match_exam_scans(request, exam_id):
         form = forms.ExamScribbleMatchRobustForm(examscribble, request.user)
         context = {
                 'matchform' : form,
-                'previous_whom' : previous_whom,
+                'previous_entity' : previous_entity,
                 'scribble' : examscribble,
                 'scribble_url' : examscribble.scan_image.url,
                 'exam' : exam,
@@ -271,6 +270,7 @@ def progress_problems(request):
     table = []
     columns = ['Problem', 'Done', 'Pending', 'Unread', 'Conflict', 'Missing']
 
+    num_mathletes = He.models.Entity.mathletes.count()
     for problem, group in itertools.groupby(verdicts, key = lambda v : v.problem):
         group = list(group) # dangit, this gotcha
         tr = collections.OrderedDict()
@@ -281,7 +281,7 @@ def progress_problems(request):
         tr['Unread']  = len([v for v in group if v.is_valid \
                 and not v.is_done and v.evidence_count() == 0])
         tr['Conflict'] = len([v for v in group if not v.is_valid])
-        tr['Missing']  = len(reg.MATHLETES) - len(group)
+        tr['Missing']  = num_mathletes - len(group)
         table.append(tr)
 
     context = {'columns' : columns, 'table' : table, 'pagetitle' : 'Scans Progress'}
@@ -299,7 +299,7 @@ def progress_scans(request):
         group = list(group) # dangit, this gotcha
         tr = collections.OrderedDict()
         tr['Exam'] = str(exam)
-        tr['Done'] = len([es for es in group if es.whom is not None])
+        tr['Done'] = len([es for es in group if es.entity is not None])
         tr['Left'] = len(group) - tr['Done']
         table.append(tr)
 
@@ -349,13 +349,17 @@ def _report(num_show = None, num_named = None, teaser = False):
     output += '<html><head></head><body>' + "\n"
     output += '<pre style="font-family:dejavu sans mono;">' + "\n"
     output += INIT_TEXT_BANNER + "\n\n"
+
+    # Do this query once, we'll need it repeatedly
+    mathletes = list(He.models.Entity.mathletes.all())
+    teams = list(He.models.Entity.teams.all())
  
     ## Individual Results
     indiv_exams = He.models.Exam.objects.filter(is_indiv=True)
     if not teaser:
         results = [NameResultRow(name = mathlete.name_with_team,
                     scores = [He.models.get_alpha(mathlete)])
-                    for mathlete in reg.MATHLETES.all()]
+                    for mathlete in mathletes]
         output += ResultPrinter(results)\
                 .get_table("Overall Individuals (Alphas)", \
                 num_show = num_show, num_named = num_named)
@@ -365,7 +369,7 @@ def _report(num_show = None, num_named = None, teaser = False):
         results = [NameResultRow(
                 name = mathlete.name_with_team,
                 scores = He.models.get_exam_scores(exam, mathlete)) \
-                for mathlete in reg.MATHLETES.all()]
+                for mathlete in mathletes]
         result_printer = ResultPrinter(results)
         output += result_printer.get_table(heading = exam.name, \
                 num_show = num_show, num_named = num_named)
@@ -376,10 +380,9 @@ def _report(num_show = None, num_named = None, teaser = False):
     team_exam_scores = collections.defaultdict(list) # team.name -> list of scores
 
     for exam in team_exams:
-        results = [NameResultRow(
-            name = team.name,
+        results = [NameResultRow(name = team.name,
             scores = He.models.get_exam_scores(exam, team)) \
-            for team in reg.TEAMS.all()]
+            for team in teams]
         result_printer = ResultPrinter(results)
         output += result_printer.get_table(heading = exam.name, \
                 num_show = num_show, num_named = num_named)
@@ -394,8 +397,8 @@ def _report(num_show = None, num_named = None, teaser = False):
     # Now compute individual scores
     if not teaser:
         results = []
-        for team in reg.TEAMS.all():
-            scores = [He.models.get_alpha(m) for m in reg.MATHLETES.filter(team = team)]
+        for team in teams:
+            scores = [He.models.get_alpha(m) for m in mathletes if m.team == team]
             scores.sort(reverse=True)
             results.append(NameResultRow(name = team.name, scores = scores))
         output += ResultPrinter(results).get_table(heading = "Team Individual Aggregate", \
@@ -412,7 +415,7 @@ def _report(num_show = None, num_named = None, teaser = False):
         output += "\n"
         results = [NameResultRow(name = team.name,
             scores = team_exam_scores[team.name])
-            for team in reg.TEAMS.all()]
+            for team in teams]
         output += ResultPrinter(results).get_table(heading = "Sweepstakes", \
                 num_show = num_show, num_named = num_named)
    

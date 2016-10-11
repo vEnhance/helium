@@ -20,6 +20,14 @@ from django.db.models import Sum
 # (namely, "contest takers")
 
 # Contestant objects
+
+class TeamManager(models.Manager):
+    def get_queryset(self):
+        return super(TeamManager, self).get_queryset().filter(is_team=True)
+class MathleteManager(models.Manager):
+    def get_queryset(self):
+        return super(MathleteManager, self).get_queryset().filter(is_team=False)
+
 class Entity(models.Model): # This is EITHER a team or mathlete (i.e. exam taker)
     name = models.CharField(max_length=80)
     team = models.ForeignKey('self', null=True, blank=True)
@@ -31,6 +39,7 @@ class Entity(models.Model): # This is EITHER a team or mathlete (i.e. exam taker
 
     def __unicode__(self):
         return self.name
+
     @property
     def verbose_name(self):
         if self.is_team:

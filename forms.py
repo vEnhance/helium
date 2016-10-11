@@ -34,11 +34,11 @@ class ExamGradingRobustForm(forms.Form):
         self.problems = list(problems)
 
         if self.exam.is_indiv:
-            self.fields['mathlete'] = MathleteModelChoiceField(\
-                    queryset = He.models.ALLMATHLETES())
+            self.fields['entity'] = MathleteModelChoiceField(\
+                    queryset = He.models.Entity.mathletes.all())
         else:
-            self.fields['team'] = forms.ModelChoiceField(\
-                    queryset = He.models.ALLTEAMS())
+            self.fields['entity'] = forms.ModelChoiceField(\
+                    queryset = He.models.Entity.teams.all())
         
         for problem in problems:
             n = problem.problem_number
@@ -73,11 +73,11 @@ class ExamGradingRobustForm(forms.Form):
         if not self.is_valid():
             return # didn't pass first validation, don't do queries
 
-        whom = data['mathlete'] if self.exam.is_indiv else data['team']
+        entity = data['entity']
         num_graded = 0
         for problem in self.problems:
             field_name = 'p' + str(problem.problem_number)
-            v, _ = He.models.query_verdict_by_problem('get_or_create', whom, problem)
+            v, _ = He.models.query_verdict_by_problem('get_or_create', entity, problem)
             user_score = data.get(field_name, None)
             if user_score is None:
                 continue
@@ -88,7 +88,7 @@ class ExamGradingRobustForm(forms.Form):
                     continue
             v.submitEvidence(user = self.user, score = user_score)
             num_graded += 1
-        return { 'num_graded' : num_graded, 'whom' :  whom}
+        return { 'num_graded' : num_graded, 'entity' :  entity }
 
 
 class ExamScribbleMatchRobustForm(forms.Form):
@@ -102,11 +102,11 @@ class ExamScribbleMatchRobustForm(forms.Form):
         self.exam = examscribble.exam
 
         if self.exam.is_indiv:
-            self.fields['mathlete'] = MathleteModelChoiceField(\
-                    queryset = He.models.ALLMATHLETES())
+            self.fields['entity'] = MathleteModelChoiceField(\
+                    queryset = He.models.Entity.mathletes.all())
         else:
-            self.fields['team'] = forms.ModelChoiceField(\
-                    queryset = He.models.ALLTEAMS())
+            self.fields['entity'] = forms.ModelChoiceField(\
+                    queryset = He.models.Entity.teams.all())
 
         # TODO it would be nice if there was an easy way
         # to filter for mathletes / teams which aren't already matched
@@ -124,20 +124,15 @@ class ExamScribbleMatchRobustForm(forms.Form):
 
     def clean(self):
         data = super(ExamScribbleMatchRobustForm, self).clean()
-        if self.exam.is_indiv:
-            if not data.has_key('mathlete'): return
-            else: whom = data['mathlete']
-        if not self.exam.is_indiv and not data.has_key('team'):
-            if not data.has_key('team'): return
-            else: whom = data['team']
+        entity = data['entity']
 
         # Now for each attached ProblemScribble...
         # check if it's okay to update
         bad_v = self.examscribble.checkConflictVerdict(
-                whom, purge = data.get('force', False))
+                entity, purge = data.get('force', False))
         if bad_v is None:
-            data['whom'] = whom
-            self.examscribble.assign(whom)
+            data['entity'] = entity
+            self.examscribble.assign(entity)
             # Now update all the verdicts attached to the exam scribble
         else:
             admin_url = "/admin/helium/verdict/" + str(bad_v.id) + "/change/"
