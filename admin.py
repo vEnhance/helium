@@ -20,12 +20,12 @@ class ProblemAdmin(admin.ModelAdmin):
 
 @admin.register(He.models.ExamScribble)
 class ExamScribbleAdmin(admin.ModelAdmin):
-    list_display = ('__unicode__', 'exam', 'mathlete', 'team', 'id', 'scan_image')
+    list_display = ('__unicode__', 'exam', 'entity', 'id', 'scan_image')
     inlines = (ProblemScribbleInline,)
 
 @admin.register(He.models.Verdict)
 class VerdictAdmin(admin.ModelAdmin):
-    list_display = ('id', 'problem', 'mathlete', 'team', 'score', 'evidence_count', 'is_valid', 'is_done')
+    list_display = ('id', 'problem', 'entity', 'score', 'evidence_count', 'is_valid', 'is_done')
     inlines = (EvidenceInline, ProblemScribbleInline,)
 
 @admin.register(He.models.ProblemScribble)
@@ -36,7 +36,6 @@ class ProblemScribbleAdmin(admin.ModelAdmin):
 class EvidenceAdmin(admin.ModelAdmin):
     list_display = ('id', 'verdict', 'user', 'score', 'god_mode')
 
-
-@admin.register(He.models.MathleteAlpha)
+@admin.register(He.models.EntityAlpha)
 class AlphaAdmin(admin.ModelAdmin):
-    list_display = ('mathlete', 'cached_alpha', 'id')
+    list_display = ('entity', 'cached_alpha', 'id')
