@@ -200,16 +200,16 @@ class ExamScribble(models.Model):
             ps.verdict.entity = self.entity
             ps.verdict.save()
 
-    def checkConflictVerdict(self, whom=None, purge=False):
+    def checkConflictVerdict(self, entity=None, purge=False):
         """Check that no collisions will arise before updateScribbles.
         Note that purge is DANGEROUS and should use with judgment."""
-        if whom is None:
-            whom = self.whom
+        if entity is None:
+            entity = self.entity
         for ps in self.problemscribble_set.all():
             verdict = ps.verdict
             problem = verdict.problem
             try: # search for conflicts
-                bad_v = query_verdict_by_problem("get", whom, problem)
+                bad_v = Verdict.objects.get(entity=entity, problem=problem)
             except Verdict.DoesNotExist: 
                 pass
             else:
