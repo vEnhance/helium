@@ -272,7 +272,7 @@ class EntityAlpha(models.Model):
 
 # Auxiliary functions
 def get_exam_scores(exam, entity):
-    queryset = Exam.objects.filter(entity=entity, exam=exam, is_valid=True)\
+    queryset = Verdict.objects.filter(entity=entity, problem__exam=exam, is_valid=True)\
                     .order_by('problem__problem_number')
     if exam.is_alg_scoring:
         return [v.problem.cached_beta * v.score \
@@ -283,7 +283,6 @@ def get_exam_scores(exam, entity):
             for v in queryset]
 
 def get_alpha(entity):
-    assert not mathlete.is_team
     m, _ =  EntityAlpha.objects.get_or_create(entity=entity)
     return m.cached_alpha or 0
 
