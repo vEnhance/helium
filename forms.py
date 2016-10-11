@@ -5,7 +5,7 @@ import logging
 
 class MathleteModelChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, mathlete):
-        return mathlete.name_with_team
+        return mathlete.name
 
 class ProblemSelectForm(forms.Form):
     """Lets you pick a problem marked as ready for grading"""
