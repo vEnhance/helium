@@ -1,5 +1,4 @@
 from django.core.management.base import BaseCommand, CommandError
-from registration.current import TEAMS, MATHLETES
 
 import helium as He
 import helium.algorithmic as algorithmic # brain for algorithmic scoring
@@ -10,22 +9,21 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         problems = [p.id for p in He.models.Problem.objects\
                 .filter(exam__is_alg_scoring=True)]
-        mathlete_lookup = { m.id : m for m in MATHLETES }
-        mathletes = mathlete_lookup.keys()
         
         verdicts = He.models.Verdict.objects.filter(\
                 problem__exam__is_alg_scoring = True)
-        scores = [(v.problem.id, v.mathlete.id, v.score) for v in verdicts \
+        scores = [(v.problem.id, v.entity.id, v.score) for v in verdicts \
                 if v.is_valid is True \
                 and v.is_done is True \
-                and v.mathlete is not None]
+                and v.entity is not None]
+        mathletes = list(set([s[1] for s in scores]))
 
         # Run the main procedure, get alpha and beta values
         alphas, betas = algorithmic.main(problems, mathletes, scores)
 
         for mathlete_id, alpha in alphas.iteritems():
-            a, _ = He.models.MathleteAlpha.objects\
-                    .get_or_create(mathlete = mathlete_lookup[mathlete_id])
+            a, _ = He.models.EntityAlpha.objects\
+                    .get_or_create(entity = He.models.Entity.objects.get(id=mathlete_id))
             a.cached_alpha = alpha
             a.save()
 
