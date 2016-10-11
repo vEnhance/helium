@@ -357,7 +357,7 @@ def _report(num_show = None, num_named = None, teaser = False):
     ## Individual Results
     indiv_exams = He.models.Exam.objects.filter(is_indiv=True)
     if not teaser:
-        results = [NameResultRow(name = mathlete.name_with_team,
+        results = [NameResultRow(name = mathlete.name,
                     scores = [He.models.get_alpha(mathlete)])
                     for mathlete in mathletes]
         output += ResultPrinter(results)\
@@ -367,7 +367,7 @@ def _report(num_show = None, num_named = None, teaser = False):
 
     for exam in indiv_exams:
         results = [NameResultRow(
-                name = mathlete.name_with_team,
+                name = mathlete.name,
                 scores = He.models.get_exam_scores(exam, mathlete)) \
                 for mathlete in mathletes]
         result_printer = ResultPrinter(results)
