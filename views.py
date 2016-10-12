@@ -62,9 +62,9 @@ def _redir_obj_id(request, target, key, form_type):
 @staff_member_required
 def index(request):
 	context = {
-			'scanform' : forms.ProblemSelectForm(),
+			'scanform' : forms.ProblemScanSelectForm(),
 			'examform' : forms.ExamSelectForm(),
-			'matchform' : forms.ExamSelectForm(),
+			'matchform' : forms.ExamScanSelectForm(),
 			}
 	return render(request, "helium.html", context)
 
@@ -120,7 +120,7 @@ def match_exam_scans_redir(request):
 	return _redir_obj_id(request,
 			target = '/helium/match-exam-scans/',
 			key = 'exam',
-			form_type = forms.ExamSelectForm)
+			form_type = forms.ExamScanSelectForm)
 @staff_member_required
 def match_exam_scans(request, exam_id):
 	try:
@@ -179,7 +179,7 @@ def grade_scans_redir(request):
 	return _redir_obj_id(request,
 			target = '/helium/grade-scans/',
 			key = 'problem',
-			form_type = forms.ProblemSelectForm)
+			form_type = forms.ProblemScanSelectForm)
 @staff_member_required
 def grade_scans(request, problem_id):
 	problem = He.models.Problem.objects.get(id=problem_id)
@@ -276,11 +276,12 @@ def progress_problems(request):
 		tr['Missing']  = num_mathletes - len(group)
 		table.append(tr)
 
-	context = {'columns' : columns, 'table' : table, 'pagetitle' : 'Scans Progress'}
+	context = {'columns' : columns, 'table' : table, 'pagetitle' : 'Grading Progress'}
 	return render(request, "gentable.html", context)
 @staff_member_required
 def progress_scans(request):
-	examscribbles = He.models.ExamScribble.objects.filter(exam__is_ready=True)
+	examscribbles = He.models.ExamScribble.objects\
+			.filter(exam__is_ready=True, exam__is_scanned=True)
 	examscribbles = list(examscribbles)
 	examscribbles.sort(key = lambda es : es.exam.id)
 

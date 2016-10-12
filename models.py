@@ -67,6 +67,9 @@ class Exam(models.Model):
 	is_indiv = models.BooleanField()
 	is_ready = models.BooleanField(default=True, help_text='Mark true if ready to grade this exam')
 	is_alg_scoring = models.BooleanField()
+	is_scanned = models.BoolenField(default=False,
+			help_text = "Whether the scan grader will show this problem or not. "
+			"For example, this should almost certainly be False for Guts round.")
 
 	min_grades = models.IntegerField(default=3, help_text='Minimum number of graders per problem')
 	min_override = models.IntegerField(default=3,

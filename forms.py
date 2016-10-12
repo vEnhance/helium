@@ -7,17 +7,23 @@ class MathleteModelChoiceField(forms.ModelChoiceField):
 	def label_from_instance(self, mathlete):
 		return mathlete.name
 
-class ProblemSelectForm(forms.Form):
+class ProblemScanSelectForm(forms.Form):
 	"""Lets you pick a problem marked as ready for grading"""
 	problem = forms.ModelChoiceField(
 			label = "Read scans for problem",
-			queryset = He.models.Problem.objects.filter(exam__is_ready=True))
+			queryset = He.models.Problem.objects\
+					.filter(exam__is_ready=True, exam__is_scanned=True))
 
 class ExamSelectForm(forms.Form):
 	"""Picks an exam marked as ready for grading"""
 	exam = forms.ModelChoiceField(
 			label = "Select exam",
 			queryset = He.models.Exam.objects.filter(is_ready=True))
+class ExamScanSelectForm(forms.Form):
+	"""Picks an exam marked as ready for grading and marked for scanning."""
+	exam = forms.ModelChoiceField(
+			label = "Read scans for exam",
+			queryset = He.models.Exam.objects.filter(is_ready=True, is_scanned=True))
 
 class ExamGradingRobustForm(forms.Form):
 	"""Creates a form for the old-style grader.
@@ -85,7 +91,6 @@ class ExamGradingRobustForm(forms.Form):
 			v.submitEvidence(user = self.user, score = user_score)
 			num_graded += 1
 		return { 'num_graded' : num_graded, 'entity' : entity }
-
 
 class ExamScribbleMatchRobustForm(forms.Form):
 	"""Creates a form for matching scribbles to teams/mathletes.
