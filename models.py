@@ -51,6 +51,9 @@ class Entity(models.Model): # This is EITHER a team or mathlete (i.e. exam taker
 	teams = TeamManager()
 	mathletes = MathleteManager()
 
+	class Meta:
+		unique_together = ('name', 'team')
+
 # Exam/problem objects
 
 class Exam(models.Model):
