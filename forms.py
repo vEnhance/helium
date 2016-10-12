@@ -59,8 +59,7 @@ class ExamGradingRobustForm(forms.Form):
 		self.fields['force'] = forms.BooleanField(
 				label = 'Override',
 				required = False,
-				help_text = "Use this to override a merge conflict (including with yourself!)")
-
+				help_text = "Use this to override a merge conflict.")
 	def clean(self):
 		if not self.user.is_staff:
 			raise ValueError("User is not staff")
@@ -76,10 +75,12 @@ class ExamGradingRobustForm(forms.Form):
 			user_score = data.get(field_name, None)
 			if user_score is None:
 				continue
-			if v.score is not None:
-				if user_score != v.score and data['force'] is False:
+			if v.score is not None and user_score != v.score and data['force'] is False:
+				previous_graders = [unicode(e.user) for e in v.evidence_set.all()]
+				if len(previous_graders) > 1 or previous_graders[0] != unicode(self.user):
 					self.add_error(field_name,
-							"Conflict: Database has score %d" % v.score)
+							"Conflict: Database has score %d (entered by %s)"
+							% (v.score, ', '.join(previous_graders)))
 					continue
 			v.submitEvidence(user = self.user, score = user_score)
 			num_graded += 1
