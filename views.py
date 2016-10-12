@@ -243,6 +243,7 @@ def ajax_prev_evidence(request):
         try:
             e = He.models.Evidence.objects.get(
                     user = request.user,
+                    verdict__problem = problem,
                     verdict__entity__id = entity_id)
         except He.models.Evidence.DoesNotExist:
             output.append( (n, None) )
