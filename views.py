@@ -21,13 +21,13 @@ DONE_IMAGE_URL = static('img/done.jpg')
 INIT_TEXT_BANNER = """
  .----------------.  .----------------.  .----------------.  .----------------. 
 | .--------------. || .--------------. || .--------------. || .--------------. |
-| |  ____  ____  | || | ____	____ | || | ____	____ | || |  _________	 | |
-| | |_	 ||   _| | || ||_	\  /   _|| || ||_	\  /   _|| || | |  _   _  |  | |
-| |   | |__| |	 | || |  |	 \/   |  | || |  |	 \/   |  | || | |_/ | | \_|  | |
-| |   |  __  |	 | || |  | |\  /| |  | || |  | |\  /| |  | || |		| |		 | |
-| |  _| |  | |_  | || | _| |_\/_| |_ | || | _| |_\/_| |_ | || |    _| |_	 | |
-| | |____||____| | || ||_____||_____|| || ||_____||_____|| || |   |_____|	 | |
-| |				 | || |				 | || |				 | || |				 | |
+| |  ____  ____  | || | ____    ____ | || | ____    ____ | || |  _________   | |
+| | |_   ||   _| | || ||_   \  /   _|| || ||_   \  /   _|| || | |  _   _  |  | |
+| |   | |__| |   | || |  |   \/   |  | || |  |   \/   |  | || | |_/ | | \_|  | |
+| |   |  __  |   | || |  | |\  /| |  | || |  | |\  /| |  | || |     | |      | |
+| |  _| |  | |_  | || | _| |_\/_| |_ | || | _| |_\/_| |_ | || |    _| |_     | |
+| | |____||____| | || ||_____||_____|| || ||_____||_____|| || |   |_____|    | |
+| |              | || |              | || |              | || |              | |
 | '--------------' || '--------------' || '--------------' || '--------------' |
  '----------------'  '----------------'  '----------------'  '----------------' 
 
@@ -36,15 +36,16 @@ of the scoring algorithm used on the individual tests.
  """.strip()
 
 FINAL_TEXT_BANNER = """ 
- ('-. .-.	('-.							   _   .-')    
-( OO )	/ _(  OO)							  ( '.( OO )_  
-,--. ,--.(,------.,--.		,-.-') ,--. ,--.   ,--.   ,--.)
-|  | |	| |  .---'|  |.-')	|  |OO)|  | |  |   |   `.'	 | 
-|	.|	| |  |	  |  | OO ) |  |  \|  | | .-') |		 | 
-|		|(|  '--. |  |`-' | |  |(_/|  |_|( OO )|  |'.'|  | 
-|  .-.	| |  .--'(|  '---.',|  |_.'|  | | `-' /|  |   |  | 
-|  | |	| |  `---.|		 |(_|  |  ('  '-'(_.-' |  |   |  | 
-`--' `--' `------'`------'	`--'	`-----'    `--'   `--'""".strip()
+ ('-. .-.   ('-.                               _   .-')    
+( OO )  / _(  OO)                             ( '.( OO )_  
+,--. ,--.(,------.,--.      ,-.-') ,--. ,--.   ,--.   ,--.)
+|  | |  | |  .---'|  |.-')  |  |OO)|  | |  |   |   `.'   | 
+|   .|  | |  |    |  | OO ) |  |  \|  | | .-') |         | 
+|       |(|  '--. |  |`-' | |  |(_/|  |_|( OO )|  |'.'|  | 
+|  .-.  | |  .--'(|  '---.',|  |_.'|  | | `-' /|  |   |  | 
+|  | |  | |  `---.|      |(_|  |  ('  '-'(_.-' |  |   |  | 
+`--' `--' `------'`------'  `--'    `-----'    `--'   `--' 
+""".strip()
 
 
 def _redir_obj_id(request, target, key, form_type):
@@ -232,7 +233,7 @@ def ajax_prev_evidence(request):
 	"""POST arguments: problem_id, and either id_mathlete / id_team.
 	RETURN: a list of pairs (num, answer) where answer may be None"""
 	try:
-		exam_id		= int(request.POST['exam_id'])
+		exam_id = int(request.POST['exam_id'])
 		exam = He.models.Exam.objects.get(id = exam_id)
 		entity_id = int(request.POST['entity_id'])
 	except ValueError:
@@ -266,10 +267,10 @@ def progress_problems(request):
 		group = list(group) # dangit, this gotcha
 		tr = collections.OrderedDict()
 		tr['Problem']  = str(problem)
-		tr['Done']	   = len([v for v in group if v.is_valid and v.is_done])
+		tr['Done']     = len([v for v in group if v.is_valid and v.is_done])
 		tr['Pending']  = len([v for v in group if v.is_valid \
 				and not v.is_done and v.evidence_count() > 0])
-		tr['Unread']  = len([v for v in group if v.is_valid \
+		tr['Unread']   = len([v for v in group if v.is_valid \
 				and not v.is_done and v.evidence_count() == 0])
 		tr['Conflict'] = len([v for v in group if not v.is_valid])
 		tr['Missing']  = num_mathletes - len(group)
@@ -316,19 +317,20 @@ class ResultPrinter:
 			elif results[n-1].total != result.total: r = n+1
 			result.rank = r
 		self.results = results
-	def get_table(self, heading = None, num_show = None, num_named = None):
+	def get_table(self, heading = None, num_show = None, num_named = None,
+			float_string = "%4.2f", int_string = "%4d"):
 		output = _heading(heading) if heading is not None else ''
 		for result in self.results:
 			if num_show is not None and result.rank > num_show:
 				break
 			output += "%4d. " % result.rank
-			output += "%6.3f"  % result.total if type(result.total) == float \
-					else "%6d" % result.total
+			output += "%7.3f"  % result.total if type(result.total) == float \
+					else "%7d" % result.total
 			if len(result.scores) > 1: # sum of more than one thing
-				output += "  |	"
-				output += " ".join(["%4.2f"%x if type(x)==float else "%4d"%x \
+				output += "  |  "
+				output += " ".join([float_string%x if type(x)==float else int_string%x \
 						for x in result.scores])
-			output += "  |	"
+			output += "  |  "
 			if num_named is None or result.rank <= num_named:
 				output += result.name
 			output += "\n"
@@ -376,7 +378,8 @@ def _report(num_show = None, num_named = None, teaser = False):
 			for team in teams]
 		result_printer = ResultPrinter(results)
 		output += result_printer.get_table(heading = exam.name, \
-				num_show = num_show, num_named = num_named)
+				num_show = num_show, num_named = num_named,
+				float_string = "%2.0f", int_string = "%2d")
 		# Use for sweeps
 		if len(results) > 0 and any([r.total for r in results]):
 			this_exam_weight = 400.0/max([r.total for r in results])
@@ -408,7 +411,8 @@ def _report(num_show = None, num_named = None, teaser = False):
 			scores = team_exam_scores[team.name])
 			for team in teams]
 		output += ResultPrinter(results).get_table(heading = "Sweepstakes", \
-				num_show = num_show, num_named = num_named)
+				num_show = num_show, num_named = num_named,
+				float_string = "%5.2f", int_string = "%5d")
    
 	output += "This report was generated by Helium at " + time.strftime('%c') + "."
 	output += "\n\n"

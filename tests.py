@@ -7,16 +7,16 @@ import helium as He
 class GradingTestCase(TestCase):
 	def setUp(self):
 		# HMMT 2016 Scripts Team whee
-		self.evan	= User.objects.create_user(username='evan', password='.')
+		self.evan   = User.objects.create_user(username='evan', password='.')
 		self.calvin = User.objects.create_user(username='calvin', password='.')
 		self.miguel = User.objects.create_user(username='miguel', password='.')
-		self.kevin	= User.objects.create_user(username='kevin', password='.')
+		self.kevin  = User.objects.create_user(username='kevin', password='.')
 
-		self.exam	= He.models.Exam.objects.create(name="Sample Individual Exam",\
+		self.exam  = He.models.Exam.objects.create(name="Sample Individual Exam",\
 				is_indiv=True, is_alg_scoring=True, is_ready=True)
-		self.prob1	= He.models.Problem.objects.create(exam = self.exam, problem_number = 1)
-		self.prob2	= He.models.Problem.objects.create(exam = self.exam, problem_number = 2)
-		self.prob3	= He.models.Problem.objects.create(exam = self.exam, problem_number = 3)
+		self.prob1 = He.models.Problem.objects.create(exam = self.exam, problem_number = 1)
+		self.prob2 = He.models.Problem.objects.create(exam = self.exam, problem_number = 2)
+		self.prob3 = He.models.Problem.objects.create(exam = self.exam, problem_number = 3)
 
 		self.verdict = He.models.Verdict.objects.create(problem=self.prob1)
 		self.mathlete = He.models.Entity.objects.create(name="Student Name", is_team=False)

@@ -88,7 +88,7 @@ class ExamGradingRobustForm(forms.Form):
 					continue
 			v.submitEvidence(user = self.user, score = user_score)
 			num_graded += 1
-		return { 'num_graded' : num_graded, 'entity' :	entity }
+		return { 'num_graded' : num_graded, 'entity' : entity }
 
 
 class ExamScribbleMatchRobustForm(forms.Form):

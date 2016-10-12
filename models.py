@@ -136,7 +136,7 @@ class Verdict(models.Model):
 		if queryset is None:
 			queryset = self.evidence_set.all()
 		strong_evidence = [e for e in queryset if e.god_mode is True]
-		weak_evidence	= [e for e in queryset if e.god_mode is False]
+		weak_evidence = [e for e in queryset if e.god_mode is False]
 		if len(strong_evidence) > 1:
 			# We have more than one "god mode" evidence, this is bad. GIVE UP.
 			self.score = None
@@ -289,7 +289,7 @@ def get_exam_scores(exam, entity):
 		for v in queryset]
 
 def get_alpha(entity):
-	m, _ =	EntityAlpha.objects.get_or_create(entity=entity)
+	m, _ = EntityAlpha.objects.get_or_create(entity=entity)
 	return m.cached_alpha or 0
 
 # vim: foldnestmax=1 foldlevel=1 fdm=indent
