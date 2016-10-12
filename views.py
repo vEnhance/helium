@@ -343,13 +343,13 @@ class ResultPrinter:
 			output += "\n"
 		output += "\n"
 		return output
-	def get_rows(self, precision = 3):
+	def get_rows(self, precision = 2):
 		sheet = [["Rank", "Name", "Total"]]
 		for result in self.results:
-			sheetrow = [result.rank, result.row_name,
-					\ round(result.total, ndigits = precision)]
+			sheetrow = [result.rank, result.row_name, \
+					round(result.total, ndigits = precision)]
 			if len(result.scores) > 1:
-				sheetrow += [round(s, ndigits = precision) for s in result.scores]
+				sheetrow += [round(s, ndigits = precision) if s else '0' for s in result.scores]
 			sheet.append(sheetrow)
 		return sheet
 
