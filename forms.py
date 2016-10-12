@@ -28,18 +28,15 @@ class ExamGradingRobustForm(forms.Form):
 			raise ValueError("User is not staff")
 		super(forms.Form, self).__init__(*args, **kwargs)
 		problems = exam.problems.all()
-
 		self.exam = exam
 		self.user = user
 		self.problems = list(problems)
-
 		if self.exam.is_indiv:
 			self.fields['entity'] = MathleteModelChoiceField(\
 					queryset = He.models.Entity.mathletes.all())
 		else:
 			self.fields['entity'] = forms.ModelChoiceField(\
 					queryset = He.models.Entity.teams.all())
-		
 		for problem in problems:
 			n = problem.problem_number
 			kwargs = {
@@ -53,14 +50,12 @@ class ExamGradingRobustForm(forms.Form):
 				kwargs['help_text'] = "Input 0 or 1."
 			elif problem.weight is not None:
 				kwargs['max_value'] = problem.weight
-				kwargs['help_text'] = "Input an integer from 0 to %d." %problem.weight
+				kwargs['help_text'] = "Weight is %d." %problem.weight
 			else:
-				kwargs['help_text'] = "Input a nonnegative integer."
+				kwargs['help_text'] = ""
 			if problem.answer.strip() != '':
-				kwargs['help_text'] += '  (Answer is %s.)' %problem.answer
-
+				kwargs['help_text'] = 'Answer is %s. ' %problem.answer + kwargs['help_text']
 			self.fields['p' + str(n)] = forms.IntegerField(**kwargs)
-
 		self.fields['force'] = forms.BooleanField(
 				label = 'Override',
 				required = False,
