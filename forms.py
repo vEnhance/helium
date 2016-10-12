@@ -25,6 +25,10 @@ class ExamScanSelectForm(forms.Form):
 			label = "Read scans for exam",
 			queryset = He.models.Exam.objects.filter(is_ready=True, is_scanned=True))
 
+# The following forms are ROBUST in the sense that
+# the form.clean() method will actually do the processing work
+# of updating the models
+
 class ExamGradingRobustForm(forms.Form):
 	"""Creates a form for the old-style grader.
 	Note this form is *robust*: on submission (actually in the clean() method),

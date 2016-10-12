@@ -49,7 +49,9 @@ FINAL_TEXT_BANNER = """
 
 
 def _redir_obj_id(request, target, key, form_type):
-	"""To be used with a select form. Redirects to page with correct ID."""
+	"""To be used with a select form. Redirects to page with correct ID.
+	For example, if you use an ExamSelectForm and POST to /helium/match-exam-scans/
+	this will send a redirec to /helium/match-exam-scans/<exam.id>"""
 	if not request.method == "POST":
 		return HttpResponseRedirect('/helium')
 	form = form_type(request.POST)
@@ -61,13 +63,13 @@ def _redir_obj_id(request, target, key, form_type):
 
 @staff_member_required
 def index(request):
+	"""This prints the main lainding page helium.html"""
 	context = {
 			'scanform' : forms.ProblemScanSelectForm(),
 			'examform' : forms.ExamSelectForm(),
 			'matchform' : forms.ExamScanSelectForm(),
 			}
 	return render(request, "helium.html", context)
-
 
 @staff_member_required
 def old_grader_redir(request):
@@ -231,7 +233,7 @@ def ajax_next_scan(request):
 @require_POST
 def ajax_prev_evidence(request):
 	"""POST arguments: problem_id, and either id_mathlete / id_team.
-	RETURN: a list of pairs (num, answer) where answer may be None"""
+	RETURN: a list of pairs (problem_number, answer) where answer may be None"""
 	try:
 		exam_id = int(request.POST['exam_id'])
 		exam = He.models.Exam.objects.get(id = exam_id)
@@ -255,6 +257,7 @@ def ajax_prev_evidence(request):
 
 @staff_member_required
 def progress_problems(request):
+	"""Generates a table of how progress grading the problem is going."""
 	verdicts = He.models.Verdict.objects.filter(problem__exam__is_ready=True)
 	verdicts = list(verdicts)
 	verdicts.sort(key = lambda v : v.problem.id)
@@ -278,8 +281,10 @@ def progress_problems(request):
 
 	context = {'columns' : columns, 'table' : table, 'pagetitle' : 'Grading Progress'}
 	return render(request, "gentable.html", context)
+
 @staff_member_required
 def progress_scans(request):
+	"""Generates a table showing how quickly the scans are being matched for a problem."""
 	examscribbles = He.models.ExamScribble.objects\
 			.filter(exam__is_ready=True, exam__is_scanned=True)
 	examscribbles = list(examscribbles)
@@ -338,7 +343,13 @@ class ResultPrinter:
 		output += "\n"
 		return output
 
-def _report(num_show = None, num_named = None, teaser = False):
+def _report(num_show = None, num_named = None,
+		show_indiv_alphas = True, show_team_sum_alphas = True, show_hmmt_sweepstakes = True):
+	"""Explanation of potions:
+	num_show: Display only the top N entities
+	num_named: Suppress the names of entities after rank N
+	The other booleans are self explanatory."""
+
 	output = '<!DOCTYPE html>' + "\n"
 	output += '<html><head></head><body>' + "\n"
 	output += '<pre style="font-family:dejavu sans mono;">' + "\n"
@@ -349,8 +360,7 @@ def _report(num_show = None, num_named = None, teaser = False):
 	teams = list(He.models.Entity.teams.all())
  
 	## Individual Results
-	indiv_exams = He.models.Exam.objects.filter(is_indiv=True)
-	if not teaser:
+	if show_indiv_alphas:
 		results = [NameResultRow(name = mathlete.name,
 					scores = [He.models.get_alpha(mathlete)])
 					for mathlete in mathletes]
@@ -359,6 +369,7 @@ def _report(num_show = None, num_named = None, teaser = False):
 				num_show = num_show, num_named = num_named)
 	output += "\n"
 
+	indiv_exams = He.models.Exam.objects.filter(is_indiv=True)
 	for exam in indiv_exams:
 		results = [NameResultRow(
 				name = mathlete.name,
@@ -371,7 +382,8 @@ def _report(num_show = None, num_named = None, teaser = False):
 
 	## Team Results
 	team_exams = He.models.Exam.objects.filter(is_indiv=False)
-	team_exam_scores = collections.defaultdict(list) # team.name -> list of scores
+	if show_hmmt_sweepstakes:
+		team_exam_scores = collections.defaultdict(list) # team.name -> list of scores
 
 	for exam in team_exams:
 		results = [NameResultRow(name = team.name,
@@ -382,15 +394,16 @@ def _report(num_show = None, num_named = None, teaser = False):
 				num_show = num_show, num_named = num_named,
 				float_string = "%2.0f", int_string = "%2d")
 		# Use for sweeps
-		if len(results) > 0 and any([r.total for r in results]):
-			this_exam_weight = 400.0/max([r.total for r in results])
-		else:
-			this_exam_weight = 0 # nothing yet
-		for r in results:
-			team_exam_scores[r.name].append(this_exam_weight * r.total)
+		if show_hmmt_sweepstakes:
+			if len(results) > 0 and any([r.total for r in results]):
+				this_exam_weight = 400.0/max([r.total for r in results])
+			else:
+				this_exam_weight = 0 # nothing yet
+			for r in results:
+				team_exam_scores[r.name].append(this_exam_weight * r.total)
 
 	# Now compute individual scores
-	if not teaser:
+	if show_team_sum_alphas:
 		results = []
 		for team in teams:
 			scores = [He.models.get_alpha(m) for m in mathletes if m.team == team]
@@ -398,15 +411,16 @@ def _report(num_show = None, num_named = None, teaser = False):
 			results.append(NameResultRow(name = team.name, scores = scores))
 		output += ResultPrinter(results).get_table(heading = "Team Individual Aggregate", \
 				num_show = num_show, num_named = num_named)
-		if len(results) > 0 and any([r.total for r in results]):
-			indiv_weight = 400.0/max([r.total for r in results])
-		else:
-			indiv_weight = 0 # nothing yet
-		for r in results:
-			team_exam_scores[r.name].append(indiv_weight * r.total)
+		if show_hmmt_sweepstakes:
+			if len(results) > 0 and any([r.total for r in results]):
+				indiv_weight = 800.0/max([r.total for r in results])
+			else:
+				indiv_weight = 0 # nothing yet
+			for r in results:
+				team_exam_scores[r.name].append(indiv_weight * r.total)
 
 	# Finally, sweepstakes
-	if not teaser:
+	if show_hmmt_sweepstakes:
 		output += "\n"
 		results = [NameResultRow(name = team.name,
 			scores = team_exam_scores[team.name])
@@ -423,7 +437,7 @@ def _report(num_show = None, num_named = None, teaser = False):
 
 @staff_member_required
 def reports_short(request):
-	return _report(num_show=10)
+	return _report(num_show = 10)
 @staff_member_required
 def reports_extended(request):
 	return _report(num_named = 50)
@@ -432,10 +446,14 @@ def reports_full(request):
 	return _report()
 def teaser(request):
 	"""ACCESSIBLE TO NON-STAFF!"""
-	return _report(num_show = 15, num_named = 0, teaser=True)
+	return _report(num_show = 15, num_named = 0,
+			show_indiv_alphas = False,
+			show_team_sum_alphas = False,
+			show_hmmt_sweepstakes = False)
 
 @user_passes_test(lambda u: u.is_superuser)
 def run_management(request, command_name):
+	"""Starts a thread which runs a specified management command"""
 	def target_function():
 		django.core.management.call_command(command_name)
 	t = threading.Thread(target = target_function)
