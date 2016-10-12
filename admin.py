@@ -38,7 +38,7 @@ class ExamAdmin(admin.ModelAdmin):
 
 @admin.register(He.models.Problem)
 class ProblemAdmin(admin.ModelAdmin):
-	list_display = ('__unicode__', 'cached_beta', 'id',  'weight', 'allow_partial')
+	list_display = ('__unicode__', 'weight', 'allow_partial', 'id')
 
 @admin.register(He.models.ExamScribble)
 class ExamScribbleAdmin(admin.ModelAdmin):

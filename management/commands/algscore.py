@@ -29,5 +29,5 @@ class Command(BaseCommand):
 
 		for problem_id, beta in betas.iteritems():
 			problem = He.models.Problem.objects.get(id = problem_id)
-			problem.cached_beta = beta
+			problem.weight = beta
 			problem.save()

@@ -82,14 +82,17 @@ class Problem(models.Model):
 	problem_number = models.IntegerField()
 	answer = models.CharField(max_length=70, default='')
 
-	cached_beta = models.FloatField(default=1, blank=True)
-	weight = models.IntegerField(blank=True, null=True)
+	weight = models.FloatField(default=1)
 	allow_partial = models.BooleanField(default=False)
 	def __unicode__(self): return self.exam.name + " #" + unicode(self.problem_number)
 
 	@property
 	def is_indiv(self):
 		return self.exam.is_indiv
+
+	@property
+	def intweight(self):
+		return int(self.weight) if self.weight.is_integer() else self.weight
 
 	class Meta:
 		unique_together = ('exam', 'problem_number')
@@ -281,13 +284,9 @@ class EntityAlpha(models.Model):
 def get_exam_scores(exam, entity):
 	queryset = Verdict.objects.filter(entity=entity, problem__exam=exam, is_valid=True)\
 					.order_by('problem__problem_number')
-	if exam.is_alg_scoring:
-		return [v.problem.cached_beta * v.score \
-				if v.score else 0 for v in queryset]
-	else:
-		return [v.problem.weight * (v.score or 0)
-			if not v.problem.allow_partial else (v.score or 0)
-			for v in queryset]
+	return [v.problem.intweight * (v.score or 0)
+		if not v.problem.allow_partial else (v.score or 0)
+		for v in queryset]
 
 def get_alpha(entity):
 	m, _ =	EntityAlpha.objects.get_or_create(entity=entity)
