@@ -17,8 +17,8 @@ If you are confident your own entered entry is correct,
 you should use the "override" button below,
 and then hand it to a third person to triple grade.</p>
 
-{% if whom %}
-<p class="text-success">Successfully graded {{ num_graded }} problems for {{ whom }}.</p>
+{% if entity %}
+<p class="text-success">Successfully graded {{ num_graded }} problems for {{ entity }}.</p>
 {% endif %}
 
 <form action="/helium/old-grader/{{exam.id}}/" method="post">
