@@ -41,6 +41,10 @@ class Entity(models.Model):
 	For HMMT, the management command heliumimport will copy data from registration into here."""
 
 	name = models.CharField(max_length=80)
+	shortname = models.CharField(max_length=80, default='',
+			help_text = "For teams, a shorter version of their name. "
+			"This is used instead when attached to mathletes. "
+			"Leave this blank to just use the team name instead.")
 	team = models.ForeignKey('self', null=True, blank=True)
 	is_team = models.BooleanField(default=False)
 	number = models.IntegerField(null=True, blank=True,
@@ -54,7 +58,10 @@ class Entity(models.Model):
 
 	def __unicode__(self):
 		if self.team is not None:
-			return '%s (%s)' %(self.name, self.team.name)
+			if self.team.shortname:
+				return '%s (%s)' %(self.name, self.team.shortname)
+			else:
+				return '%s (%s)' %(self.name, self.team.name)
 		else:
 			return self.name
 
