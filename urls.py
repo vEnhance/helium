@@ -1,6 +1,9 @@
 from django.conf.urls import url
 import helium.views as views
 
+# CONVENTION: URL is always the name of the view function
+# with all dashes and slashes replaced by underscores
+
 urlpatterns = [
 	url(r'^grade-scans/([0-9]+)$', views.grade_scans),
 	url(r'^grade-scans-redir/$', views.grade_scans_redir),
@@ -18,6 +21,7 @@ urlpatterns = [
 	url(r'^reports/extended/$', views.reports_extended),
 	url(r'^reports/full/$', views.reports_full), # super-user only
 	url(r'^reports/teaser/$', views.teaser),
+	url(r'^spreadsheet/$', views.spreadsheet),
 	url(r'^management/([a-zA-Z]+)/$', views.run_management),
 	url(r'^$', views.index),
 ]

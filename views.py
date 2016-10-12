@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import user_passes_test
+from odfsheetapi import get_spreadsheet
 import django.core.management
 import django.db
 import helium as He
@@ -310,8 +311,8 @@ def _heading(s):
 	return s.upper() + "\n" + "=" * 60 + "\n"
 class NameResultRow:
 	rank = None # assigned by parent ExamPrinter
-	def __init__(self, name, scores):
-		self.name = name
+	def __init__(self, row_name, scores):
+		self.row_name = row_name
 		self.scores = scores
 		self.total = sum(scores)
 class ResultPrinter:
@@ -330,7 +331,7 @@ class ResultPrinter:
 			if num_show is not None and result.rank > num_show:
 				break
 			output += "%4d. " % result.rank
-			output += "%7.3f"  % result.total if type(result.total) == float \
+			output += "%7.2f"  % result.total if type(result.total) == float \
 					else "%7d" % result.total
 			if len(result.scores) > 1: # sum of more than one thing
 				output += "  |  "
@@ -338,10 +339,19 @@ class ResultPrinter:
 						for x in result.scores])
 			output += "  |  "
 			if num_named is None or result.rank <= num_named:
-				output += result.name
+				output += result.row_name
 			output += "\n"
 		output += "\n"
 		return output
+	def get_rows(self):
+		sheet = [["Rank", "Name", "Total"]]
+		for result in self.results:
+			if len(result.scores) > 1:
+				sheet.append([result.rank, result.row_name, "%.3f"%result.total] \
+						+ ["%.3f" %s for s in result.scores])
+			else:
+				sheet.append([result.rank, result.row_name, "%.3f"%result.total])
+		return sheet
 
 def _report(num_show = None, num_named = None,
 		show_indiv_alphas = True, show_team_sum_alphas = True, show_hmmt_sweepstakes = True):
@@ -361,7 +371,7 @@ def _report(num_show = None, num_named = None,
  
 	## Individual Results
 	if show_indiv_alphas:
-		results = [NameResultRow(name = mathlete.name,
+		results = [NameResultRow(row_name = unicode(mathlete),
 					scores = [He.models.get_alpha(mathlete)])
 					for mathlete in mathletes]
 		output += ResultPrinter(results)\
@@ -372,25 +382,25 @@ def _report(num_show = None, num_named = None,
 	indiv_exams = He.models.Exam.objects.filter(is_indiv=True)
 	for exam in indiv_exams:
 		results = [NameResultRow(
-				name = mathlete.name,
+				row_name = unicode(mathlete),
 				scores = He.models.get_exam_scores(exam, mathlete)) \
 				for mathlete in mathletes]
 		result_printer = ResultPrinter(results)
-		output += result_printer.get_table(heading = exam.name, \
+		output += result_printer.get_table(heading = unicode(exam), \
 				num_show = num_show, num_named = num_named)
 	output += "\n"
 
 	## Team Results
 	team_exams = He.models.Exam.objects.filter(is_indiv=False)
 	if show_hmmt_sweepstakes:
-		team_exam_scores = collections.defaultdict(list) # team.name -> list of scores
+		team_exam_scores = collections.defaultdict(list) # unicode(team) -> list of scores
 
 	for exam in team_exams:
-		results = [NameResultRow(name = team.name,
+		results = [NameResultRow(row_name = unicode(team),
 			scores = He.models.get_exam_scores(exam, team)) \
 			for team in teams]
 		result_printer = ResultPrinter(results)
-		output += result_printer.get_table(heading = exam.name, \
+		output += result_printer.get_table(heading = unicode(exam), \
 				num_show = num_show, num_named = num_named,
 				float_string = "%2.0f", int_string = "%2d")
 		# Use for sweeps
@@ -400,15 +410,15 @@ def _report(num_show = None, num_named = None,
 			else:
 				this_exam_weight = 0 # nothing yet
 			for r in results:
-				team_exam_scores[r.name].append(this_exam_weight * r.total)
+				team_exam_scores[r.row_name].append(this_exam_weight * r.total)
 
-	# Now compute individual scores
+	# Now compute sum of individual scores
 	if show_team_sum_alphas:
 		results = []
 		for team in teams:
 			scores = [He.models.get_alpha(m) for m in mathletes if m.team == team]
 			scores.sort(reverse=True)
-			results.append(NameResultRow(name = team.name, scores = scores))
+			results.append(NameResultRow(row_name = unicode(team), scores = scores))
 		output += ResultPrinter(results).get_table(heading = "Team Individual Aggregate", \
 				num_show = num_show, num_named = num_named)
 		if show_hmmt_sweepstakes:
@@ -417,17 +427,17 @@ def _report(num_show = None, num_named = None,
 			else:
 				indiv_weight = 0 # nothing yet
 			for r in results:
-				team_exam_scores[r.name].append(indiv_weight * r.total)
+				team_exam_scores[r.row_name].append(indiv_weight * r.total)
 
 	# Finally, sweepstakes
 	if show_hmmt_sweepstakes:
 		output += "\n"
-		results = [NameResultRow(name = team.name,
-			scores = team_exam_scores[team.name])
+		results = [NameResultRow(row_name = unicode(team),
+			scores = team_exam_scores[unicode(team)])
 			for team in teams]
 		output += ResultPrinter(results).get_table(heading = "Sweepstakes", \
 				num_show = num_show, num_named = num_named,
-				float_string = "%5.2f", int_string = "%5d")
+				float_string = "%6.2f", int_string = "%6d")
    
 	output += "This report was generated by Helium at " + time.strftime('%c') + "."
 	output += "\n\n"
@@ -450,6 +460,46 @@ def teaser(request):
 			show_indiv_alphas = False,
 			show_team_sum_alphas = False,
 			show_hmmt_sweepstakes = False)
+
+@user_passes_test(lambda u: u.is_superuser)
+def spreadsheet(request):
+	"""Get the entire score spreadsheet."""
+
+	mathletes = list(He.models.Entity.mathletes.all())
+	teams = list(He.models.Entity.teams.all())
+
+	sheets = {} # sheet name -> rows
+
+	# Individual alphas
+	results = [NameResultRow(row_name = unicode(mathlete),
+				scores = [He.models.get_alpha(mathlete)])
+				for mathlete in mathletes]
+	if any([r.total for r in results]): # any nonzero alphas
+		sheets['Alpha'] = ResultPrinter(results).get_rows()
+
+	indiv_exams = He.models.Exam.objects.filter(is_indiv=True)
+	for exam in indiv_exams:
+		results = [NameResultRow(
+				row_name = unicode(mathlete),
+				scores = He.models.get_exam_scores(exam, mathlete)) \
+				for mathlete in mathletes]
+		result_printer = ResultPrinter(results)
+		sheets[unicode(exam)] = result_printer.get_rows()
+
+	team_exams = He.models.Exam.objects.filter(is_indiv=False)
+	for exam in team_exams:
+		results = [NameResultRow(row_name = unicode(team),
+			scores = He.models.get_exam_scores(exam, team)) \
+			for team in teams]
+		result_printer = ResultPrinter(results)
+		sheets[unicode(exam)] = result_printer.get_rows()
+
+	spreadsheet = get_spreadsheet(sheets)
+	response = HttpResponse(spreadsheet,\
+			content_type="application/vnd.oasis.opendocument.spreadsheet")
+	response['Content-Disposition'] = 'attachment; filename=scores-%s.ods' \
+			%time.strftime("%Y%m%d-%H%M%S")
+	return response
 
 @user_passes_test(lambda u: u.is_superuser)
 def run_management(request, command_name):
