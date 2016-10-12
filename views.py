@@ -234,26 +234,16 @@ def ajax_prev_evidence(request):
     try:
         exam_id     = int(request.POST['exam_id'])
         exam = He.models.Exam.objects.get(id = exam_id)
-        if exam.is_indiv:
-            mathlete_id = int(request.POST['mathlete_id'])
-        else:
-            team_id     = int(request.POST['team_id'])
+        entity_id = int(request.POST['entity_id'])
     except ValueError:
         return
     output = []
     for problem in exam.problem_set.all().order_by('problem_number'):
         n = problem.problem_number
         try:
-            if exam.is_indiv:
-                e = He.models.Evidence.objects.get(
-                        user = request.user,
-                        verdict__problem = problem,
-                        verdict__mathlete_id = mathlete_id)
-            else:
-                e = He.models.Evidence.objects.get(
-                        user = request.user,
-                        verdict__problem = problem,
-                        verdict__team_id = team_id)
+            e = He.models.Evidence.objects.get(
+                    user = request.user,
+                    verdict__entity__id = entity_id)
         except He.models.Evidence.DoesNotExist:
             output.append( (n, None) )
         else:

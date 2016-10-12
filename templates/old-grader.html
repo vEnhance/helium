@@ -36,13 +36,12 @@ and then hand it to a third person to triple grade.</p>
 <script type="text/javascript">
 $(document).ready(function() {
 	function update(){
-		if ( $("#id_mathlete").val() || $("#id_team").val() ) {
+		if ( $("#id_entity").val() ) {
 			$.ajax({
 				url  : "/helium/ajax/prev-evidence/",
 				type : "POST",
 				data : {
-					mathlete_id : $("#id_mathlete").val(),
-					team_id : $("#id_team").val(),
+					entity_id : $("#id_entity").val(),
 					exam_id : {{ exam.id }}
 				},
 			}).done( function(result) {
