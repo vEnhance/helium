@@ -3,10 +3,6 @@ import django.utils.safestring
 import helium as He
 import logging
 
-class MathleteModelChoiceField(forms.ModelChoiceField):
-	def label_from_instance(self, mathlete):
-		return mathlete.name
-
 class ProblemScanSelectForm(forms.Form):
 	"""Lets you pick a problem marked as ready for grading"""
 	problem = forms.ModelChoiceField(
@@ -42,7 +38,7 @@ class ExamGradingRobustForm(forms.Form):
 		self.user = user
 		self.problems = list(problems)
 		if self.exam.is_indiv:
-			self.fields['entity'] = MathleteModelChoiceField(\
+			self.fields['entity'] = forms.ModelChoiceField(\
 					queryset = He.models.Entity.mathletes.all())
 		else:
 			self.fields['entity'] = forms.ModelChoiceField(\

@@ -34,10 +34,11 @@ class Entity(models.Model):
 	(as well as Entity.objects, as usual).
 	
 	The `team` attribute points to another Entity,
-	and should be set to None for unaffiliated individuals and actual teams.
-	The Boolean is_team distinguishes between these two use cases.
+	and should be set to None for (i) actual teams, and (ii) individuals without teams.
+	In particular, in a contest with no teams this should always be None.
+	The Boolean is_team distinguishes between use cases (i) and (ii).
 	
-	The management command heliumimport will copy data from registration into here."""
+	For HMMT, the management command heliumimport will copy data from registration into here."""
 
 	name = models.CharField(max_length=80)
 	team = models.ForeignKey('self', null=True, blank=True)
@@ -52,14 +53,10 @@ class Entity(models.Model):
 			raise ValidationError("LOL what?")
 
 	def __unicode__(self):
-		return self.name
-
-	@property
-	def verbose_name(self):
-		if self.is_team:
-			return '%s [%s]' %(self.name, self.team.name)
+		if self.team is not None:
+			return '%s (%s)' %(self.name, self.team.name)
 		else:
-			return self.team.name
+			return self.name
 
 	objects = models.Manager() # why do I have to repeat this?
 	teams = TeamManager()
