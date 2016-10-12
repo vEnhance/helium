@@ -32,6 +32,10 @@ class Entity(models.Model): # This is EITHER a team or mathlete (i.e. exam taker
 	name = models.CharField(max_length=80)
 	team = models.ForeignKey('self', null=True, blank=True)
 	is_team = models.BooleanField(default=False)
+	number = models.IntegerField(null=True, blank=True,
+			help_text = "You can assign (unique) numbers here "
+			"if you can't assume names are pairwise distinct."
+			"This isn't used internally by Helium itself.")
 
 	def clean(self):
 		if self.team is not None and self.is_team:
@@ -52,7 +56,7 @@ class Entity(models.Model): # This is EITHER a team or mathlete (i.e. exam taker
 	mathletes = MathleteManager()
 
 	class Meta:
-		unique_together = ('name', 'team')
+		unique_together = ('is_team', 'number')
 
 # Exam/problem objects
 

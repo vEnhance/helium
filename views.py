@@ -436,7 +436,7 @@ def run_management(request, command_name):
 	t = threading.Thread(target = target_function)
 	t.daemon = True
 	t.start()
-	return HttpResponseNotFound("Command %s started" %command_name,\
+	return HttpResponse("Command %s started" %command_name,\
 			content_type="text/plain")
 
 # vim: fdm=indent foldnestmax=1

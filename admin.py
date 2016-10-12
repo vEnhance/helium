@@ -27,7 +27,7 @@ class TeamFilter(admin.SimpleListFilter):
 
 @admin.register(He.models.Entity)
 class EntityAdmin(admin.ModelAdmin):
-	list_display = ('name', 'id', 'team', 'is_team')
+	list_display = ('name', 'id', 'team', 'number', 'is_team')
 	list_filter = (TeamFilter,)
 	inlines = (EntityInline,)
 
