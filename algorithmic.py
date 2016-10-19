@@ -1,4 +1,5 @@
 # This is taken from the old Babbage system
+# The "math" portion of algorithmic scoring is here
 
 from math import exp, fabs
 from operator import itemgetter

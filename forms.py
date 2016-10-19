@@ -1,3 +1,17 @@
+"""
+HELIUM
+Evan Chen, 2016
+
+forms.py
+
+These are automatic Django forms used in the templates and throughout.
+The first few are pretty self-explanatory.
+
+The ROBUST forms are interesting in that they save changes to database
+in the clean() method (not sure if this is the right thing to do).
+"""
+
+
 from django import forms
 import django.utils.safestring
 import helium as He

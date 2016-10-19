@@ -1,3 +1,13 @@
+"""
+HELIUM
+Evan Chen, 2016
+
+admin.py
+
+This is fairly straightforward.
+It makes the Django admin interface usable, and is amazing.
+"""
+
 from django.contrib import admin
 import helium as He
 

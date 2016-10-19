@@ -1,3 +1,15 @@
+"""
+HELIUM
+Evan Chen, 2016
+
+tests.py
+
+These are some very rudimentary tests
+(to be honest I just wanted to play with Django testing units).
+It would be good if we could make these tests much more extensive.
+But that's a to-do item a long while from now.
+"""
+
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError

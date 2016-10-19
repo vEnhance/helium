@@ -1,3 +1,19 @@
+"""
+HELIUM
+Evan Chen, 2016
+
+models.py
+
+General overview of models:
+
+* Entity objects represent either a team or mathlete
+* These Entity's takes several Exams, with several Problems
+* For every Entity and Problem, we have a Verdict (which gives the score)
+  based on Evidence (one for each grader who read the problem)
+* ExamScribble and ProblemScrrible objects keep track of scans
+* EntityAlpha is a way to store alpha values (so we don't have to keep recomputing them)
+"""
+
 from __future__ import unicode_literals
 
 from django.db import models
@@ -21,6 +37,8 @@ from django.db.models import Sum
 
 
 ### CONTESTANT Objects ###
+
+# These are used to provide Entity.teams and Entity.mathletes
 class TeamManager(models.Manager):
 	def get_queryset(self):
 		return super(TeamManager, self).get_queryset().filter(is_team=True)
@@ -38,7 +56,9 @@ class Entity(models.Model):
 	In particular, in a contest with no teams this should always be None.
 	The Boolean is_team distinguishes between use cases (i) and (ii).
 	
-	For HMMT, the management command heliumimport will copy data from registration into here."""
+	For HMMT, the management command heliumimport will copy data from registration into here.
+	
+	In addition to Entity.objects, the managers Entity.teams and Entity.mathletes."""
 
 	name = models.CharField(max_length=80)
 	shortname = models.CharField(max_length=80, default='',

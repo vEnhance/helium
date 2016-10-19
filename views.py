@@ -1,3 +1,37 @@
+"""
+HELIUM
+Evan Chen, 2016
+
+views.py
+
+This is the massive views.py.
+
+CONVENTION: Name of view function is always the URL
+with all dashes and slashes replaced by underscores
+
+This file is divided into roughly a few parts:
+
+## Grading views: for example
+* The classical grader (old_grader), grade by name and test
+* The exam scan matching interface (match_exam_scans)
+* The scan grader (grade_scans), grading problem scans
+
+## AJAX hooks
+These are ajax_*. Used by scan grading.
+
+## Progress reports
+progress_*, shows how much progress we've made grading.
+
+## Results
+reports_*, this shows the results of the tournament.
+This includes also teaser and spreadsheet.
+
+## Misc
+run_management, for management commands
+index, the main landing page.
+"""
+
+
 from django.shortcuts import render
 from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound

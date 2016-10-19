@@ -1,4 +1,13 @@
-# Taken from babbage
+"""
+HELIUM
+Evan Cheno, 2016
+
+presentation.py
+
+This is responsible for the final presentation of results of tournament.
+It generates both text files and ODF spreadsheets.
+The get_odf_spreadsheet is an improved version of one inside Babbage.
+"""
 
 from StringIO import StringIO
 from odf.opendocument import OpenDocumentSpreadsheet
@@ -36,16 +45,26 @@ def get_odf_spreadsheet(sheets):
 	doc.write(st)
 	return st.getvalue()
 
-# PRINTING OF RESULTS
 def get_heading(s):
+	"""Creates a heading from a string s"""
 	return s.upper() + "\n" + "=" * 60 + "\n"
 class NameResultRow:
+	"""This is a container object which hold the information of a *row*;
+	this includes a name (e.g. mathlete or team name)
+	and one or more scores, which are printed one at a time.
+	The sum of the scores is also computed and stored as row.total"""
 	rank = None # assigned by parent ExamPrinter
 	def __init__(self, row_name, scores):
 		self.row_name = row_name
 		self.scores = scores
 		self.total = sum(scores)
 class ResultPrinter:
+	"""This is a object which takes in several result rows,
+	stored as self.results.
+	It will assign ranks to these rows (e.g. 1st, 2nd, etc.).
+	Then, the facilities RP.get_table and RP.get_rows
+	will respectively create a text table and a list of Python lists
+	(the latter which should probably be fed into get_odf_spreadsheet"""
 	def __init__(self, results):
 		results.sort(key = lambda r : -r.total)
 		r = 0
@@ -83,22 +102,28 @@ class ResultPrinter:
 			sheet.append(sheetrow)
 		return sheet
 
+
 def RP_alphas(mathletes):
+	"""Creates a ResultPrinter for a set of mathletes,
+	by looking up their alpha values"""
 	results = [NameResultRow(row_name = unicode(mathlete),
 				scores = [He.models.get_alpha(mathlete)])
 				for mathlete in mathletes]
 	return ResultPrinter(results)
 def RP_exam(exam, entities):
+	"""Creates a ResultPrinter for a set of exams and entities,
+	by looking up their scores for the exam"""
 	results = [NameResultRow(
 			row_name = unicode(entity),
 			scores = He.models.get_exam_scores(exam, entity)) \
 			for entity in entities]
 	return ResultPrinter(results)
 def RP_alpha_sums(mathletes, teams):
+	"""Creates a ResultPrinter for a set of mathletes and teams
+	by summing the alpha values of the mathletes"""
 	results = []
 	for team in teams:
 		scores = [He.models.get_alpha(m) for m in mathletes if m.team == team]
 		scores.sort(reverse=True)
 		results.append(NameResultRow(row_name = unicode(team), scores = scores))
 	return ResultPrinter(results)
-

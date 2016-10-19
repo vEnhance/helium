@@ -1,8 +1,18 @@
+"""
+HELIUM
+Evan Chen, 2016
+
+urls.py
+
+Pretty self-explanatory.
+
+CONVENTION: Name of view function is always the URL
+with all dashes and slashes replaced by underscores
+"""
+
 from django.conf.urls import url
 import helium.views as views
 
-# CONVENTION: URL is always the name of the view function
-# with all dashes and slashes replaced by underscores
 
 urlpatterns = [
 	url(r'^grade-scans/([0-9]+)$', views.grade_scans),
