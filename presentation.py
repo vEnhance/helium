@@ -7,21 +7,31 @@ from odf.text import P
 
 import helium as He
 
-# Babbage
+# Why isn't this built-in?
+def valuetype(val):
+	if isinstance(val, int): return 'float'
+	elif isinstance(val, float): return 'float'
+	elif isinstance(val, bool): return 'boolean'
+	else: return 'string'
+
 def get_odf_spreadsheet(sheets):
+	"""Creates a spreadsheet from a dictionary sheets of 
+	dictionary entries sheetname -> nested list of rows"""
 	doc = OpenDocumentSpreadsheet()
 	spreadsheet = doc.spreadsheet
-	for sheet_name, target_cells in sheets.iteritems():
+	for sheet_name, list_rows in sheets.iteritems():
 		sheet = Table()
 		spreadsheet.addElement(sheet)
 		sheet.setAttribute("name", sheet_name)
-		for target_row in target_cells:
-			row = TableRow()
-			for target_cell in target_row:
-				cell = TableCell()
-				cell.addElement(P(text=target_cell))
-				row.addElement(cell)
-			sheet.addElement(row)
+		for list_row in list_rows:
+			table_row = TableRow()
+			for cell_content in list_row:
+				vtype = valuetype(cell_content)
+				table_cell = TableCell(valuetype = vtype, value = cell_content)
+				table_row.addElement(table_cell)
+				if vtype == "string":
+					table_cell.addElement(P(text=cell_content))
+			sheet.addElement(table_row)
 	st = StringIO()
 	doc.write(st)
 	return st.getvalue()
@@ -69,7 +79,7 @@ class ResultPrinter:
 			sheetrow = [result.rank, result.row_name, \
 					round(result.total, ndigits = precision)]
 			if len(result.scores) > 1:
-				sheetrow += [round(s, ndigits = precision) if s else '0' for s in result.scores]
+				sheetrow += [round(s, ndigits = precision) if s else 0 for s in result.scores]
 			sheet.append(sheetrow)
 		return sheet
 
