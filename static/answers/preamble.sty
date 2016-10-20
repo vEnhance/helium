@@ -1,0 +1,72 @@
+\newcommand{\HMMT}{HMMT}
+
+\setlength{\parindent}{0pt}
+\usepackage[margin=1in]{geometry}
+\usepackage{tabularx}
+\newcommand{\answerbox}[1]{
+	\begin{tabular}{|m{0.3in}|m{2in}|}
+		\hline
+		\LARGE \bfseries #1 & \\[0.45in]
+		\hline
+	\end{tabular}
+	\par\vspace*{0.45in}
+}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\setlength{\headheight}{30pt}
+\renewcommand{\headrulewidth}{0pt}
+\rhead{\Huge$\bullet$}
+\lfoot{\Huge$\bullet$}
+\rfoot{\Huge$\bullet$}
+\cfoot{HELIUM}
+
+\newcommand{\answerboxes}{
+\begin{center}
+	\begin{minipage}[t]{2.8in}
+		\answerbox{1}
+		\answerbox{2}
+		\answerbox{3}
+		\answerbox{4}
+		\answerbox{5}
+	\end{minipage}
+	\hspace{0.7in}
+	\begin{minipage}[t]{2.8in}
+		\answerbox{6}
+		\answerbox{7}
+		\answerbox{8}
+		\answerbox{9}
+		\answerbox{10}
+	\end{minipage}
+\end{center}
+}
+
+\newcommand{\indivsheet}[1]{
+\begin{center}
+	\bfseries\huge
+	\HMMT: #1 \\[0.5in]
+	\begin{tabular}{|m{1.5in}|m{4.5in}|}
+		\hline
+		\bfseries \large Student Name  & \\[0.3in] \hline
+		\bfseries \large Team Name     & \\[0.3in] \hline
+	\end{tabular}
+	\vspace{0.4in}
+	\answerboxes
+\end{center}
+}
+
+\newcommand{\teamsheet}[1]{
+\begin{center}
+	\bfseries\huge
+	\HMMT: #1 \\[0.5in]
+	\begin{tabular}{|m{1.5in}|m{4.5in}|}
+		\hline
+		\bfseries \large Organization & \\[0.3in] \hline
+		\bfseries \large Team Name    & \\[0.3in] \hline
+	\end{tabular}
+	\vspace{0.4in}
+	\answerboxes
+\end{center}
+
+\eject
+}
+
