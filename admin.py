@@ -71,3 +71,7 @@ class EvidenceAdmin(admin.ModelAdmin):
 @admin.register(He.models.EntityAlpha)
 class AlphaAdmin(admin.ModelAdmin):
 	list_display = ('entity', 'cached_alpha', 'id')
+
+@admin.register(He.models.GutsScoreFunc)
+class AlphaAdmin(admin.ModelAdmin):
+	list_display = ('problem_number', 'answer', 'problem_help_text')

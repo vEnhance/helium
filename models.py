@@ -12,6 +12,7 @@ General overview of models:
   based on Evidence (one for each grader who read the problem)
 * ExamScribble and ProblemScrrible objects keep track of scans
 * EntityAlpha is a way to store alpha values (so we don't have to keep recomputing them)
+* GutsScoreFunc is a stupid applet that lets you compute guts estimation scores
 """
 
 from __future__ import unicode_literals
@@ -359,7 +360,8 @@ class ProblemScribble(models.Model):
 
 class Evidence(models.Model):
 	"""This represents a single input by a given user for a verdict:
-	`Evan entered a score of 1 on Algebra #3 for X."""
+	`Evan entered a score of 1 on Algebra #3 for X`
+	is an example of a valid interprettion."""
 
 	verdict = models.ForeignKey(Verdict)
 	user = models.ForeignKey(auth.User)
@@ -378,6 +380,27 @@ class Evidence(models.Model):
 
 	class Meta:
 		unique_together = ('verdict', 'user')
+
+class GutsScoreFunc(models.Model):
+	"""Stores a scoring function for Guts Estimation.
+	This is pretty self-explanatory."""
+
+	problem_number = models.IntegerField(unique=True,
+			help_text = "This is the problem number on Guts Round.")
+	answer = models.CharField(max_length = 80,
+			help_text = "Answer for problem, not actually used by model, shown in grader.")
+	scoring_function = models.TextField(help_text =
+			"Javascript syntax for a one-variable function. "
+			"This is the score reported if a staff member enters input x. "
+			"For example `function (x) { return 0; }`. "
+			"Can span multiple lines.")
+	problem_help_text = models.CharField(max_length = 120,
+			help_text = "An optional text that will display to help the staff member. "
+			"For example, `input a string of seven letters`.")
+
+	def __unicode__(self):
+		return "Guts %d" %self.problem_number
+	
 
 # HMMT object to store pairs of alpha and entity
 
