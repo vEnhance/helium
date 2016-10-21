@@ -397,9 +397,9 @@ class GutsScoreFunc(models.Model):
 	problem_number = models.IntegerField(unique=True,
 			help_text = "This is the problem number on Guts Round.")
 	description = models.CharField(max_length = 80, blank = True,
-			help_text = "A brief description of the problem, for admin interface use")
-	answer = models.CharField(max_length = 80, blank = True,
-			help_text = "Answer for problem, not actually used by model, shown in grader.")
+			help_text = "A brief description of the problem, shown only in admin interface.")
+	answer = models.CharField(max_length = 80,
+			help_text = "True answer for problem, not actually used by model, shown in grader.")
 	scoring_function = models.TextField(
 			default = "function (x) {\n\treturn Math.max(0, 20-Math.abs(49-x));\n}",
 			help_text =
@@ -407,6 +407,7 @@ class GutsScoreFunc(models.Model):
 			"This is the score reported if a staff member enters input x.\n"
 			"Can span multiple lines.")
 	problem_help_text = models.CharField(max_length = 120, blank = True,
+			default = "Input an integer.",
 			help_text = "An optional text that will display to help the staff member. "
 			"For example, `input a string of seven letters`.")
 
