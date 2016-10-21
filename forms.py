@@ -60,7 +60,7 @@ class ExamGradingRobustForm(forms.Form):
 		for problem in problems:
 			n = problem.problem_number
 			kwargs = {
-					'label' : unicode(problem),
+					'label' : '%s [%s]' %(unicode(problem), round(problem.weight,2)),
 					# 'widget' : forms.TextInput,
 					'required' : False,
 					'min_value' : 0,
@@ -70,7 +70,7 @@ class ExamGradingRobustForm(forms.Form):
 				kwargs['help_text'] = "Input 0 or 1."
 			elif problem.weight is not None:
 				kwargs['max_value'] = problem.weight
-				kwargs['help_text'] = "Weight is %d." %problem.weight
+				kwargs['help_text'] = "Input score out of %s." %(problem.weight)
 			else:
 				kwargs['help_text'] = ""
 			if problem.answer.strip() != '':
