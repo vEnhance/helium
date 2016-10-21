@@ -8,6 +8,7 @@ Pretty self-explanatory.
 
 CONVENTION: Name of view function is always the URL
 with all dashes and slashes replaced by underscores
+The corresponding template, if applicable, uses the URL name
 """
 
 from django.conf.urls import url
@@ -22,6 +23,7 @@ urlpatterns = [
 	url(r'^match-exam-scans/([0-9]+)/$', views.match_exam_scans),
 	url(r'^match-exam-scans-redir/$', views.match_exam_scans_redir),
 	url(r'^old-grader/$', views.old_grader),
+	url(r'^estimation-calc/$', views.estimation_calc),
 	url(r'^progress-problems/$', views.progress_problems),
 	url(r'^progress-scans/$', views.progress_scans),
 	url(r'^ajax/submit-scan/$', views.ajax_submit_scan), 

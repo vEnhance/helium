@@ -416,6 +416,14 @@ def _report(num_show = None, num_named = None,
 	output += "</pre></body></html>"
 	return HttpResponse(output, content_type="text/html")
 
+
+@staff_member_required
+def estimation_calc(request):
+	"""This is a calculator for guts estimation problems."""
+	scoring_fns = He.models.GutsScoreFunc.objects.all()
+	return render(request, "estimation-calc.html", {'scoring_fns' : scoring_fns})
+
+
 @staff_member_required
 def reports_short(request):
 	return _report(num_show = 10)

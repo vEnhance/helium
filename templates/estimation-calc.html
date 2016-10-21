@@ -1,0 +1,40 @@
+{% extends 'layout-helium.html' %}
+{% load static %}
+
+{% block title %}Helium | Guts Estimation{% endblock %}
+
+{% block layout-content %}
+
+<h3>Guts Estimation</h3>
+<table class="table">
+	<tr>
+		<th>Problem</th>
+		<th>Contestant Answer</th>
+		<th>Score</th>
+	</tr>
+	{% for fn in scoring_fns %}
+	<tr>
+		<td>Problem <b>{{ fn.problem_number }}</b> (answer {{fn.answer}})<br>
+			<span class="helptext">{{ fn.problem_help_text }}</span></td>
+		<td><input id="guts_input_p{{ fn.problem_number }}" /></td>
+		<td>Response: <b id="guts_echo_p{{ fn.problem_number }}"></b><br>
+			Score: <b id="guts_output_p{{ fn.problem_number }}"></b></td>
+	</tr>
+	{% endfor %}
+</table>
+
+{% endblock %}
+{% block scripts %}
+
+<script type="text/javascript">
+{% for fn in scoring_fns %}
+$("#guts_input_p{{fn.problem_number}}").change(function() {
+	var f = {{ fn.scoring_function }};
+	var guess = $("#guts_input_p{{fn.problem_number}}").val();
+	var score = f(guess);
+	$("#guts_echo_p{{ fn.problem_number }}").html(guess);
+	$("#guts_output_p{{ fn.problem_number }}").html(score);
+});
+{% endfor %}
+</script>
+{% endblock %}
