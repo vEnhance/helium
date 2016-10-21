@@ -13,6 +13,15 @@ General overview of models:
 * ExamScribble and ProblemScrrible objects keep track of scans
 * EntityAlpha is a way to store alpha values (so we don't have to keep recomputing them)
 * GutsScoreFunc is a stupid applet that lets you compute guts estimation scores
+
+
+Notes on data creation:
+
+* The Exam and Guts Scoring Function objects are meant to be edited
+  directly through the admin interface.
+* The Entity table is populated using the command heliumimport.
+
+
 """
 
 from __future__ import unicode_literals
@@ -387,14 +396,17 @@ class GutsScoreFunc(models.Model):
 
 	problem_number = models.IntegerField(unique=True,
 			help_text = "This is the problem number on Guts Round.")
-	answer = models.CharField(max_length = 80,
+	description = models.CharField(max_length = 80, blank = True,
+			help_text = "A brief description of the problem, for admin interface use")
+	answer = models.CharField(max_length = 80, blank = True,
 			help_text = "Answer for problem, not actually used by model, shown in grader.")
-	scoring_function = models.TextField(help_text =
+	scoring_function = models.TextField(
+			default = "function (x) {\n\treturn Math.max(0, 20-Math.abs(49-x));\n}",
+			help_text =
 			"Javascript syntax for a one-variable function. "
-			"This is the score reported if a staff member enters input x. "
-			"For example `function (x) { return 0; }`. "
+			"This is the score reported if a staff member enters input x.\n"
 			"Can span multiple lines.")
-	problem_help_text = models.CharField(max_length = 120,
+	problem_help_text = models.CharField(max_length = 120, blank = True,
 			help_text = "An optional text that will display to help the staff member. "
 			"For example, `input a string of seven letters`.")
 

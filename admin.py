@@ -74,4 +74,4 @@ class AlphaAdmin(admin.ModelAdmin):
 
 @admin.register(He.models.GutsScoreFunc)
 class AlphaAdmin(admin.ModelAdmin):
-	list_display = ('problem_number', 'answer', 'problem_help_text')
+	list_display = ('problem_number', 'description', 'answer', 'problem_help_text')
