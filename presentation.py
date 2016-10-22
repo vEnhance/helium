@@ -18,9 +18,9 @@ import helium as He
 
 # Why isn't this built-in?
 def valuetype(val):
-	if isinstance(val, int): return 'float'
+	if isinstance(val, bool): return 'boolean'
+	elif isinstance(val, int): return 'float' # somehow isinstance(True, int) = True !?
 	elif isinstance(val, float): return 'float'
-	elif isinstance(val, bool): return 'boolean'
 	else: return 'string'
 
 def get_odf_spreadsheet(sheets):
@@ -36,10 +36,13 @@ def get_odf_spreadsheet(sheets):
 			table_row = TableRow()
 			for cell_content in list_row:
 				vtype = valuetype(cell_content)
-				table_cell = TableCell(valuetype = vtype, value = cell_content)
-				table_row.addElement(table_cell)
+				if vtype == "boolean":
+					cell_content = ("YES" if cell_content else "NO")
+					vtype = "string"
+				table_cell = TableCell(valuetype=vtype, value=cell_content)
 				if vtype == "string":
-					table_cell.addElement(P(text=cell_content))
+					table_cell.addElement(P(text=str(cell_content)))
+				table_row.addElement(table_cell)
 			sheet.addElement(table_row)
 	st = StringIO()
 	doc.write(st)
