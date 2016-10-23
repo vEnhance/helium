@@ -74,10 +74,13 @@
 	<li><a href="/helium/progress-scans/">Progress Matching Scans</a></li>
 	<li><a href="/helium/view-conflicts/own/">View Grading Conflicts</a></li>
 	<li><a href="/helium/find-verdicts">Find Verdicts</a></li>
-	{% if request.user.is_superuser %}
-	<li><a href="/helium/view-conflicts/all/">View All Grading Conflicts</a></li>
-	<li><a href="/admin/helium/">Django Admin</a></li>
-	{% endif %}
+</ul>
+
+<h4>Results (not realtime)</h4>
+<ul>
+	<li><a href="/helium/reports/short/">Print Short Results</a></li>
+	<li><a href="/helium/reports/extended/">Print Extended Results</a></li>
+	<li><a href="/helium/reports/teaser/">Print Teaser</a></li>
 </ul>
 
 {% if request.user.is_superuser %}
@@ -88,18 +91,15 @@
 	<li><a href="/helium/management/updatescribbles/">Update Scribbles</a></li>
 	<li><a href="/helium/management/heliumimport/">Import Entities from Reg</a></li>
 </ul>
-{% endif %}
 
-<h4>Results (not realtime)</h4>
+<h4>Administration Commands</h4>
 <ul>
-	<li><a href="/helium/reports/short/">Print Short Results</a></li>
-	<li><a href="/helium/reports/extended/">Print Extended Results</a></li>
-	<li><a href="/helium/reports/teaser/">Print Teaser</a></li>
-	{% if request.user.is_superuser %}
+	<li><a href="/helium/view-conflicts/all/">View All Grading Conflicts</a></li>
 	<li><a href="/helium/reports/full/">Print Full Results</a></li>
 	<li><a href="/helium/spreadsheet/">Score Spreadsheet</a></li>
-	{% endif %}
+	<li><a href="/admin/helium/">Admin Interface</a></li>
 </ul>
+{% endif %}
 
 </div>
 {% endblock %}
