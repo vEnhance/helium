@@ -221,7 +221,6 @@ def match_exam_scans(request, exam_id):
 				}
 	return render(request, "match-exam-scans.html", context)
 
-
 @staff_member_required
 def grade_scans_redir(request):
 	return _redir_obj_id(request,
@@ -229,10 +228,43 @@ def grade_scans_redir(request):
 			form_type = forms.ProblemScanSelectForm)
 @staff_member_required
 def grade_scans(request, problem_id):
-	problem = He.models.Problem.objects.get(id=problem_id)
+	problem = He.models.Problem.objects.get(id=int(problem_id))
 	return render(request, "grade-scans.html",
 			{'problem' : problem, 'exam': problem.exam})
 
+
+def _show_evidences(request, verdicts):
+	table = []
+	columns = ['Entity', 'Problem', 'User', 'Score', 'Edit']
+	for verdict in verdicts:
+		for evidence in verdict.evidence_set.all():
+			tr = collections.OrderedDict()
+			tr['Entity'] = verdict.entity
+			tr['Problem'] = verdict.problem
+			tr['Score'] = evidence.score
+			tr['User'] = evidence.user
+			if request.user == evidence.user:
+				tr['Edit'] = "<a href=\"/helium/view-verdict/%d/\">Edit</a>" \
+						% verdict.id
+			else:
+				tr['Edit'] = ""
+			table.append(tr)
+	context = {'columns' : columns, 'table' : table, 'pagetitle' : 'View Evidences'}
+	return render(request, "table-only.html", context)
+
+@staff_member_required
+def view_verdict(request, verdict_id):
+	return _show_evidences(request, [He.models.Verdict.objects\
+			.get(id=int(verdict_id))] )
+@staff_member_required
+def view_conflicts_all(request):
+	return _show_evidences(request, He.models.Verdict.objects\
+			.filter(is_valid=False, problem__exam__is_ready = True) )
+@staff_member_required
+def view_conflicts_own(request):
+	return _show_evidences(request, He.models.Verdict.objects\
+			.filter(is_valid=False, problem__exam__is_ready = True,
+				evidence__user = request.user) )
 
 @staff_member_required
 @require_POST
@@ -325,8 +357,7 @@ def progress_problems(request):
 		table.append(tr)
 
 	context = {'columns' : columns, 'table' : table, 'pagetitle' : 'Grading Progress'}
-	return render(request, "gentable.html", context)
-
+	return render(request, "table-only.html", context)
 @staff_member_required
 def progress_scans(request):
 	"""Generates a table showing how quickly the scans are being matched for a problem."""
@@ -347,7 +378,7 @@ def progress_scans(request):
 		table.append(tr)
 
 	context = {'columns' : columns, 'table' : table, 'pagetitle' : 'Scans Progress'}
-	return render(request, "gentable.html", context)
+	return render(request, "table-only.html", context)
 
 def _report(num_show = None, num_named = None,
 		show_indiv_alphas = True, show_team_sum_alphas = True, show_hmmt_sweepstakes = True):

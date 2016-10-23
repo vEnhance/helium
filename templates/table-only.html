@@ -1,0 +1,11 @@
+{% extends 'layout-helium.html' %}
+{% load static %}
+
+{% block title %}Helium | {{ pagetitle }}{% endblock %}
+
+{% block layout-content %}
+<h3>{{ pagetitle }}</h3>
+
+{% include '_table.html' %}
+
+{% endblock %}
