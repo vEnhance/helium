@@ -49,11 +49,11 @@ class ExamGradingRobustForm(forms.Form):
 	"""Creates a form for the old-style grader.
 	Note this form is *robust*: on submission (actually in the clean() method),
 	it will actually submit the changes to the database"""
-	def __init__(self, exam, user, *args, **kwargs):
+	def __init__(self, exam, problems, user, *args, **kwargs):
+		print user
 		if not user.is_staff:
 			raise ValueError("User is not staff")
 		super(forms.Form, self).__init__(*args, **kwargs)
-		problems = exam.problems.all()
 		self.exam = exam
 		self.user = user
 		self.problems = list(problems)

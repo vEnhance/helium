@@ -108,26 +108,15 @@ def index(request):
 			}
 	return render(request, "helium.html", context)
 
-@staff_member_required
-def old_grader_exam_redir(request):
-	return _redir_obj_id(request,
-			key = 'exam',
-			form_type = forms.ExamSelectForm)
-@staff_member_required
-def old_grader_exam(request, exam_id):
-	exam_id = int(exam_id)
-	try:
-		exam = He.models.Exam.objects.get(id=exam_id)
-	except He.models.Exam.DoesNotExist:
-		return HttpResponseNotFound("Exam does not exist", content_type="text/plain")
+def _old_grader(request, exam, problems):
 	if request.method == 'POST':
-		form = forms.ExamGradingRobustForm(exam, request.user, request.POST)
+		form = forms.ExamGradingRobustForm(exam, problems, request.user, request.POST)
 		if form.is_valid():
 			num_graded = form.cleaned_data['num_graded']
 			entity = form.cleaned_data['entity']
 			# the form cleanup actually does the processing for us,
 			# so just hand the user a fresh form if no validation errors
-			form = forms.ExamGradingRobustForm(exam, request.user)
+			form = forms.ExamGradingRobustForm(exam, problems, request.user)
 			context = {
 					'exam' : exam,
 					'oldform' : form,
@@ -146,12 +135,34 @@ def old_grader_exam(request, exam_id):
 		# No actual grades to process yet
 		context = {
 				'exam' : exam,
-				'oldform' : forms.ExamGradingRobustForm(exam, request.user),
+				'oldform' : forms.ExamGradingRobustForm(exam, problems, request.user),
 				'num_graded' : 0,
 				'entity' : None,
 				}
 	return render(request, "old-grader.html", context)
 
+@staff_member_required
+def old_grader_exam_redir(request):
+	return _redir_obj_id(request,
+			key = 'exam',
+			form_type = forms.ExamSelectForm)
+@staff_member_required
+def old_grader_exam(request, exam_id):
+	exam = He.models.Exam.objects.get(id=int(exam_id))
+	problems = exam.problems.all()
+	return _old_grader(request, exam, problems)
+	
+@staff_member_required
+def old_grader_problem_redir(request):
+	return _redir_obj_id(request,
+			key = 'problem',
+			form_type = forms.ProblemSelectForm)
+@staff_member_required
+def old_grader_problem(request, problem_id):
+	problem = He.models.Problem.objects.get(id=int(problem_id))
+	exam = problem.exam
+	problems = [problem]
+	return _old_grader(request, exam, problems)
 
 @staff_member_required
 def match_exam_scans_redir(request):
