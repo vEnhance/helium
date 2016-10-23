@@ -108,13 +108,13 @@ def index(request):
 	return render(request, "helium.html", context)
 
 @staff_member_required
-def old_grader_redir(request):
+def old_grader_exam_redir(request):
 	return _redir_obj_id(request,
-			target = '/helium/old-grader/',
+			target = '/helium/old-grader/exam/',
 			key = 'exam',
 			form_type = forms.ExamSelectForm)
 @staff_member_required
-def old_grader(request, exam_id):
+def old_grader_exam(request, exam_id):
 	exam_id = int(exam_id)
 	try:
 		exam = He.models.Exam.objects.get(id=exam_id)
