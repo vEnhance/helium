@@ -41,6 +41,21 @@ class ExamScanSelectForm(forms.Form):
 			label = "Read scans for exam",
 			queryset = He.models.Exam.objects.filter(is_ready=True, is_scanned=True))
 
+class EntityExamSelectForm(forms.Form):
+	"""Picks any exam (even one not marked ready) and any entity"""
+	exam = forms.ModelChoiceField(label = "Select exam",
+			queryset = He.models.Exam.objects.all())
+	entity = forms.ModelChoiceField(label = "Select entity",
+			queryset = He.models.Entity.objects.all())
+	def clean(self):
+		data = super(EntityExamSelectForm, self).clean()
+		exam = data['exam']
+		entity = data['entity']
+		if entity.is_team is True and exam.is_indiv is True:
+			self.add_error('entity', "Not compatible (team taking indiv exam)")
+		if entity.is_team is False and exam.is_indiv is False:
+			self.add_error('entity', "Not compatible (indiv taking team exam)")
+		
 
 # The following forms are ROBUST in the sense that
 # the form.clean() method will actually do the processing work

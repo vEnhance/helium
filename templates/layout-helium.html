@@ -36,6 +36,7 @@ body { background-color: {{ exam.color }}; }
 {% endblock %}
 
 {% block helium-scripts %}
+<script type="text/javascript" src="{% static 'js/autoselect.js' %}"></script>
 <script type="text/javascript">
 $(document).ready(function() {
 	$.ajaxSetup({
@@ -43,6 +44,7 @@ $(document).ready(function() {
 		if (settings.type == 'POST' && !this.crossDomain) {
 			xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
 		}}});
+	$('#id_entity').selectToAutocomplete();
 });
 </script>
 {% endblock %} 

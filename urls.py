@@ -28,6 +28,7 @@ urlpatterns = [
 	url(r'^view-verdict/([0-9]+)/$', views.view_verdict),
 	url(r'^view-conflicts/all/$', views.view_conflicts_all),
 	url(r'^view-conflicts/own/$', views.view_conflicts_own),
+	url(r'^find-verdicts/$', views.find_verdicts),
 	url(r'^estimation-calc/$', views.estimation_calc),
 	url(r'^progress-problems/$', views.progress_problems),
 	url(r'^progress-scans/$', views.progress_scans),

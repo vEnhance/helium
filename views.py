@@ -14,6 +14,7 @@ This file is divided into roughly a few parts:
 ## Grading views: for example
 * The classical grader (old_grader_*), grade by name and test/problem
 * The exam scan matching interface (match_exam_scans)
+* Interfaces view_* for viewing previous evidences and maybe fixing them
 * The scan grader (grade_scans), grading problem scans
 
 ## AJAX hooks
@@ -255,7 +256,6 @@ def _show_evidences(request, verdicts):
 			table.append(tr)
 	context = {'columns' : columns, 'table' : table, 'pagetitle' : 'View Evidences'}
 	return render(request, "table-only.html", context)
-
 @staff_member_required
 def view_verdict(request, verdict_id):
 	verdict = He.models.Verdict.objects.get(id = int(verdict_id))
@@ -292,7 +292,19 @@ def view_verdict(request, verdict_id):
 		context['image_url'] = verdict.problemscribble.scan_image.url
 
 	return render(request, "view-verdict.html", context)
-
+@staff_member_required
+def find_verdicts(request):
+	if request.method == "POST":
+		form = forms.EntityExamSelectForm(request.POST)
+		if form.is_valid():
+			entity = form.cleaned_data['entity']
+			exam = form.cleaned_data['exam']
+			return _show_evidences(request, He.models.Verdict.objects\
+					.filter(problem__exam = exam, entity = entity))
+	else:
+		form = forms.EntityExamSelectForm()
+	context = { 'eesform' : form }
+	return render(request, "find-verdicts.html", context)
 @staff_member_required
 def view_conflicts_all(request):
 	return _show_evidences(request, He.models.Verdict.objects\

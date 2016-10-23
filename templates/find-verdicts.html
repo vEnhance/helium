@@ -1,0 +1,20 @@
+{% extends 'layout-helium.html' %}
+{% load static %}
+
+{% block title %}Helium | Find Verdicts{% endblock %}
+
+{% block layout-content %}
+<h3>Find Verdicts</h3>
+
+<p>In this interface you can look up all the
+verdicts and evidence for a specific
+entity and exam.</p>
+
+<form action="{{ request.path }}" method="post">
+	<table class="table">
+	{% include '_form.html' with form=eesform %}
+	</table>
+	<input type="submit">
+</form>
+
+{% endblock %}
