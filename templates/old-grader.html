@@ -23,7 +23,7 @@ for grading Guts estimation questions.</p>
 <p class="text-success">Successfully graded {{ num_graded }} problems for {{ entity }}.</p>
 {% endif %}
 
-<form action="/helium/old-grader/{{exam.id}}/" method="post">
+<form action="{{ request.path }}" method="post">
 {% csrf_token %}
 <table class="table">
 	{% include "base_form.html" with form=oldform %}

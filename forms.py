@@ -17,6 +17,12 @@ import django.utils.safestring
 import helium as He
 import logging
 
+class ProblemSelectForm(forms.Form):
+	"""Picks a problem marked ready for grading"""
+	problem = forms.ModelChoiceField(
+			label = "Select problem",
+			queryset = He.models.Problem.objects\
+					.filter(exam__is_ready=True))
 class ProblemScanSelectForm(forms.Form):
 	"""Lets you pick a problem marked as ready for grading"""
 	problem = forms.ModelChoiceField(

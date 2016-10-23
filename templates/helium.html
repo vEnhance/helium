@@ -21,7 +21,7 @@
 	<div class="clearfix">
 		<div class="col-xs-8">
 		{% csrf_token %}
-		{{ scanform.as_p }}
+		{{ problemscanform.as_p }}
 		</div>
 		<div class="col-xs-4">
 		<input type="submit" name="from_landing" value="Start Scan Grader" />
@@ -32,7 +32,7 @@
 	<div class="clearfix">
 		<div class="col-xs-8">
 		{% csrf_token %}
-		{{ matchform.as_p }}
+		{{ examscanform.as_p }}
 		</div>
 		<div class="col-xs-4">
 		<input type="submit" name="from_landing" value="Match Scans" />
@@ -52,6 +52,18 @@
 		</div>
 	</div>
 </form>
+<form action="/helium/old-grader/problem/redir/" method="post">
+	<div class="clearfix">
+		<div class="col-xs-8">
+		{% csrf_token %}
+		{{ problemform.as_p }}
+		</div>
+		<div class="col-xs-4">
+		<input type="submit" name="from_landing" value="Classical Grader" />
+		</div>
+	</div>
+</form>
+
 <div><a href="/helium/estimation-calc">Guts Estimation Grader</a></div>
 
 <h4>Information</h4>

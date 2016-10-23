@@ -84,33 +84,33 @@ FINAL_TEXT_BANNER = """
 """.strip()
 
 
-def _redir_obj_id(request, target, key, form_type):
+def _redir_obj_id(request, key, form_type):
 	"""To be used with a select form. Redirects to page with correct ID.
 	For example, if you use an ExamSelectForm and POST to /helium/match-exam-scans/
-	this will send a redirec to /helium/match-exam-scans/<exam.id>"""
+	this will send a redirect to /helium/match-exam-scans/<exam.id>"""
 	if not request.method == "POST":
 		return HttpResponseRedirect('/helium')
 	form = form_type(request.POST)
 	if form.is_valid():
 		obj = form.cleaned_data[key]
-		return HttpResponseRedirect(target + str(obj.id))
+		return HttpResponseRedirect(request.path.replace('redir', str(obj.id)))
 	else:
 		return HttpResponseNotFound("Invalid object ID provided", content_type="text/plain")
 
 @staff_member_required
 def index(request):
-	"""This prints the main lainding page helium.html"""
+	"""This prints the main landing page helium.html"""
 	context = {
-			'scanform' : forms.ProblemScanSelectForm(),
+			'problemscanform' : forms.ProblemScanSelectForm(),
+			'problemform' : forms.ProblemSelectForm(),
 			'examform' : forms.ExamSelectForm(),
-			'matchform' : forms.ExamScanSelectForm(),
+			'examscanform' : forms.ExamScanSelectForm(),
 			}
 	return render(request, "helium.html", context)
 
 @staff_member_required
 def old_grader_exam_redir(request):
 	return _redir_obj_id(request,
-			target = '/helium/old-grader/exam/',
 			key = 'exam',
 			form_type = forms.ExamSelectForm)
 @staff_member_required
@@ -156,7 +156,6 @@ def old_grader_exam(request, exam_id):
 @staff_member_required
 def match_exam_scans_redir(request):
 	return _redir_obj_id(request,
-			target = '/helium/match-exam-scans/',
 			key = 'exam',
 			form_type = forms.ExamScanSelectForm)
 @staff_member_required
@@ -215,7 +214,6 @@ def match_exam_scans(request, exam_id):
 @staff_member_required
 def grade_scans_redir(request):
 	return _redir_obj_id(request,
-			target = '/helium/grade-scans/',
 			key = 'problem',
 			form_type = forms.ProblemScanSelectForm)
 @staff_member_required
