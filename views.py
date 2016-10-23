@@ -12,7 +12,7 @@ with all dashes and slashes replaced by underscores
 This file is divided into roughly a few parts:
 
 ## Grading views: for example
-* The classical grader (old_grader), grade by name and test
+* The classical grader (old_grader_*), grade by name and test/problem
 * The exam scan matching interface (match_exam_scans)
 * The scan grader (grade_scans), grading problem scans
 
