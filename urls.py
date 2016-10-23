@@ -16,7 +16,7 @@ import helium.views as views
 
 
 urlpatterns = [
-	url(r'^grade-scans/([0-9]+)$', views.grade_scans),
+	url(r'^grade-scans/([0-9]+)/$', views.grade_scans),
 	url(r'^grade-scans/redir/$', views.grade_scans_redir),
 	url(r'^old-grader/exam/([0-9]+)/$', views.old_grader_exam),
 	url(r'^old-grader/exam/redir/$', views.old_grader_exam_redir),
@@ -25,6 +25,9 @@ urlpatterns = [
 	url(r'^match-exam-scans/([0-9]+)/$', views.match_exam_scans),
 	url(r'^match-exam-scans/([0-9]+)/$', views.match_exam_scans),
 	url(r'^match-exam-scans/redir/$', views.match_exam_scans_redir),
+	url(r'^view-verdict/([0-9]+)/$', views.view_verdict),
+	url(r'^view-conflicts/all/$', views.view_conflicts_all),
+	url(r'^view-conflicts/own/$', views.view_conflicts_own),
 	url(r'^estimation-calc/$', views.estimation_calc),
 	url(r'^progress-problems/$', views.progress_problems),
 	url(r'^progress-scans/$', views.progress_scans),

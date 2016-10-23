@@ -374,18 +374,18 @@ class Evidence(models.Model):
 
 	verdict = models.ForeignKey(Verdict)
 	user = models.ForeignKey(auth.User)
-	score = models.IntegerField()
+	score = models.IntegerField(help_text = "The score assigned by the user")
 	god_mode = models.BooleanField(default=False, help_text = 
 			"If enabled, this piece of evidence is in GOD MODE. "
-			"That means that all other evidences are ignored for that verdict. "
-			"If more than one evidence is in God mode, the verdict will be marked invalid. "
-			"This option is not present in the user interface; "
-			"it is meant to be set manually from inside the administration interface.")
+			"That means that all other evidences are ignored for that verdict."
+			"If more than one evidence is in God mode, the verdict will be marked invalid. ")
 	def __unicode__(self): return unicode(self.id)
 
 	def clean(self):
 		if not self.verdict.problem.allow_partial and not self.score in (0,1):
 			raise ValidationError("All-or-nothing problem with non-binary score")
+		if not user.is_superuser and self.god_mode is True:
+			raise ValidationError("Only super-users may submit in GOD MODE")
 
 	class Meta:
 		unique_together = ('verdict', 'user')

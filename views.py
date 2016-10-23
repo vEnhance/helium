@@ -110,13 +110,15 @@ def index(request):
 
 def _old_grader(request, exam, problems):
 	if request.method == 'POST':
-		form = forms.ExamGradingRobustForm(exam, problems, request.user, request.POST)
+		form = forms.ExamGradingRobustForm(request.POST,
+				exam = exam, problems = problems, user = request.user)
 		if form.is_valid():
 			num_graded = form.cleaned_data['num_graded']
 			entity = form.cleaned_data['entity']
 			# the form cleanup actually does the processing for us,
 			# so just hand the user a fresh form if no validation errors
-			form = forms.ExamGradingRobustForm(exam, problems, request.user)
+			form = forms.ExamGradingRobustForm(
+					exam = exam, problems = problems, user = request.user)
 			context = {
 					'exam' : exam,
 					'oldform' : form,
@@ -135,7 +137,8 @@ def _old_grader(request, exam, problems):
 		# No actual grades to process yet
 		context = {
 				'exam' : exam,
-				'oldform' : forms.ExamGradingRobustForm(exam, problems, request.user),
+				'oldform' : forms.ExamGradingRobustForm(
+					exam = exam, problems = problems, user = request.user),
 				'num_graded' : 0,
 				'entity' : None,
 				}
@@ -183,7 +186,8 @@ def match_exam_scans(request, exam_id):
 		except ValueError, He.models.ExamScribble.DoesNotExist:
 			return HttpResponse("What did you DO?", content_type="text/plain")
 
-		form = forms.ExamScribbleMatchRobustForm(examscribble, request.user, request.POST)
+		form = forms.ExamScribbleMatchRobustForm(
+				request.POST, examscribble = examscribble, user = request.user)
 		if not form.is_valid(): # validation errors
 			context = {
 					'matchform' : form,
@@ -211,7 +215,8 @@ def match_exam_scans(request, exam_id):
 				}
 	else:
 		examscribble = queryset[random.randrange(queryset.count())]
-		form = forms.ExamScribbleMatchRobustForm(examscribble, request.user)
+		form = forms.ExamScribbleMatchRobustForm(
+				examscribble = examscribble, user = request.user)
 		context = {
 				'matchform' : form,
 				'previous_entity' : previous_entity,
@@ -235,7 +240,7 @@ def grade_scans(request, problem_id):
 
 def _show_evidences(request, verdicts):
 	table = []
-	columns = ['Entity', 'Problem', 'User', 'Score', 'Edit']
+	columns = ['Entity', 'Problem', 'Score', 'User', 'More']
 	for verdict in verdicts:
 		for evidence in verdict.evidence_set.all():
 			tr = collections.OrderedDict()
@@ -244,18 +249,50 @@ def _show_evidences(request, verdicts):
 			tr['Score'] = evidence.score
 			tr['User'] = evidence.user
 			if request.user == evidence.user:
-				tr['Edit'] = "<a href=\"/helium/view-verdict/%d/\">Edit</a>" \
-						% verdict.id
-			else:
-				tr['Edit'] = ""
+				tr['User'] = '<b>' + str(tr['User']) + '</b>'
+			tr['More'] = "<a href=\"/helium/view-verdict/%d/\">Open</a>" \
+					% verdict.id
 			table.append(tr)
 	context = {'columns' : columns, 'table' : table, 'pagetitle' : 'View Evidences'}
 	return render(request, "table-only.html", context)
 
 @staff_member_required
 def view_verdict(request, verdict_id):
-	return _show_evidences(request, [He.models.Verdict.objects\
-			.get(id=int(verdict_id))] )
+	verdict = He.models.Verdict.objects.get(id = int(verdict_id))
+	form_args = {
+			'entity' : verdict.entity,
+			'exam' : verdict.problem.exam,
+			'problems' : [verdict.problem],
+			'user' : request.user,
+			'show_god' : request.user.is_superuser,
+			}
+
+	if request.method == 'POST':
+		form = forms.ExamGradingRobustForm(request.POST, **form_args)
+		if form.is_valid(): # and we're done!
+			pass
+			# TODO messages framework displays "success" messages, use this
+		evform = form
+	else:
+		evform = forms.ExamGradingRobustForm(**form_args)
+
+	verdict.refresh_from_db()
+	table = []
+	columns = ['Score', 'User', 'God Mode']
+	for evidence in verdict.evidence_set.all():
+		tr = collections.OrderedDict()
+		tr['Score'] = evidence.score
+		tr['User'] = evidence.user
+		if request.user == evidence.user:
+			tr['User'] = '<b>' + str(tr['User']) + '</b>'
+		tr['God Mode'] = str(evidence.god_mode)
+		table.append(tr)
+	context = {'columns' : columns, 'table' : table, 'evform' : evform, 'verdict' : verdict}
+	if hasattr(verdict, 'problemscribble'):
+		context['image_url'] = verdict.problemscribble.scan_image.url
+
+	return render(request, "view-verdict.html", context)
+
 @staff_member_required
 def view_conflicts_all(request):
 	return _show_evidences(request, He.models.Verdict.objects\

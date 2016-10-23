@@ -1,0 +1,32 @@
+{% extends 'layout-helium.html' %}
+{% load static %}
+
+{% block title %}Helium | View Verdict{% endblock %}
+
+{% block layout-content %}
+<h3>{{ verdict.problem }} for {{ verdict.entity }}</h3>
+
+{% if image_url %}
+<div><img class="scan" src="{{ image_url }}" /></div>
+{% endif %}
+
+<h3>Submit Evidence</h3>
+<form action="{{ request.path }}" method="post">
+<table class="table">
+	{% csrf_token %}
+	{% include "_form.html" with form=evform %}
+</table>
+<input type="submit">
+</form>
+
+<h3>Existing Evidences</h3>
+{% include "_table.html" %}
+
+<h4>Final Judgment</h4>
+<ul>
+	<li>Consensus Score: {{ verdict.score }}</li>
+	<li>Verdict Done: {{ verdict.is_done }}</li>
+	<li>Verdict Valid: {{ verdict.is_valid }}</li>
+</ul>
+
+{% endblock %}

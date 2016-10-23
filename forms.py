@@ -41,29 +41,39 @@ class ExamScanSelectForm(forms.Form):
 			label = "Read scans for exam",
 			queryset = He.models.Exam.objects.filter(is_ready=True, is_scanned=True))
 
+
 # The following forms are ROBUST in the sense that
 # the form.clean() method will actually do the processing work
 # of updating the models
 
+
 class ExamGradingRobustForm(forms.Form):
 	"""Creates a form for the old-style grader.
 	Note this form is *robust*: on submission (actually in the clean() method),
-	it will actually submit the changes to the database"""
-	def __init__(self, exam, problems, user, *args, **kwargs):
-		print user
-		if not user.is_staff:
-			raise ValueError("User is not staff")
+	it will actually submit the changes to the database.
+	
+	Exam, user, problems fields are self-explanatory.
+	If the entity keyword is specified,
+	self.fields['entity'] is hidden and populated with that value
+	"""
+	def __init__(self, *args, **kwargs):
+		self.exam = kwargs.pop('exam')
+		self.user = kwargs.pop('user')
+		self.problems = list(kwargs.pop('problems'))
+		self.entity = kwargs.pop('entity', None)
+		self.show_force = kwargs.pop('show_force', True)
+		self.show_god = kwargs.pop('show_god', False)
 		super(forms.Form, self).__init__(*args, **kwargs)
-		self.exam = exam
-		self.user = user
-		self.problems = list(problems)
-		if self.exam.is_indiv:
+		if self.entity is not None:
+			pass # no entity field
+		elif self.exam.is_indiv:
 			self.fields['entity'] = forms.ModelChoiceField(\
 					queryset = He.models.Entity.mathletes.all())
 		else:
 			self.fields['entity'] = forms.ModelChoiceField(\
 					queryset = He.models.Entity.teams.all())
-		for problem in problems:
+
+		for problem in self.problems:
 			n = problem.problem_number
 			kwargs = {
 					'label' : '%s [%s]' %(unicode(problem), round(problem.weight,2)),
@@ -85,30 +95,36 @@ class ExamGradingRobustForm(forms.Form):
 		self.fields['force'] = forms.BooleanField(
 				label = 'Override',
 				required = False,
-				help_text = "Use this to override a merge conflict.")
+				help_text = "Suppress warnings that you are going against the majority vote.")
+		if self.show_god:
+			self.fields['god_mode'] = forms.BooleanField(
+					label = 'GOD Mode',
+					required = False,
+					help_text = "Enables GOD MODE for admins.")
 	def clean(self):
-		if not self.user.is_staff:
-			raise ValueError("User is not staff")
+		"""Return a num_graded, entity dictionary"""
 		data = super(ExamGradingRobustForm, self).clean()
 		if not self.is_valid():
 			return # didn't pass first validation, don't do queries
-
-		entity = data['entity']
+		entity = self.entity or data['entity']
 		num_graded = 0
+		is_god = data.get('god_mode', False)
+		is_forceful = is_god or data['force'] # is_god implies is_forceful
+
 		for problem in self.problems:
 			field_name = 'p' + str(problem.problem_number)
 			v, _ = He.models.Verdict.objects.get_or_create(entity=entity, problem=problem)
 			user_score = data.get(field_name, None)
 			if user_score is None:
 				continue
-			if v.score is not None and user_score != v.score and data['force'] is False:
+			if v.score is not None and user_score != v.score and not is_forceful:
 				previous_graders = [unicode(e.user) for e in v.evidence_set.all()]
 				if len(previous_graders) > 1 or previous_graders[0] != unicode(self.user):
 					self.add_error(field_name,
 							"Conflict: Database has score %d (entered by %s)"
 							% (v.score, ', '.join(previous_graders)))
 					continue
-			v.submitEvidence(user = self.user, score = user_score)
+			v.submitEvidence(user = self.user, score = user_score, god_mode = is_god)
 			num_graded += 1
 		return { 'num_graded' : num_graded, 'entity' : entity }
 
@@ -116,10 +132,10 @@ class ExamScribbleMatchRobustForm(forms.Form):
 	"""Creates a form for matching scribbles to teams/mathletes.
 	Note this form is *robust*: on submission (actually in the clean() method),
 	it will actually submit the changes to the database"""
-	def __init__(self, examscribble, user, *args, **kwargs):
+	def __init__(self, *args, **kwargs):
+		self.examscribble = kwargs.pop('examscribble')
+		self.user = kwargs.pop('user')
 		super(forms.Form, self).__init__(*args, **kwargs)
-		self.examscribble = examscribble
-		self.user = user
 		self.exam = examscribble.exam
 
 		if self.exam.is_indiv:

@@ -1,0 +1,34 @@
+{% if form.non_field_errors %}
+<ul class="form_error_messages">
+	{% for err in form.non_field_errors %}
+	<li class="form_error_message">{{ err }}</li>
+	{% endfor %}
+</li>
+{% endif %}
+
+{% for hidden in form.hidden_fields %}
+	{{ hidden }}
+{% endfor %}
+
+{% for field in form.visible_fields %}
+	<tr {% if field.errors %} class="field_error"{% endif %}>
+		<th class="label-tag"> {{ field.label_tag }} </th>
+		<td class="field-tag">
+			{{ field }}
+			{% if field.help_text %}
+			<span class="helptext">{{ field.help_text }}</span>
+			{% endif %}
+			{% if field.errors %}
+				<ul class="errorlist">
+				{% for err in field.errors %}
+					{{ err }}
+				{% endfor %}
+				</ul>
+			{% endif %}
+		</td>
+	</tr>
+{% endfor %}
+
+{% comment %}
+vim: ft=htmldjango
+{% endcomment %}

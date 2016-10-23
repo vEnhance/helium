@@ -7,7 +7,7 @@
 	{% for tr in table %}
 		<tr>
 			{% for k, n in tr.items  %}
-			<td>{{ n }}</td>
+			<td>{{ n|safe }}</td>
 			{% endfor %}
 		</tr>
 	{% endfor %}
