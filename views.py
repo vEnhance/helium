@@ -25,6 +25,9 @@ These are used so that e.g. you can look at your own grading conflicts.
 ## AJAX hooks
 These are ajax_*. Used by scan grading.
 
+## Upload scans
+upload_scans, uploading scans for exams
+
 ## Progress reports
 progress_*, shows how much progress we've made grading.
 
@@ -53,13 +56,13 @@ import itertools
 import collections
 import random
 import time
-import threading
 
 # The following imports are Helium specific
 import helium as He
 import helium.forms as forms
 import presentation
 import scanimage
+import threader
 
 DONE_IMAGE_URL = static('img/done.jpg')
 
@@ -589,9 +592,7 @@ def run_management(request, command_name):
 	"""Starts a thread which runs a specified management command"""
 	def target_function():
 		django.core.management.call_command(command_name)
-	t = threading.Thread(target = target_function)
-	t.daemon = True
-	t.start()
+	threader.run_async(target_function)
 	return HttpResponse("Command %s started" %command_name,\
 			content_type="text/plain")
 
