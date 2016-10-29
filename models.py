@@ -275,10 +275,10 @@ class ExamScribble(models.Model):
 	entity = models.ForeignKey(Entity, blank=True, null=True,
 			help_text = "This is the entity the scan belongs to. "
 			"It is None if the scan has not yet been identified.")
-	scan_image = models.ImageField(upload_to='scans/names/', blank=False, null=True,
-			help_text = "This is the image of the `name` field for the scan.")
 	full_image = models.ImageField(upload_to='scans/full/', blank=False, null=True,
 			help_text = "This is the image of the entire scan.")
+	name_image = models.ImageField(upload_to='scans/names/', blank=False, null=True,
+			help_text = "This is the image of the `name` field for the scan.")
 		 # blargh. These should really be null=False, but it makes testing hard.
 
 	def __unicode__(self):
@@ -291,6 +291,16 @@ class ExamScribble(models.Model):
 	@property
 	def is_indiv(self):
 		return self.exam.is_indiv
+
+	def createProblemScribble(self, n, prob_image):
+		"""Creates a problem scribble from problem number (n) and prob_image"""
+		problem = Problem.objects.get(problem_number = n, exam = self.exam)
+		v = Verdict.objects.create(problem = problem)
+		v.save()
+		ps = ProblemScribble.objects.create(
+				examscribble = self,
+				verdict = v,
+				prob_image = prob_image)
 
 	def assign(self, entity):
 		"""Identifies the scan as being owned by an entity.
@@ -359,9 +369,10 @@ class ProblemScribble(models.Model):
 	It contains the data of scanned image and the ExamScribble it came from.
 	For convnience, it contains a submitEvidence wrapper function
 	which links to the original Verdict function."""
+
 	examscribble = models.ForeignKey(ExamScribble)
 	verdict = models.OneToOneField(Verdict, on_delete=models.CASCADE)
-	scan_image = models.ImageField(upload_to='scans/problems/', blank=False, null=True)
+	prob_image = models.ImageField(upload_to='scans/problems/', blank=False, null=True)
 		 # blargh. This should really be null=False, but it makes testing hard.
 
 	def __unicode__(self): return unicode(self.verdict)

@@ -52,7 +52,7 @@ class ProblemAdmin(admin.ModelAdmin):
 
 @admin.register(He.models.ExamScribble)
 class ExamScribbleAdmin(admin.ModelAdmin):
-	list_display = ('__unicode__', 'exam', 'entity', 'id', 'scan_image')
+	list_display = ('__unicode__', 'exam', 'entity', 'id')
 	inlines = (ProblemScribbleInline,)
 
 @admin.register(He.models.Verdict)
@@ -62,7 +62,7 @@ class VerdictAdmin(admin.ModelAdmin):
 
 @admin.register(He.models.ProblemScribble)
 class ProblemScribbleAdmin(admin.ModelAdmin):
-	list_display = ('__unicode__', 'id', 'verdict', 'examscribble', 'scan_image')
+	list_display = ('__unicode__', 'id', 'verdict', 'examscribble')
 
 @admin.register(He.models.Evidence)
 class EvidenceAdmin(admin.ModelAdmin):
