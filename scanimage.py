@@ -22,6 +22,11 @@ Dependencies:
 	* The Wand Python module should be installed.
 	* The system should have imagemagick, ghostscript, freetype
 	  so that Wand can function.
+
+On a system one can perform a "test run" by calling this as main
+(and indeed static/answers/run-cutout-test.py symlinks to this file).
+Simply call scanimage.py <filename.pdf>.
+This will generate the cut-outs of the first page of that PDF file.
 """
 
 from wand.image import Image
