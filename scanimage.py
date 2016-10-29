@@ -41,7 +41,9 @@ import StringIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
 
 # http://stackoverflow.com/a/26252400/4826845
-# This is some hocus pocus to let us to threshold on the image
+# This is some hocus pocus to let us to use arbitrary imagemagick
+# It was orignally used for threshold but later that part disappeared
+# so now it's just sitting here doing not much
 MagickEvaluateImage = wand.api.library.MagickEvaluateImage
 MagickEvaluateImage.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_double]
 def evaluate(self, operation, argument):
@@ -83,7 +85,7 @@ class AnswerSheetImage:
 		self.full_image = Image(image = image)
 		self.full_image.format = 'jpg' # convert to jpg
 		self.image = Image(image = self.full_image)
-		evaluate(self.image, 'threshold', 0.90)
+		# evaluate(self.image, 'threshold', 0.90)
 
 	def get_django_cutout(self, rect, filename):
 		width = self.image.width
