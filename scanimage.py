@@ -55,11 +55,16 @@ def evaluate(self, operation, argument):
 CUTOUT_FULL_REGION = [0.00, 1.00, 0.00, 1.00] # name area
 CUTOUT_NAME_REGION = [0.00, 1.00, 0.07, 0.36] # name area
 CUTOUT_PROBLEM_REGIONS = [
-		[0.00, 0.55, 0.31, 0.49], # problem <++>
-		[0.00, 0.55, 0.42, 0.60], # problem <++>
-		[0.00, 0.55, 0.53, 0.71], # problem <++>
-		[0.00, 0.55, 0.64, 0.82], # problem <++>
-		[0.00, 0.55, 0.75, 0.93], # problem <++>
+		[0.00, 0.55, 0.31, 0.49], # problem 1
+		[0.00, 0.55, 0.42, 0.60], # problem 2
+		[0.00, 0.55, 0.53, 0.71], # problem 3
+		[0.00, 0.55, 0.64, 0.82], # problem 4
+		[0.00, 0.55, 0.75, 0.93], # problem 5
+		[0.45, 1.00, 0.31, 0.49], # problem 6
+		[0.45, 1.00, 0.42, 0.60], # problem 7
+		[0.45, 1.00, 0.53, 0.71], # problem 8
+		[0.45, 1.00, 0.64, 0.82], # problem 9
+		[0.45, 1.00, 0.75, 0.93], # problem 10
 	]
 def to_django_file(image, filename):
 	"""http://stackoverflow.com/a/4544525/4826845
@@ -134,7 +139,7 @@ if __name__ == "__main__":
 	else:
 		filename = sys.argv[1]
 		with open(filename) as pdf:
-			sheets = get_answer_sheets(pdf, "testing")
+			sheets = get_answer_sheets(pdf)
 			a = next(sheets) # answer sheet 1 only
 
 			saveDjangoFile(a.get_full_file())
