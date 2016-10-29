@@ -9,14 +9,14 @@
 		\LARGE \bfseries #1 & \\[0.45in]
 		\hline
 	\end{tabular}
-	\par\vspace*{0.55in}
+	\par\vspace{0.55in}
 }
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 \setlength{\headheight}{30pt}
 \renewcommand{\headrulewidth}{0pt}
 \rhead{\Huge$\bullet$}
-\lfoot{\scriptsize \textsf{HELIUM}, \copyright 2016 Evan Chen}
+\lfoot{\footnotesize \textsf{HELIUM}, \copyright 2016 Evan Chen}
 \cfoot{}
 
 
@@ -40,13 +40,14 @@
 \end{center}
 }
 
-\newcommand{\indivsheet}[1]{
+
+\newcommand{\sheet}[3]{
 \begin{center}
 	{ \bfseries\huge \HMMT: #1 } \\[0.5in]
 	\begin{tabular}{|m{1.5in}|m{4.5in}|}
 		\hline
-		\bfseries \large Student Name  & \\[0.3in] \hline
-		\bfseries \large Team Name     & \\[0.3in] \hline
+		\bfseries \large #2 & \\[0.3in] \hline
+		\bfseries \large #3 & \\[0.3in] \hline
 	\end{tabular}
 \end{center}
 \vspace{0.2in}
@@ -54,21 +55,8 @@ Your work is graded by computer;
 illegible answers may affect your score.
 Write \emph{darkly} and \emph{legibly} in \emph{large font},
 staying within the borders for each problem.
-
 \par\vspace{0.2in} 
 \answerboxes\eject}
 
-\newcommand{\teamsheet}[1]{
-\begin{center}
-	\bfseries\huge
-	\HMMT: #1 \\[0.5in]
-	\begin{tabular}{|m{1.5in}|m{4.5in}|}
-		\hline
-		\bfseries \large Organization & \\[0.3in] \hline
-		\bfseries \large Team Name    & \\[0.3in] \hline
-	\end{tabular}
-	\vspace{0.4in}
-	\answerboxes
-\end{center}
-\eject}
-
+\newcommand{\indivsheet}[1]{\sheet{#1}{Student Name}{Team Name}}
+\newcommand{\teamsheet}[1]{\sheet{#1}{Team Name}{Organization}}
