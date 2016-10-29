@@ -184,6 +184,8 @@ class ExamScribbleMatchRobustForm(forms.Form):
 
 	def clean(self):
 		data = super(ExamScribbleMatchRobustForm, self).clean()
+		if not self.is_valid():
+			return
 		entity = data['entity']
 
 		# Now for each attached ProblemScribble...
