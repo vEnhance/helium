@@ -1,0 +1,120 @@
+- model: auth.group
+  pk: 3
+  fields:
+    name: problems_admin
+    permissions: []
+- model: auth.group
+  pk: 4
+  fields:
+    name: problems_staff
+    permissions: []
+- model: auth.user
+  pk: 12
+  fields:
+    password: pbkdf2_sha256$24000$T8wKwTWBHwkm$SBmDOHVb7QRLbbHwY490e8ewh6At07DZa3JS852qVBg=
+    last_login: 2016-10-19 13:43:39.075752+00:00
+    is_superuser: true
+    username: evan
+    first_name: ''
+    last_name: ''
+    email: evanchen@mit.edu
+    is_staff: true
+    is_active: true
+    date_joined: 2016-10-08 14:07:38+00:00
+    groups: [3, 4]
+    user_permissions: []
+- model: auth.user
+  pk: 13
+  fields:
+    password: pbkdf2_sha256$24000$FroMErwkPGP7$UxiqmmsIpvRu1SD0gjOScMHcDzQN11jpndhjThwinHQ=
+    last_login: null
+    is_superuser: false
+    username: zfeng
+    first_name: ''
+    last_name: ''
+    email: ''
+    is_staff: false
+    is_active: true
+    date_joined: 2016-10-18 02:15:49.963253+00:00
+    groups: []
+    user_permissions: []
+- model: auth.user
+  pk: 14
+  fields:
+    password: pbkdf2_sha256$24000$nGdl4buGZFe7$OImkVv9CrzzdTOcp9XxXC0Nvqh63B+Zj3iIaqz+Sk68=
+    last_login: 2016-10-19 13:43:03.790244+00:00
+    is_superuser: false
+    username: staff
+    first_name: Stahff
+    last_name: stf
+    email: aoeu@mailinator.com
+    is_staff: true
+    is_active: true
+    date_joined: 2016-10-19 13:43:03.348786+00:00
+    groups: []
+    user_permissions: []
+- model: registration.abstractmathlete
+  pk: 3
+  fields: {first: A, alias: '', last: A, organization: 5, comment: null, created: ! '2016-10-18
+      02:20:35.135150+00:00', lastupdate: ! '2016-10-18 02:20:35.135243+00:00', contactothers: false,
+    indiv_accepted: false, indiv_waitlisted: false}
+- model: registration.abstractmathlete
+  pk: 4
+  fields: {first: B, alias: '', last: B, organization: 5, comment: null, created: ! '2016-10-18
+      02:20:35.252116+00:00', lastupdate: ! '2016-10-18 02:20:35.252195+00:00', contactothers: false,
+    indiv_accepted: false, indiv_waitlisted: false}
+- model: registration.abstractmathlete
+  pk: 5
+  fields: {first: C, alias: '', last: C, organization: 5, comment: null, created: ! '2016-10-18
+      02:20:35.327000+00:00', lastupdate: ! '2016-10-18 02:20:35.327069+00:00', contactothers: false,
+    indiv_accepted: false, indiv_waitlisted: false}
+- model: registration.abstractmathlete
+  pk: 6
+  fields: {first: D, alias: '', last: D, organization: 5, comment: null, created: ! '2016-10-18
+      02:20:35.435391+00:00', lastupdate: ! '2016-10-18 02:20:35.435458+00:00', contactothers: false,
+    indiv_accepted: false, indiv_waitlisted: false}
+- model: registration.abstractmathlete
+  pk: 7
+  fields: {first: E, alias: '', last: E, organization: 5, comment: null, created: ! '2016-10-18
+      02:20:35.502010+00:00', lastupdate: ! '2016-10-18 02:20:35.502077+00:00', contactothers: false,
+    indiv_accepted: false, indiv_waitlisted: false}
+- model: registration.abstractmathlete
+  pk: 8
+  fields: {first: F, alias: '', last: F, organization: 5, comment: null, created: ! '2016-10-18
+      02:20:35.568700+00:00', lastupdate: ! '2016-10-18 02:20:35.568765+00:00', contactothers: false,
+    indiv_accepted: false, indiv_waitlisted: false}
+- model: registration.mathletefeb
+  pk: 3
+  fields: {team: 3}
+- model: registration.mathletefeb
+  pk: 4
+  fields: {team: 3}
+- model: registration.mathletefeb
+  pk: 5
+  fields: {team: 3}
+- model: registration.mathletefeb
+  pk: 6
+  fields: {team: 3}
+- model: registration.mathletefeb
+  pk: 7
+  fields: {team: 3}
+- model: registration.mathletefeb
+  pk: 8
+  fields: {team: 3}
+- model: registration.abstractteam
+  pk: 3
+  fields: {name: Black MOP, shortname: K2016, organization: 5, comment: '', proctor: .,
+    proctor_phone_number: ., room: '', created: ! '2016-10-15 15:25:08.609923+00:00',
+    lastupdate: ! '2016-10-18 02:20:34.983878+00:00', present: false, accepted: true,
+    waitlisted: false}
+- model: registration.teamfeb
+  pk: 3
+  fields: {}
+- model: registration.organization
+  pk: 5
+  fields: {name: Ambient Organization, address: 'Lincoln, NE', comment: '', paid_nov_reg: false,
+    paid_nov_shirts: false, paid_nov_pizza: false, paid_nov_extras: false, nov_payment_notes: '',
+    nov_extras: 0, paid_feb_reg: false, paid_feb_shirts: false, paid_feb_pizza: false,
+    paid_feb_extras: false, feb_payment_notes: '', feb_extras: 0, coach: 13, created: ! '2016-10-15
+      15:25:08.606060+00:00', lastupdate: ! '2016-10-20 12:17:38.697859+00:00', iscoach: true,
+    novorfeb: feb, confirmation: true}

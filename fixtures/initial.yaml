@@ -1,0 +1,15 @@
+- model: auth.user
+  pk: 12
+  fields:
+    password: pbkdf2_sha256$24000$T8wKwTWBHwkm$SBmDOHVb7QRLbbHwY490e8ewh6At07DZa3JS852qVBg=
+    last_login: null
+    is_superuser: true
+    username: evan
+    first_name: ''
+    last_name: ''
+    email: evanchen@mit.edu
+    is_staff: true
+    is_active: true
+    date_joined: 2016-10-08 14:07:38.305539+00:00
+    groups: []
+    user_permissions: []
