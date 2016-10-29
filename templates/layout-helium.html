@@ -18,9 +18,19 @@ body { background-color: {{ exam.color }}; }
   {% block layout-banner %}
   {% endblock layout-banner %}
 
+
   <section id="body-form">
 	<div id="content-container">
 	<div class="btn-toolbar"><a href="/helium">&lt; Back to Helium home</a></div>
+
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
     {% block layout-content %}
     {% endblock %}
 	</div>

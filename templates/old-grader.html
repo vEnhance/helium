@@ -19,10 +19,6 @@ you should use the "override" button below.</p>
 <p>Use <a target="_new" href="/helium/estimation-calc">this widget</a>
 for grading Guts estimation questions.</p>
 
-{% if entity %}
-<p class="text-success">Successfully graded {{ num_graded }} problems for {{ entity }}.</p>
-{% endif %}
-
 {% include "_form.html" with form=form submit_name="Enter Scores" %}
 {% endblock %}
 

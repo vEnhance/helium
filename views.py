@@ -48,6 +48,7 @@ from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import user_passes_test
+from django.contrib import messages
 import django.core.management
 import django.db
 import json
@@ -137,15 +138,13 @@ def _old_grader(request, exam, problems):
 			context = {
 					'exam' : exam,
 					'form' : form,
-					'num_graded' : num_graded,
-					'entity' : entity,
 					}
+			messages.success(request, "Successfully graded %d problems for %s" \
+					%(num_graded, entity))
 		else:
 			context = {
 					'exam' : exam,
 					'form' : form,
-					'num_graded' : 0,
-					'entity' : None
 					}
 	else:
 		# This means we just got here from landing.
@@ -154,8 +153,6 @@ def _old_grader(request, exam, problems):
 				'exam' : exam,
 				'form' : forms.ExamGradingRobustForm(
 					exam = exam, problems = problems, user = request.user),
-				'num_graded' : 0,
-				'entity' : None,
 				}
 	return render(request, "old-grader.html", context)
 @staff_member_required
@@ -284,8 +281,8 @@ def view_verdict(request, verdict_id):
 	if request.method == 'POST':
 		form = forms.ExamGradingRobustForm(request.POST, **form_args)
 		if form.is_valid(): # and we're done!
-			pass
-			# TODO messages framework displays "success" messages, use this
+			entity = form.cleaned_data['entity']
+			message.success(request, "Successfully submitted evidence for %s" % entity)
 	else:
 		form = forms.ExamGradingRobustForm(**form_args)
 
