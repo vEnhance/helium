@@ -43,10 +43,10 @@
     weight: 1.0, allow_partial: false}
 - model: helium.problem
   pk: 26
-  fields: {exam: 7, problem_number: 1, answer: '', weight: 7.0, allow_partial: false}
+  fields: {exam: 7, problem_number: 1, answer: '', weight: 7.0, allow_partial: true}
 - model: helium.problem
   pk: 27
-  fields: {exam: 7, problem_number: 2, answer: '', weight: 7.0, allow_partial: false}
+  fields: {exam: 7, problem_number: 2, answer: '', weight: 7.0, allow_partial: true}
 - model: helium.problem
   pk: 28
-  fields: {exam: 7, problem_number: 3, answer: '', weight: 7.0, allow_partial: false}
+  fields: {exam: 7, problem_number: 3, answer: '', weight: 7.0, allow_partial: true}
