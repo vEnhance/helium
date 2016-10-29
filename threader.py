@@ -26,7 +26,7 @@ def run_async(func, name = None):
 			logger.error("Process `%s` FAILED: %s" %(name, traceback.format_exc()))
 			raise
 		else:
-			logger.info('success', "Process `%s` OK" %name)
+			logger.info("Process `%s` OK" %name)
 	t = threading.Thread(target = target_func)
 	t.daemon = True
 	t.start()
