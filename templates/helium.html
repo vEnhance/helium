@@ -1,4 +1,4 @@
-{% extends 'layout.html' %}
+{% extends 'layout-helium.html' %}
 {% load static %}
 
 {% block title %}Helium | Dashboard{% endblock %}
@@ -9,15 +9,8 @@
 {% block layout-content %}
 <div id="content-container">
 
-{% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
-
 <h2>Helium</h2>
+
 <p>
 	This is <b>Helium</b>, brought to you by HMMT 2016-2017 Scripts Team.
 	It is inspired off of Stanford's <a href="http://atomicgrader.com/">Atomic Grader</a>,

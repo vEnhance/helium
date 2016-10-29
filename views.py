@@ -200,19 +200,17 @@ def match_exam_scans(request, exam_id):
 
 		form = forms.ExamScribbleMatchRobustForm(
 				request.POST, examscribble = examscribble, user = request.user)
-		if not form.is_valid(): # validation errors
+		if form.is_valid(): 
+			prev_entity = form.cleaned_data['entity']
+			messages.success("Matched exam for %s" %prev_entity)
+		else: # validation errors
 			context = {
 					'matchform' : form,
-					'previous_entity' : None,
 					'scribble' : examscribble,
 					'scribble_url' : examscribble.name_image.url,
 					'exam' : exam,
 					}
 			return render(request, "match-exam-scans.html", context)
-		else:
-			previous_entity = form.cleaned_data['entity']
-	else:
-		previous_entity = None
 
 	# Now we're set, so get the next scribble, or alert none left
 	queryset = He.models.ExamScribble.objects.filter(entity=None, exam=exam)
@@ -220,7 +218,6 @@ def match_exam_scans(request, exam_id):
 	if len(queryset) == 0:
 		context = {
 				'matchform' : None,
-				'previous_entity' : previous_entity,
 				'scribble' : None,
 				'scribble_url' : DONE_IMAGE_URL,
 				'exam' : exam,
@@ -231,7 +228,6 @@ def match_exam_scans(request, exam_id):
 				examscribble = examscribble, user = request.user)
 		context = {
 				'matchform' : form,
-				'previous_entity' : previous_entity,
 				'scribble' : examscribble,
 				'scribble_url' : examscribble.name_image.url,
 				'exam' : exam,
@@ -464,6 +460,7 @@ def upload_scans(request):
 						n += 1
 						es.createProblemScribble(n, prob_img)
 			threader.run_async(target_function, name = "upload_scans")
+			messages.success("PDF successfully uploaded and now processing")
 	else:
 		form = forms.UploadScanForm()
 	return render(request, "upload-scans.html", {'form' : form})
@@ -593,7 +590,6 @@ def run_management(request, command_name):
 	def target_function():
 		django.core.management.call_command(command_name)
 	threader.run_async(target_function, name = command_name)
-	return HttpResponse("Command %s started" %command_name,\
-			content_type="text/plain")
+	return HttpResponse("Command started", content_type="text/plain")
 
 # vim: fdm=indent foldnestmax=1

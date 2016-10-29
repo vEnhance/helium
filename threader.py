@@ -15,18 +15,18 @@ import traceback
 logger = logging.getLogger("django")
 
 def run_async(func, name = None):
+	logging.info("Starting `%s`..." %name)
+
 	if name is None:
 		name = func.__name__
 	def target_func():
-		logger.info("Starting `%s`..." %name)
 		try:
 			func()
 		except Exception as e:
-			logger.error("Process `%s` FAILED" %name)
-			logger.error(traceback.format_exc())
-			raise e
+			logging.error("Process `%s` FAILED: %s" %(name, traceback.format_exc()))
+			raise
 		else:
-			logger.info("Process `%s` OK" %name)
+			logging.info('success', "Process `%s` OK" %name)
 	t = threading.Thread(target = target_func)
 	t.daemon = True
 	t.start()

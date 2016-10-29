@@ -41,3 +41,4 @@ ul.messages {
 ul.messages > li.success { color: green; }
 ul.messages > li.error { color: red; }
 ul.messages > li.warning { color: orange; }
+ul.messages > li.info { color: blue; }
