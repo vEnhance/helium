@@ -4,12 +4,16 @@ It takes two arguments:
 
 form: the Django form object
 submit_name: the label to put on the Submit button
+has_upload: a Boolean, if true, enctype="multipart/form-data" is set
 
 {% endcomment %}
 
-
+{% if has_upload %}
+<form action="{{ request.path }}" method="post" enctype="multipart/form-data">
+{% else %}
 <form action="{{ request.path }}" method="post">
-<table class="table">
+{% endif %}
+
 {% csrf_token %}
 
 {% if form.non_field_errors %}
@@ -19,6 +23,9 @@ submit_name: the label to put on the Submit button
 	{% endfor %}
 </li>
 {% endif %}
+
+
+<table class="table">
 
 {% for hidden in form.hidden_fields %}
 	{{ hidden }}

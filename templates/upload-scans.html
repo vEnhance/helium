@@ -1,11 +1,11 @@
 {% extends 'layout-helium.html' %}
 {% load static %}
 
-{% block title %}Helium | {{ pagetitle }}{% endblock %}
+{% block title %}Helium | Upload Scans{% endblock %}
 
 {% block layout-content %}
 <h3>Upload Scans</h3>
 
-{% include "_form.html" with form=form submit_name="Upload" %}
+{% include "_form.html" with form=form submit_name="Upload" has_upload=True %}
 
 {% endblock %}

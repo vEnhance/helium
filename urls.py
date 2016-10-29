@@ -30,6 +30,7 @@ urlpatterns = [
 	url(r'^view-conflicts/own/$', views.view_conflicts_own),
 	url(r'^find-verdicts/$', views.find_verdicts),
 	url(r'^estimation-calc/$', views.estimation_calc),
+	url(r'^upload-scans/$', views.upload_scans),
 	url(r'^progress-problems/$', views.progress_problems),
 	url(r'^progress-scans/$', views.progress_scans),
 	url(r'^ajax/submit-scan/$', views.ajax_submit_scan), 
