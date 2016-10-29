@@ -38,8 +38,6 @@ import ctypes
 import StringIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
 
-import time
-
 # http://stackoverflow.com/a/26252400/4826845
 # This is some hocus pocus to let us to threshold on the image
 MagickEvaluateImage = wand.api.library.MagickEvaluateImage
@@ -109,19 +107,13 @@ class AnswerSheetImage:
 			filename = '%s-prob-%02d.jpg' % (self.fprefix, i+1)
 			yield self.get_django_cutout(rect, filename)
 
-def get_answer_sheets(f, prefix = None):
+def get_answer_sheets(f):
 	"""Given a file object f, yield answer sheet objects.
 	The prefix, if specified, is appended to the start of filename."""
-	curr_time = time.strftime("%Y%m%d-%H%M%S")
-	if prefix is None:
-		prefix = curr_time
-	else:
-		prefix = prefix + '-' + curr_time
-
 	with Image(file = f, resolution = (140, 140)) as full_pdf:
 		for i, page in enumerate(full_pdf.sequence):
 			yield AnswerSheetImage(image = page,
-					fprefix = "%s-sheet%04d" %(prefix, i+1))
+					fprefix = "%s-sheet%04d" %(f.name, i+1))
 
 if __name__ == "__main__":
 	# This is for testing.
