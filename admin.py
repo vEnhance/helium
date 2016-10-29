@@ -81,4 +81,4 @@ class AlphaAdmin(admin.ModelAdmin):
 
 @admin.register(He.models.EntirePDFScribble)
 class AlphaAdmin(admin.ModelAdmin):
-	list_display = ('name', 'scan_pdf')
+	list_display = ('name', 'scan_file')

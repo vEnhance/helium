@@ -274,7 +274,7 @@ class EntirePDFScribble(models.Model):
 	name = models.CharField(max_length = 80, unique = True,
 			help_text = "The name of the PDF file, which must be unique "\
 			"(this is a safety feature to prevent accidental double uploads). ")
-	scan_pdf = models.FileField(upload_to = 'scans/pdfs/', blank = False, null = True,
+	scan_file = models.FileField(upload_to = 'scans/pdfs/', blank = False, null = True,
 			help_text = "The scanned PDF file itself.")
 	def __unicode__(self): return unicode(self.name)
 

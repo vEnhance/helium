@@ -454,7 +454,8 @@ def upload_scans(request):
 				messages.error(request, "PDF with name %s was already uploaded. "\
 						"No action taken." % pdf_name)
 			else:
-				pdfscribble = He.models.EntirePDFScribble(name = pdf_name)
+				pdfscribble = He.models.EntirePDFScribble(name = pdf_name,
+						scan_file = pdf_file)
 				pdfscribble.save()
 				def target_function():
 					sheets = scanimage.get_answer_sheets(pdf_file)
