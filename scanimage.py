@@ -1,3 +1,29 @@
+"""
+HELIUM
+(c) 2016 Evan Chen
+See LICENSE.txt for details.
+
+scanimage.py
+
+The main public method of this class is
+get_answer_sheets( ... )
+
+It takes in a file object (presumably from Django)
+and then returns a generator which produces AnswerSheetImage objects.
+The latter object is a class with several wrapper functions
+which extract the relevant parts:
+	AnswerSheetImage.get_full_file()
+	AnswerSheetImage.get_name_file()
+	AnswerSheetImage.get_problem_files() which is itself a generator
+The return types of the cut-outs are Django InMemoryUploadedFile objects;
+these allow storage in the database.
+
+Dependencies:
+	* The Wand Python module should be installed.
+	* The system should have imagemagick, ghostscript, freetype
+	  so that Wand can function.
+"""
+
 from wand.image import Image
 import wand.api
 import wand.image
@@ -93,17 +119,20 @@ if __name__ == "__main__":
 	# and it will output (in current directory) all image files
 
 	import sys
-	filename = sys.argv[1]
 	def saveDjangoFile(f):
 		with open(f.name, 'w') as target:
 			for chunk in f.chunks():
 				target.write(chunk)
 
-	with open(filename) as pdf:
-		sheets = get_answer_sheets(pdf, "testing")
-		a = next(sheets) # answer sheet 1 only
+	if len(sys.argv) == 0:
+		print "Need to specify a filename"
+	else:
+		filename = sys.argv[1]
+		with open(filename) as pdf:
+			sheets = get_answer_sheets(pdf, "testing")
+			a = next(sheets) # answer sheet 1 only
 
-		saveDjangoFile(a.get_full_file())
-		saveDjangoFile(a.get_name_file())
-		for pf in a.get_problem_files():
-			saveDjangoFile(pf)
+			saveDjangoFile(a.get_full_file())
+			saveDjangoFile(a.get_name_file())
+			for pf in a.get_problem_files():
+				saveDjangoFile(pf)
