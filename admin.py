@@ -79,6 +79,6 @@ class AlphaAdmin(admin.ModelAdmin):
 class AlphaAdmin(admin.ModelAdmin):
 	list_display = ('problem_number', 'description', 'answer', 'problem_help_text')
 
-@admin.register(He.models.EntireScanPDF)
+@admin.register(He.models.EntirePDFScribble)
 class AlphaAdmin(admin.ModelAdmin):
 	list_display = ('name', 'scan_pdf')

@@ -12,7 +12,7 @@ General overview of models:
 * For every Entity and Problem, we have a Verdict (which gives the score)
   based on Evidence (one for each grader who read the problem)
 * ExamScribble and ProblemScrrible objects keep track of scans
-* EntireScanPDF is a container for keeping track of uploaded PDF's
+* EntirePDFScribble is a container for keeping track of uploaded PDF's
 * EntityAlpha is a way to store alpha values (so we don't have to keep recomputing them)
 * GutsScoreFunc is a stupid applet that lets you compute guts estimation scores
 
@@ -268,7 +268,7 @@ class Verdict(models.Model):
 		unique_together = ('problem', 'entity')
 	
 # Scribble objects
-class EntireScanPDF(models.Model):
+class EntirePDFScribble(models.Model):
 	"""This holds only two properties: the filename of an uploaded PDF,
 	and a FileField to a scan PDF"""
 	name = models.CharField(max_length = 80, unique = True)
@@ -282,7 +282,7 @@ class ExamScribble(models.Model):
 
 	Call the `assign` function in order to identify the scribble."""
 	
-	pdf  = models.ForeignKey(EntireScanPDF)
+	pdf_scribble = models.ForeignKey(EntirePDFScribble)
 	exam = models.ForeignKey(Exam)
 	entity = models.ForeignKey(Entity, blank=True, null=True,
 			help_text = "This is the entity the scan belongs to. "
