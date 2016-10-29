@@ -271,8 +271,11 @@ class Verdict(models.Model):
 class EntirePDFScribble(models.Model):
 	"""This holds only two properties: the filename of an uploaded PDF,
 	and a FileField to a scan PDF"""
-	name = models.CharField(max_length = 80, unique = True)
-	scan_pdf = models.FileField(upload_to = 'scans/pdfs/', blank = False, null = True)
+	name = models.CharField(max_length = 80, unique = True,
+			help_text = "The name of the PDF file, which must be unique "\
+			"(this is a safety feature to prevent accidental double uploads). ")
+	scan_pdf = models.FileField(upload_to = 'scans/pdfs/', blank = False, null = True,
+			help_text = "The scanned PDF file itself.")
 	def __unicode__(self): return unicode(self.name)
 
 class ExamScribble(models.Model):
@@ -282,8 +285,10 @@ class ExamScribble(models.Model):
 
 	Call the `assign` function in order to identify the scribble."""
 	
-	pdf_scribble = models.ForeignKey(EntirePDFScribble)
-	exam = models.ForeignKey(Exam)
+	pdf_scribble = models.ForeignKey(EntirePDFScribble,
+			help_text = "The PDF from which the exam scribble comes from.")
+	exam = models.ForeignKey(Exam,
+			help_text = "The exam associated to an exam scribble file.")
 	entity = models.ForeignKey(Entity, blank=True, null=True,
 			help_text = "This is the entity the scan belongs to. "
 			"It is None if the scan has not yet been identified.")

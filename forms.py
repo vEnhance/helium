@@ -63,7 +63,9 @@ class UploadScanForm(forms.Form):
 			label = "Select exam",
 			queryset = He.models.Exam.objects.filter(is_ready=True, is_scanned=True),
 			help_text = "Please, please, PLEASE check this is right!")
-	pdf = forms.FileField(label = "Upload PDF")
+	pdf = forms.FileField(label = "Upload PDF",
+			help_text = "Note file names must be unique; "\
+			"this is a safety feature to prevent accidental double submission.")
 
 # The following forms are ROBUST in the sense that
 # the form.clean() method will actually do the processing work

@@ -111,7 +111,7 @@ class AnswerSheetImage:
 
 def get_answer_sheets(f):
 	"""Given a file object f, yield answer sheet objects."""
-	if f.name.endswith('.pdf'):
+	if f.name.endswith('.pdf'): # which SHOULD be the case!
 		prefix = f.name[:-4] # strip pdf extension if applicable
 	else:
 		prefix = f.name
