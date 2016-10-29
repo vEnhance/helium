@@ -55,7 +55,13 @@ class EntityExamSelectForm(forms.Form):
 			self.add_error('entity', "Not compatible (team taking indiv exam)")
 		if entity.is_team is False and exam.is_indiv is False:
 			self.add_error('entity', "Not compatible (indiv taking team exam)")
-		
+
+class UploadScanForm(forms.Form):
+	"""Takes an exam and a PDF scan of several pages"""
+	exam = forms.ModelChoiceField(
+			label = "Select exam",
+			queryset = He.models.Exam.objects.filter(is_ready=True, is_scanned=True))
+	pdf = forms.FileField(label = "Upload PDF")
 
 # The following forms are ROBUST in the sense that
 # the form.clean() method will actually do the processing work

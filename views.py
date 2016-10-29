@@ -122,14 +122,14 @@ def _old_grader(request, exam, problems):
 					exam = exam, problems = problems, user = request.user)
 			context = {
 					'exam' : exam,
-					'oldform' : form,
+					'form' : form,
 					'num_graded' : num_graded,
 					'entity' : entity,
 					}
 		else:
 			context = {
 					'exam' : exam,
-					'oldform' : form,
+					'form' : form,
 					'num_graded' : 0,
 					'entity' : None
 					}
@@ -138,7 +138,7 @@ def _old_grader(request, exam, problems):
 		# No actual grades to process yet
 		context = {
 				'exam' : exam,
-				'oldform' : forms.ExamGradingRobustForm(
+				'form' : forms.ExamGradingRobustForm(
 					exam = exam, problems = problems, user = request.user),
 				'num_graded' : 0,
 				'entity' : None,
@@ -272,9 +272,8 @@ def view_verdict(request, verdict_id):
 		if form.is_valid(): # and we're done!
 			pass
 			# TODO messages framework displays "success" messages, use this
-		evform = form
 	else:
-		evform = forms.ExamGradingRobustForm(**form_args)
+		form = forms.ExamGradingRobustForm(**form_args)
 
 	verdict.refresh_from_db()
 	table = []
@@ -287,7 +286,7 @@ def view_verdict(request, verdict_id):
 			tr['User'] = '<b>' + str(tr['User']) + '</b>'
 		tr['God Mode'] = str(evidence.god_mode)
 		table.append(tr)
-	context = {'columns' : columns, 'table' : table, 'evform' : evform, 'verdict' : verdict}
+	context = {'columns' : columns, 'table' : table, 'form' : form, 'verdict' : verdict}
 	if hasattr(verdict, 'problemscribble'):
 		context['image_url'] = verdict.problemscribble.scan_image.url
 
@@ -511,6 +510,19 @@ def estimation_calc(request):
 	"""This is a calculator for guts estimation problems."""
 	scoring_fns = He.models.GutsScoreFunc.objects.all()
 	return render(request, "estimation-calc.html", {'scoring_fns' : scoring_fns})
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def upload_scans(request):
+	"""Uploading scans happens here. Uses the image library."""
+	if request.method == "POST":
+		form = forms.UploadScanForm(request.POST)
+		if form.is_valid():
+			pass
+	else:
+		form = forms.UploadScanForm()
+	return render(request, "upload-scans.html", {'form' : form})
+
 
 
 @staff_member_required
