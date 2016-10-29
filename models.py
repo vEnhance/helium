@@ -12,6 +12,7 @@ General overview of models:
 * For every Entity and Problem, we have a Verdict (which gives the score)
   based on Evidence (one for each grader who read the problem)
 * ExamScribble and ProblemScrrible objects keep track of scans
+* EntireScanPDF is a container for keeping track of uploaded PDF's
 * EntityAlpha is a way to store alpha values (so we don't have to keep recomputing them)
 * GutsScoreFunc is a stupid applet that lets you compute guts estimation scores
 
@@ -267,6 +268,13 @@ class Verdict(models.Model):
 		unique_together = ('problem', 'entity')
 	
 # Scribble objects
+class EntireScanPDF(models.Model):
+	"""This holds only two properties: the filename of an uploaded PDF,
+	and a FileField to a scan PDF"""
+	name = models.CharField(max_length = 80, unique = True)
+	scan_pdf = models.FileField(upload_to = 'scans/pdfs/', blank = False, null = True)
+	def __unicode__(self): return unicode(self.name)
+
 class ExamScribble(models.Model):
 	"""This object represents the entire scan for an entity taking some exam.
 	Several `problem scribbles`, which represent the individual answers of the scan,
@@ -274,6 +282,7 @@ class ExamScribble(models.Model):
 
 	Call the `assign` function in order to identify the scribble."""
 	
+	pdf  = models.ForeignKey(EntireScanPDF)
 	exam = models.ForeignKey(Exam)
 	entity = models.ForeignKey(Entity, blank=True, null=True,
 			help_text = "This is the entity the scan belongs to. "
@@ -370,7 +379,7 @@ class ExamScribble(models.Model):
 class ProblemScribble(models.Model):
 	"""This is attached to a Verdict which is being graded by scan.
 	It contains the data of scanned image and the ExamScribble it came from.
-	For convnience, it contains a submitEvidence wrapper function
+	For convenience, it contains a submitEvidence wrapper function
 	which links to the original Verdict function."""
 
 	examscribble = models.ForeignKey(ExamScribble)
@@ -382,6 +391,7 @@ class ProblemScribble(models.Model):
 
 	def submitEvidence(self, *args, **kwargs):
 		self.verdict.submitEvidence(*args, **kwargs)
+
 
 class Evidence(models.Model):
 	"""This represents a single input by a given user for a verdict:
