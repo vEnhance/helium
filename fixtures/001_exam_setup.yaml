@@ -1,0 +1,82 @@
+- model: auth.user
+  pk: 12
+  fields:
+    password: pbkdf2_sha256$24000$T8wKwTWBHwkm$SBmDOHVb7QRLbbHwY490e8ewh6At07DZa3JS852qVBg=
+    last_login: 2016-10-29 15:07:01.455231+00:00
+    is_superuser: true
+    username: evan
+    first_name: ''
+    last_name: ''
+    email: evanchen@mit.edu
+    is_staff: true
+    is_active: true
+    date_joined: 2016-10-08 14:07:38.305539+00:00
+    groups: []
+    user_permissions: []
+- model: auth.user
+  pk: 15
+  fields:
+    password: pbkdf2_sha256$24000$o4AKawvX0Ek1$yIqZ+EZaSKtoU3rhdCypI/KhqvfU6cTq6+298lSP34g=
+    last_login: null
+    is_superuser: false
+    username: staff1
+    first_name: Staff
+    last_name: One
+    email: ''
+    is_staff: true
+    is_active: true
+    date_joined: 2016-10-29 15:10:36+00:00
+    groups: []
+    user_permissions: []
+- model: helium.exam
+  pk: 6
+  fields: {name: GEO!, color: '#EEFFEE', is_indiv: true, is_ready: true, is_alg_scoring: true,
+    is_scanned: true, min_grades: 2, min_override: 3}
+- model: helium.exam
+  pk: 7
+  fields: {name: Mock IMO, color: '#FFFFE0', is_indiv: false, is_ready: true, is_alg_scoring: false,
+    is_scanned: false, min_grades: 3, min_override: 3}
+- model: helium.problem
+  pk: 16
+  fields: {exam: 6, problem_number: 1, answer: '2, 6', weight: 1.0, allow_partial: false}
+- model: helium.problem
+  pk: 17
+  fields: {exam: 6, problem_number: 2, answer: '14', weight: 1.0, allow_partial: false}
+- model: helium.problem
+  pk: 18
+  fields: {exam: 6, problem_number: 3, answer: '$\frac{25\sqrt3}{12}-\frac{4\pi}{3}$',
+    weight: 1.0, allow_partial: false}
+- model: helium.problem
+  pk: 19
+  fields: {exam: 6, problem_number: 4, answer: '$\frac{7\sqrt3}{3}$', weight: 1.0,
+    allow_partial: false}
+- model: helium.problem
+  pk: 20
+  fields: {exam: 6, problem_number: 5, answer: '462', weight: 1.0, allow_partial: false}
+- model: helium.problem
+  pk: 21
+  fields: {exam: 6, problem_number: 6, answer: '$\frac{21\sqrt3}{8}$', weight: 1.0,
+    allow_partial: false}
+- model: helium.problem
+  pk: 22
+  fields: {exam: 6, problem_number: 7, answer: '1021', weight: 1.0, allow_partial: false}
+- model: helium.problem
+  pk: 23
+  fields: {exam: 6, problem_number: 8, answer: $2+4\log(2)$, weight: 1.0, allow_partial: false}
+- model: helium.problem
+  pk: 24
+  fields: {exam: 6, problem_number: 9, answer: '$\frac{28}{5}\sqrt{69}$', weight: 1.0,
+    allow_partial: false}
+- model: helium.problem
+  pk: 25
+  fields: {exam: 6, problem_number: 10, answer: '$\sqrt{\frac{7+2\sqrt{13}}{3}}$',
+    weight: 1.0, allow_partial: false}
+- model: helium.problem
+  pk: 26
+  fields: {exam: 7, problem_number: 1, answer: '', weight: 7.0, allow_partial: false}
+- model: helium.problem
+  pk: 27
+  fields: {exam: 7, problem_number: 2, answer: '', weight: 7.0, allow_partial: false}
+- model: helium.problem
+  pk: 28
+  fields: {exam: 7, problem_number: 3, answer: '', weight: 7.0, allow_partial: false}
