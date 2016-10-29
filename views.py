@@ -466,7 +466,7 @@ def upload_scans(request):
 					for prob_img in sheet.get_problem_files():
 						n += 1
 						es.createProblemScribble(n, prob_img)
-			threader.run_async(target_function)
+			threader.run_async(target_function, name = "upload_scans")
 	else:
 		form = forms.UploadScanForm()
 	return render(request, "upload-scans.html", {'form' : form})
@@ -595,7 +595,7 @@ def run_management(request, command_name):
 	"""Starts a thread which runs a specified management command"""
 	def target_function():
 		django.core.management.call_command(command_name)
-	threader.run_async(target_function)
+	threader.run_async(target_function, name = command_name)
 	return HttpResponse("Command %s started" %command_name,\
 			content_type="text/plain")
 
