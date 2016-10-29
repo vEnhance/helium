@@ -10,13 +10,23 @@ This is a simple wrapper for running processes async.
 
 import logging
 import threading
+import traceback
 
-def run_async(func, name=""):
+logger = logging.getLogger("django")
+
+def run_async(func, name = None):
+	if name is None:
+		name = func.__name__
 	def target_func():
+		logger.info("Starting `%s`..." %name)
 		try:
 			func()
+		except Exception as e:
+			logger.error("Process `%s` FAILED" %name)
+			logger.error(traceback.format_exc())
+			raise e
 		else:
-			logging.info("%s completed OK" %name)
-	t = threading.Thread(target = func)
+			logger.info("Process `%s` OK" %name)
+	t = threading.Thread(target = target_func)
 	t.daemon = True
 	t.start()
