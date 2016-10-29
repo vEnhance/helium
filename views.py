@@ -458,7 +458,8 @@ def upload_scans(request):
 						scan_file = pdf_file)
 				pdfscribble.save()
 				def target_function():
-					sheets = scanimage.get_answer_sheets(pdf_file)
+					with open(pdfscribble.pdf_file) as f: # need to re-read
+						sheets = scanimage.get_answer_sheets(f)
 					for sheet in sheets:
 						es = He.models.ExamScribble(
 								pdf_scribble = pdfscribble,
@@ -470,6 +471,8 @@ def upload_scans(request):
 						for prob_img in sheet.get_problem_files():
 							n += 1
 							es.createProblemScribble(n, prob_img)
+					pdfscribble.is_done = True
+					pdfscribble.save()
 				threader.run_async(target_function, name = "upload_scans")
 				messages.success(request, "PDF successfully uploaded and now processing")
 	else:

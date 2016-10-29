@@ -276,6 +276,7 @@ class EntirePDFScribble(models.Model):
 			"(this is a safety feature to prevent accidental double uploads). ")
 	scan_file = models.FileField(upload_to = 'scans/pdfs/', blank = False, null = True,
 			help_text = "The scanned PDF file itself.")
+	is_done = models.BooleanField(default = False, help_text = "Whether the PDF is done scanning.")
 	def __unicode__(self): return unicode(self.name)
 
 class ExamScribble(models.Model):
