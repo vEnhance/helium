@@ -78,7 +78,7 @@ class ResultPrinter:
 			result.rank = r
 		self.results = results
 	def get_table(self, heading = None, num_show = None, num_named = None,
-			float_string = "%4.2f", int_string = "%4d"):
+			float_string = "%5.2f", int_string = "%5d"):
 		output = get_heading(heading) if heading is not None else ''
 		for result in self.results:
 			if num_show is not None and result.rank > num_show:
@@ -88,8 +88,8 @@ class ResultPrinter:
 					else "%7d" % result.total
 			if len(result.scores) > 1: # sum of more than one thing
 				output += "  |  "
-				output += " ".join([float_string%x if type(x)==float else int_string%x \
-						for x in result.scores])
+				output += " ".join([int_string %x if type(x) == int or x == 0 \
+						else float_string % x  for x in result.scores])
 			output += "  |  "
 			if num_named is None or result.rank <= num_named:
 				output += result.row_name
