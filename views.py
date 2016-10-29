@@ -17,17 +17,22 @@ This file is divided into roughly a few parts:
 * Interfaces view_* for viewing previous evidences and maybe fixing them
 * The scan grader (grade_scans), grading problem scans
 
+## Verdict views
+The interfaces view_verdict and find_verdicts, etc.
+These are used so that e.g. you can look at your own grading conflicts.
+
 ## AJAX hooks
 These are ajax_*. Used by scan grading.
 
 ## Progress reports
 progress_*, shows how much progress we've made grading.
 
-## Results
+## Score reports
 reports_*, this shows the results of the tournament.
 This includes also teaser and spreadsheet.
 
 ## Misc
+estimation_calc, a widget to compute partial marks for Guts round
 run_management, for management commands
 index, the main landing page.
 """
@@ -49,9 +54,11 @@ import random
 import time
 import threading
 
+# The following imports are Helium specific
 import helium as He
 import helium.forms as forms
 import presentation
+import scanimage
 
 DONE_IMAGE_URL = static('img/done.jpg')
 
@@ -109,6 +116,7 @@ def index(request):
 			}
 	return render(request, "helium.html", context)
 
+## VIEWS FOR CLASSICAL GRADER
 def _old_grader(request, exam, problems):
 	if request.method == 'POST':
 		form = forms.ExamGradingRobustForm(request.POST,
@@ -144,7 +152,6 @@ def _old_grader(request, exam, problems):
 				'entity' : None,
 				}
 	return render(request, "old-grader.html", context)
-
 @staff_member_required
 def old_grader_exam_redir(request):
 	return _redir_obj_id(request,
@@ -168,6 +175,7 @@ def old_grader_problem(request, problem_id):
 	problems = [problem]
 	return _old_grader(request, exam, problems)
 
+## VIEWS FOR SCAN GRADER
 @staff_member_required
 def match_exam_scans_redir(request):
 	return _redir_obj_id(request,
@@ -194,7 +202,7 @@ def match_exam_scans(request, exam_id):
 					'matchform' : form,
 					'previous_entity' : None,
 					'scribble' : examscribble,
-					'scribble_url' : examscribble.scan_image.url,
+					'scribble_url' : examscribble.name_image.url,
 					'exam' : exam,
 					}
 			return render(request, "match-exam-scans.html", context)
@@ -222,7 +230,7 @@ def match_exam_scans(request, exam_id):
 				'matchform' : form,
 				'previous_entity' : previous_entity,
 				'scribble' : examscribble,
-				'scribble_url' : examscribble.scan_image.url,
+				'scribble_url' : examscribble.name_image.url,
 				'exam' : exam,
 				}
 	return render(request, "match-exam-scans.html", context)
@@ -238,7 +246,7 @@ def grade_scans(request, problem_id):
 	return render(request, "grade-scans.html",
 			{'problem' : problem, 'exam': problem.exam})
 
-
+## VIEWS FOR VERDICTS
 def _show_evidences(request, verdicts):
 	table = []
 	columns = ['Entity', 'Problem', 'Score', 'User', 'More']
@@ -288,7 +296,7 @@ def view_verdict(request, verdict_id):
 		table.append(tr)
 	context = {'columns' : columns, 'table' : table, 'form' : form, 'verdict' : verdict}
 	if hasattr(verdict, 'problemscribble'):
-		context['image_url'] = verdict.problemscribble.scan_image.url
+		context['image_url'] = verdict.problemscribble.prob_image.url
 
 	return render(request, "view-verdict.html", context)
 @staff_member_required
@@ -314,6 +322,7 @@ def view_conflicts_own(request):
 			.filter(is_valid=False, problem__exam__is_ready = True,
 				evidence__user = request.user) )
 
+## AJAX HOOKS
 @staff_member_required
 @require_POST
 def ajax_submit_scan(request):
@@ -331,25 +340,21 @@ def ajax_submit_scan(request):
 def ajax_next_scan(request):
 	"""POST arguments: problem_id. RETURN: (scribble id, scribble url)"""
 	problem_id = int(request.POST['problem_id'])
-	print problem_id
 	if problem_id == 0: return
 
 	problem = He.models.Problem.objects.get(id=problem_id)
 	scribbles = He.models.ProblemScribble.objects.filter(
 			verdict__problem=problem,
 			verdict__is_done=False)
-	print scribbles
 	random_indices = range(0,scribbles.count())
 	random.shuffle(random_indices)
 	for i in random_indices:
-		print i
-		s = scribbles[i]
-		print s
+		ps = scribbles[i]
 		# If seen before, toss out
-		if s.verdict.evidence_set.filter(user=request.user).exists():
+		if ps.verdict.evidence_set.filter(user=request.user).exists():
 			continue
 		else:
-			return HttpResponse( json.dumps([s.id, s.scan_image.url]), \
+			return HttpResponse( json.dumps([ps.id, ps.prob_image.url]), \
 					content_type = 'application/json' )
 	else: # done grading!
 		return HttpResponse( json.dumps([0, DONE_IMAGE_URL]), \
@@ -379,7 +384,7 @@ def ajax_prev_evidence(request):
 			output.append( (n, e.score) )
 	return HttpResponse( json.dumps(output), content_type='application/json' )
 
-
+## PROGRESS REPORTS
 @staff_member_required
 def progress_problems(request):
 	"""Generates a table of how progress grading the problem is going."""
@@ -428,6 +433,36 @@ def progress_scans(request):
 	context = {'columns' : columns, 'table' : table, 'pagetitle' : 'Scans Progress'}
 	return render(request, "table-only.html", context)
 
+## ESTIMATION CALC
+@staff_member_required
+def estimation_calc(request):
+	"""This is a calculator for guts estimation problems."""
+	scoring_fns = He.models.GutsScoreFunc.objects.all()
+	return render(request, "estimation-calc.html", {'scoring_fns' : scoring_fns})
+
+## SCAN UPLOAD
+@staff_member_required
+def upload_scans(request):
+	"""Uploading scans happens here. Uses the image library."""
+	if request.method == "POST":
+		form = forms.UploadScanForm(request.POST, request.FILES)
+		if form.is_valid():
+			sheets = scanimage.get_answer_sheets(request.FILES['pdf'])
+			for sheet in sheets:
+				es = He.models.ExamScribble(
+						exam = form.cleaned_data['exam'],
+						full_image = sheet.get_full_file(),
+						name_image = sheet.get_name_file())
+				es.save()
+				n = 0
+				for prob_img in sheet.get_problem_files():
+					n += 1
+					es.createProblemScribble(n, prob_img)
+	else:
+		form = forms.UploadScanForm()
+	return render(request, "upload-scans.html", {'form' : form})
+
+## SCORE REPORTS
 def _report(num_show = None, num_named = None,
 		show_indiv_alphas = True, show_team_sum_alphas = True, show_hmmt_sweepstakes = True):
 	"""Explanation of potions:
@@ -503,28 +538,6 @@ def _report(num_show = None, num_named = None,
 	output += FINAL_TEXT_BANNER + "\n"
 	output += "</pre></body></html>"
 	return HttpResponse(output, content_type="text/html")
-
-
-@staff_member_required
-def estimation_calc(request):
-	"""This is a calculator for guts estimation problems."""
-	scoring_fns = He.models.GutsScoreFunc.objects.all()
-	return render(request, "estimation-calc.html", {'scoring_fns' : scoring_fns})
-
-
-@user_passes_test(lambda u: u.is_superuser)
-def upload_scans(request):
-	"""Uploading scans happens here. Uses the image library."""
-	if request.method == "POST":
-		form = forms.UploadScanForm(request.POST)
-		if form.is_valid():
-			pass
-	else:
-		form = forms.UploadScanForm()
-	return render(request, "upload-scans.html", {'form' : form})
-
-
-
 @staff_member_required
 def reports_short(request):
 	return _report(num_show = 10)
