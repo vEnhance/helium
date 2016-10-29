@@ -12,7 +12,9 @@ For an all-or-nothing problem,
 input a score of either 0 or 1 in the textbox below, then press return.
 You will then automatically be shown a different scan.</p>
 
-<p><b>Ludicrous Speed:</b> <input type="checkbox" id="ludicrous_speed" /></p>
+<p><b>Ludicrous Speed:</b>
+<input type="checkbox" id="ludicrous_speed"
+	{% if not problem.allow_partial %}checked{% endif%}/></p>
 <p>(Enable ludicrous speed only if you plan to enter one-digit answers only.
 If enabled, you don't need to press "return".)
 </p>
