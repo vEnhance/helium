@@ -44,9 +44,10 @@ class AnswerSheetImage:
 	"""This is a wrapper class that has all the data of a single answer sheet"""
 	def __init__(self, image, fprefix):
 		self.fprefix = fprefix
-		self.image = Image(image = image)
+		self.full_image = Image(image = image)
+		self.full_image.format = 'jpg' # convert to jpg
+		self.image = Image(image = self.full_image)
 		evaluate(self.image, 'threshold', 0.90)
-		self.image.format = 'jpg' # convert to jpg
 
 	def get_django_cutout(self, rect, filename):
 		width = self.image.width
@@ -61,7 +62,7 @@ class AnswerSheetImage:
 
 	def get_full_file(self):
 		filename = '%s-full.jpg' % self.fprefix
-		return self.get_django_cutout(CUTOUT_FULL_REGION, filename)
+		return to_django_file(self.full_image, filename)
 
 	def get_name_file(self):
 		filename = '%s-name.jpg' % self.fprefix
