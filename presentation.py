@@ -1,6 +1,7 @@
 """
 HELIUM
-Evan Cheno, 2016
+(c) 2016 Evan Chen
+See LICENSE.txt for details.
 
 presentation.py
 

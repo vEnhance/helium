@@ -1,6 +1,7 @@
 """
 HELIUM
-Evan Chen, 2016
+(c) 2016 Evan Chen
+See LICENSE.txt for details.
 
 views.py
 
@@ -89,6 +90,8 @@ FINAL_TEXT_BANNER = """
 |  .-.  | |  .--'(|  '---.',|  |_.'|  | | `-' /|  |   |  | 
 |  | |  | |  `---.|      |(_|  |  ('  '-'(_.-' |  |   |  | 
 `--' `--' `------'`------'  `--'    `-----'    `--'   `--' 
+
+HELIUM (c) 2016 Evan Chen
 """.strip()
 
 
