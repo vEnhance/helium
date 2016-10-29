@@ -453,17 +453,20 @@ def upload_scans(request):
 	if request.method == "POST":
 		form = forms.UploadScanForm(request.POST, request.FILES)
 		if form.is_valid():
-			sheets = scanimage.get_answer_sheets(request.FILES['pdf'])
-			for sheet in sheets:
-				es = He.models.ExamScribble(
-						exam = form.cleaned_data['exam'],
-						full_image = sheet.get_full_file(),
-						name_image = sheet.get_name_file())
-				es.save()
-				n = 0
-				for prob_img in sheet.get_problem_files():
-					n += 1
-					es.createProblemScribble(n, prob_img)
+			pdf = request.FILES['pdf']
+			def target_function():
+				sheets = scanimage.get_answer_sheets(pdf)
+				for sheet in sheets:
+					es = He.models.ExamScribble(
+							exam = form.cleaned_data['exam'],
+							full_image = sheet.get_full_file(),
+							name_image = sheet.get_name_file())
+					es.save()
+					n = 0
+					for prob_img in sheet.get_problem_files():
+						n += 1
+						es.createProblemScribble(n, prob_img)
+			threader.run_async(target_function)
 	else:
 		form = forms.UploadScanForm()
 	return render(request, "upload-scans.html", {'form' : form})
