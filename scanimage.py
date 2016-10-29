@@ -22,18 +22,13 @@ def evaluate(self, operation, argument):
 
 # These are in (x1, x2, y1, y2) format
 CUTOUT_FULL_REGION = [0.00, 1.00, 0.00, 1.00] # name area
-CUTOUT_NAME_REGION = [0.00, 1.00, 0.07, 0.34] # name area
+CUTOUT_NAME_REGION = [0.00, 1.00, 0.07, 0.36] # name area
 CUTOUT_PROBLEM_REGIONS = [
-		[0.00, 0.55, 0.30, 0.45], # problem 1
-		[0.00, 0.55, 0.42, 0.57], # problem 2
-		[0.00, 0.55, 0.54, 0.69], # problem 3
-		[0.00, 0.55, 0.65, 0.80], # problem 4
-		[0.00, 0.55, 0.77, 0.92], # problem 5
-		[0.45, 1.00, 0.30, 0.45], # problem 6
-		[0.45, 1.00, 0.42, 0.57], # problem 7
-		[0.45, 1.00, 0.54, 0.69], # problem 8
-		[0.45, 1.00, 0.65, 0.80], # problem 9
-		[0.45, 1.00, 0.77, 0.92], # problem 10
+		[0.00, 0.55, 0.31, 0.49], # problem <++>
+		[0.00, 0.55, 0.42, 0.60], # problem <++>
+		[0.00, 0.55, 0.53, 0.71], # problem <++>
+		[0.00, 0.55, 0.64, 0.82], # problem <++>
+		[0.00, 0.55, 0.75, 0.93], # problem <++>
 	]
 def to_django_file(image, filename):
 	"""http://stackoverflow.com/a/4544525/4826845
