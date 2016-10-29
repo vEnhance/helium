@@ -27,6 +27,8 @@ On a system one can perform a "test run" by calling this as main
 (and indeed static/answers/run-cutout-test.py symlinks to this file).
 Simply call scanimage.py <filename.pdf>.
 This will generate the cut-outs of the first page of that PDF file.
+
+By design, this module is agnostic to remaining components of helium.
 """
 
 from wand.image import Image
