@@ -109,12 +109,12 @@ class AnswerSheetImage:
 			filename = '%s-prob-%02d.jpg' % (self.fprefix, i+1)
 			yield self.get_django_cutout(rect, filename)
 
-def get_answer_sheets(f):
+def get_answer_sheets(f, filename):
 	"""Given a file object f, yield answer sheet objects."""
-	if f.name.endswith('.pdf'): # which SHOULD be the case!
-		prefix = f.name[:-4] # strip pdf extension if applicable
+	if filename.endswith('.pdf'): # which SHOULD be the case!
+		prefix = filename[:-4] # strip pdf extension if applicable
 	else:
-		prefix = f.name
+		prefix = filename
 	with Image(file = f, resolution = (140, 140)) as full_pdf:
 		for i, page in enumerate(full_pdf.sequence):
 			yield AnswerSheetImage(image = page,
