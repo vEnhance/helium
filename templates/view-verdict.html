@@ -11,12 +11,7 @@
 {% endif %}
 
 <h3>Submit Evidence</h3>
-<form action="{{ request.path }}" method="post">
-<table class="table">
-	{% include "_form.html" with form=evform %}
-</table>
-<input type="submit">
-</form>
+{% include "_form.html" with form=evform submit_name="Submit Evidence" %}
 
 <h3>Existing Evidences</h3>
 {% include "_table.html" %}

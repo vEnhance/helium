@@ -1,3 +1,15 @@
+{% comment %}
+This is a boilerplate template for a typical form which posts to itself.
+It takes two arguments:
+
+form: the Django form object
+submit_name: the label to put on the Submit button
+
+{% endcomment %}
+
+
+<form action="{{ request.path }}" method="post">
+<table class="table">
 {% csrf_token %}
 
 {% if form.non_field_errors %}
@@ -30,6 +42,10 @@
 		</td>
 	</tr>
 {% endfor %}
+
+</table>
+<input type="submit" value="{{ submit_name }}">
+</form>
 
 {% comment %}
 vim: ft=htmldjango

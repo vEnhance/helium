@@ -1,3 +1,12 @@
+{% comment %}
+This is a boilerplate table for a template.
+It takes two parameters:
+
+columns: a Python list of column names
+table: a Python list of rows, each row which is itself a Python list
+
+{% endcomment %}
+
 <table class="table">
 	<tr>
 		{% for col in columns %}
@@ -12,4 +21,3 @@
 		</tr>
 	{% endfor %}
 </table>
-

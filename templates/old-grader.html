@@ -23,12 +23,7 @@ for grading Guts estimation questions.</p>
 <p class="text-success">Successfully graded {{ num_graded }} problems for {{ entity }}.</p>
 {% endif %}
 
-<form action="{{ request.path }}" method="post">
-<table class="table">
-	{% include "_form.html" with form=oldform %}
-</table>
-<input type="submit" value="Enter Scores">
-</form>
+{% include "_form.html" with form=oldform submit_name="Enter Scores" %}
 {% endblock %}
 
 {% block scripts %}
