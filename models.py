@@ -276,8 +276,10 @@ class ExamScribble(models.Model):
 			help_text = "This is the entity the scan belongs to. "
 			"It is None if the scan has not yet been identified.")
 	scan_image = models.ImageField(upload_to='scans/names/', blank=False, null=True,
-			help_text = "This is the image of the `name` field for the scan. ")
-		 # blargh. This should really be null=False, but it makes testing hard.
+			help_text = "This is the image of the `name` field for the scan.")
+	full_image = models.ImageField(upload_to='scans/full/', blank=False, null=True,
+			help_text = "This is the image of the entire scan.")
+		 # blargh. These should really be null=False, but it makes testing hard.
 
 	def __unicode__(self):
 		if self.entity is not None:
