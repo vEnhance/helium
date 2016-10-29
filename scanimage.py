@@ -53,7 +53,6 @@ class AnswerSheetImage:
 		evaluate(self.image, 'threshold', 0.90)
 		self.image.format = 'jpg' # convert to jpg
 
-
 	def get_django_cutout(self, rect, filename):
 		width = self.image.width
 		height = self.image.height
@@ -91,3 +90,24 @@ def get_answer_sheets(f, prefix = None):
 		for i, page in enumerate(full_pdf.sequence):
 			yield AnswerSheetImage(image = page,
 					fprefix = "%s-sheet%04d" %(prefix, i+1))
+
+if __name__ == "__main__":
+	# This is for testing.
+	# You call python scan.py <filename>
+	# and it will output (in current directory) all image files
+
+	import sys
+	filename = sys.argv[1]
+	def saveDjangoFile(f):
+		with open(f.name, 'w') as target:
+			for chunk in f.chunks():
+				target.write(chunk)
+
+	with open(filename) as pdf:
+		sheets = get_answer_sheets(pdf, "testing")
+		a = next(sheets) # answer sheet 1 only
+
+		saveDjangoFile(a.get_full_file())
+		saveDjangoFile(a.get_name_file())
+		for pf in a.get_problem_files():
+			saveDjangoFile(pf)
