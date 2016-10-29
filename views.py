@@ -446,21 +446,27 @@ def upload_scans(request):
 	if request.method == "POST":
 		form = forms.UploadScanForm(request.POST, request.FILES)
 		if form.is_valid():
-			pdf = request.FILES['pdf']
-			def target_function():
-				sheets = scanimage.get_answer_sheets(pdf)
-				for sheet in sheets:
-					es = He.models.ExamScribble(
-							exam = form.cleaned_data['exam'],
-							full_image = sheet.get_full_file(),
-							name_image = sheet.get_name_file())
-					es.save()
-					n = 0
-					for prob_img in sheet.get_problem_files():
-						n += 1
-						es.createProblemScribble(n, prob_img)
-			threader.run_async(target_function, name = "upload_scans")
-			messages.success(request, "PDF successfully uploaded and now processing")
+			pdf_file = request.FILES['pdf']
+			pdf_name = pdf_file.name
+			if He.models.EntirePDFScribble.objects.exists(name = pdf_name):
+				messages.error("PDF with name %s was already uploaded. No action taken." % pdf_name)
+			else:
+				pdfscribble = He.models.EntirePDFScribble(name = pdf_name)
+				def target_function():
+					sheets = scanimage.get_answer_sheets(pdf_file)
+					for sheet in sheets:
+						es = He.models.ExamScribble(
+								pdf_scribble = pdfscribble,
+								exam = form.cleaned_data['exam'],
+								full_image = sheet.get_full_file(),
+								name_image = sheet.get_name_file())
+						es.save()
+						n = 0
+						for prob_img in sheet.get_problem_files():
+							n += 1
+							es.createProblemScribble(n, prob_img)
+				threader.run_async(target_function, name = "upload_scans")
+				messages.success(request, "PDF successfully uploaded and now processing")
 	else:
 		form = forms.UploadScanForm()
 	return render(request, "upload-scans.html", {'form' : form})
