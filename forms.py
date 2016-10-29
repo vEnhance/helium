@@ -61,7 +61,8 @@ class UploadScanForm(forms.Form):
 	"""Takes an exam and a PDF scan of several pages"""
 	exam = forms.ModelChoiceField(
 			label = "Select exam",
-			queryset = He.models.Exam.objects.filter(is_ready=True, is_scanned=True))
+			queryset = He.models.Exam.objects.filter(is_ready=True, is_scanned=True),
+			help_text = "Please, please, PLEASE check this is right!")
 	pdf = forms.FileField(label = "Upload PDF")
 
 # The following forms are ROBUST in the sense that
