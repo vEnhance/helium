@@ -202,7 +202,7 @@ def match_exam_scans(request, exam_id):
 				request.POST, examscribble = examscribble, user = request.user)
 		if form.is_valid(): 
 			prev_entity = form.cleaned_data['entity']
-			messages.success("Matched exam for %s" %prev_entity)
+			messages.success(request, "Matched exam for %s" %prev_entity)
 		else: # validation errors
 			context = {
 					'matchform' : form,
@@ -460,7 +460,7 @@ def upload_scans(request):
 						n += 1
 						es.createProblemScribble(n, prob_img)
 			threader.run_async(target_function, name = "upload_scans")
-			messages.success("PDF successfully uploaded and now processing")
+			messages.success(request, "PDF successfully uploaded and now processing")
 	else:
 		form = forms.UploadScanForm()
 	return render(request, "upload-scans.html", {'form' : form})
@@ -590,6 +590,6 @@ def run_management(request, command_name):
 	def target_function():
 		django.core.management.call_command(command_name)
 	threader.run_async(target_function, name = command_name)
-	return HttpResponse("Command started", content_type="text/plain")
+	return HttpResponse("Command %s started" % command_name, content_type="text/plain")
 
 # vim: fdm=indent foldnestmax=1

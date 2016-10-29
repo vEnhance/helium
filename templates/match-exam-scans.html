@@ -8,10 +8,6 @@
 
 <h3>Name Matching System for {{ exam }}</h3>
 
-{% if previous_entity %}
-<p class="text-success">Successfully identified {{ exam }} exam for {{ previous_entity }}.</p>
-{% endif %}
-
 <div id="scan_img_div">
 	<h5>Scribble ID {{ scribble.id }}</h5>
 	<img src="{{ scribble_url }}" id="scan_img" width="100%" />
