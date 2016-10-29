@@ -72,10 +72,11 @@ class Entity(models.Model):
 	In addition to Entity.objects, the managers Entity.teams and Entity.mathletes."""
 
 	name = models.CharField(max_length=80)
-	shortname = models.CharField(max_length=80, default='',
+	shortname = models.CharField(max_length=80, default='', blank=True,
 			help_text = "For teams, a shorter version of their name. "
 			"This is used instead when attached to mathletes. "
-			"Leave this blank to just use the team name instead.")
+			"Leave this blank to just use the team name instead. "
+			"Leave this blank for individuals.")
 	team = models.ForeignKey('self', null=True, blank=True)
 	is_team = models.BooleanField(default=False)
 	number = models.IntegerField(null=True, blank=True,
@@ -111,8 +112,9 @@ class Exam(models.Model):
 			help_text="Color which exam is printed on. "
 			"Grading pages will be tinted with this color so that e.g. "
 			"we don't accidentally have someone enter Algebra scores into Geometry. "
-			"(This was a very common mistake in old Babbage.")
-	is_indiv = models.BooleanField()
+			"(This was a very common mistake in old Babbage.) "
+			"This color is page background so it should be VERY light (like #EEFFEE light).")
+	is_indiv = models.BooleanField(default=True)
 	is_ready = models.BooleanField(default=True,
 			help_text = "Mark true if you want users to be able to grade this exam. "
 			"You should set it to False if you are waiting for scans for example. "
@@ -120,7 +122,7 @@ class Exam(models.Model):
 			"so as not to distract users. "
 			"Note that this does not affect validation, it only affects the UI: "
 			"in other words users can still navigate directly to a URL to grade this exam.")
-	is_alg_scoring = models.BooleanField()
+	is_alg_scoring = models.BooleanField(default=True)
 	is_scanned = models.BooleanField(default=False,
 			help_text = "Whether the scan grader will show this problem or not. "
 			"For example, this should almost certainly be False for Guts round.")
@@ -141,7 +143,7 @@ class Exam(models.Model):
 class Problem(models.Model):
 	exam = models.ForeignKey(Exam)
 	problem_number = models.IntegerField(help_text = "Must be unique per exam.")
-	answer = models.CharField(max_length=70, default='',
+	answer = models.CharField(max_length=70, default='', blank=True,
 			help_text = "The answer for a problem, which is shown in help texts.")
 
 	weight = models.FloatField(default=1,
