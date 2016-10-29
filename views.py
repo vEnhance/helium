@@ -448,10 +448,12 @@ def upload_scans(request):
 		if form.is_valid():
 			pdf_file = request.FILES['pdf']
 			pdf_name = pdf_file.name
-			if He.models.EntirePDFScribble.objects.exists(name = pdf_name):
-				messages.error("PDF with name %s was already uploaded. No action taken." % pdf_name)
+			if He.models.EntirePDFScribble.objects.filter(name = pdf_name).exists():
+				messages.error(request, "PDF with name %s was already uploaded. "\
+						"No action taken." % pdf_name)
 			else:
 				pdfscribble = He.models.EntirePDFScribble(name = pdf_name)
+				pdfscribble.save()
 				def target_function():
 					sheets = scanimage.get_answer_sheets(pdf_file)
 					for sheet in sheets:
