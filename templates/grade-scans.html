@@ -21,8 +21,8 @@ If enabled, you don't need to press "return".)
 <div id="scan_img_div"><h5>Scan ID <span id="scan_id"></span></h5>
 	<img class="scan" src="" id="scan_img"/></div>
 <div id="controls">
-<h4>Input Score (Answer {{problem.answer }})</h4>
-<p><input id="score" name="score" type="number" /></p>
+<p>Input Score: <input id="score" name="score" type="number" /></p>
+<h4>Answer: {{ problem.answer }}</h4>
 </div>
 {% endblock %}
 
@@ -65,6 +65,7 @@ $(document).ready(function() {
 			$("#score").val(''); // reset
 		}
 	});
+	$("#score").focus();
 });
 </script>
 {% endblock %}
