@@ -68,7 +68,7 @@ class VerdictAdmin(admin.ModelAdmin):
 
 @admin.register(He.models.ProblemScribble)
 class ProblemScribbleAdmin(admin.ModelAdmin):
-	list_display = ('__unicode__', 'id', 'verdict', 'examscribble')
+	list_display = ('__unicode__', 'id', 'verdict', 'examscribble', 'last_sent_time')
 
 @admin.register(He.models.Evidence)
 class EvidenceAdmin(admin.ModelAdmin):

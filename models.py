@@ -53,7 +53,7 @@ from django.db.models import Sum
 # These are used to provide Entity.teams and Entity.mathletes
 class TeamManager(models.Manager):
 	def get_queryset(self):
-		return super(TeamManager, self).get_queryset().filter(is_team=True)
+		return super(TeamManager, self).get_queryset().filter(is_team = True)
 class MathleteManager(models.Manager):
 	def get_queryset(self):
 		return super(MathleteManager, self).get_queryset().filter(is_team=False)
@@ -108,7 +108,7 @@ class Entity(models.Model):
 # Exam/problem objects
 
 class Exam(models.Model):
-	name = models.CharField(max_length=50, help_text='Name of exam')
+	name = models.CharField(max_length=50, help_text = 'Name of exam')
 	color = models.CharField(max_length=50, default="#FFFFFF",\
 			help_text="Color which exam is printed on. "
 			"Grading pages will be tinted with this color so that e.g. "
@@ -274,9 +274,9 @@ class EntirePDFScribble(models.Model):
 	name = models.CharField(max_length = 80, unique = True,
 			help_text = "The name of the PDF file, which must be unique "\
 			"(this is a safety feature to prevent accidental double uploads). ")
-	scan_file = models.FileField(upload_to = 'scans/pdfs/', blank = False, null = True,
+	scan_file = models.FileField(upload_to = 'scans/pdfs/', blank=False, null=True,
 			help_text = "The scanned PDF file itself.")
-	is_done = models.BooleanField(default = False, help_text = "Whether the PDF is done scanning.")
+	is_done = models.BooleanField(default=False, help_text = "Whether the PDF is done scanning.")
 	def __unicode__(self): return unicode(self.name)
 
 class ExamScribble(models.Model):
@@ -392,6 +392,10 @@ class ProblemScribble(models.Model):
 	verdict = models.OneToOneField(Verdict, on_delete=models.CASCADE)
 	prob_image = models.ImageField(upload_to='scans/problems/', blank=False, null=True)
 		 # blargh. This should really be null=False, but it makes testing hard.
+	last_sent_time = models.IntegerField(blank=True, null=True,
+			help_text = "Most recent time the scan was sent out (in seconds since Epoch);"\
+			"reset to None when the problem is graded. "\
+			"This prevents the scan grader from accidentally giving duplicates.")
 
 	def __unicode__(self): return unicode(self.verdict)
 
@@ -402,7 +406,7 @@ class ProblemScribble(models.Model):
 class Evidence(models.Model):
 	"""This represents a single input by a given user for a verdict:
 	`Evan entered a score of 1 on Algebra #3 for X`
-	is an example of a valid interprettion."""
+	is an example of a valid interpretation."""
 
 	verdict = models.ForeignKey(Verdict)
 	user = models.ForeignKey(auth.User)
@@ -428,18 +432,18 @@ class GutsScoreFunc(models.Model):
 
 	problem_number = models.IntegerField(unique=True,
 			help_text = "This is the problem number on Guts Round.")
-	description = models.CharField(max_length = 80, blank = True,
+	description = models.CharField(max_length = 80, blank=True,
 			help_text = "A brief description of the problem, shown only in admin interface.")
 	answer = models.CharField(max_length = 80,
 			help_text = "True answer for problem, not actually used by model, shown in grader.")
 	scoring_function = models.TextField(
-			default = "function (x) {\n\treturn Math.max(0, 20-Math.abs(49-x));\n}",
+			default="function (x) {\n\treturn Math.max(0, 20-Math.abs(49-x));\n}",
 			help_text =
 			"Javascript syntax for a one-variable function. "
 			"This is the score reported if a staff member enters input x.\n"
 			"Can span multiple lines.")
-	problem_help_text = models.CharField(max_length = 120, blank = True,
-			default = "Input an integer.",
+	problem_help_text = models.CharField(max_length = 120, blank=True,
+			default="Input an integer.",
 			help_text = "An optional text that will display to help the staff member. "
 			"For example, `input a string of seven letters`.")
 
