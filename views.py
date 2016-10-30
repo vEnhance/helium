@@ -323,9 +323,15 @@ def view_paper(request, examscribble_id):
 	verdicts = He.models.Verdict.objects.filter(problemscribble__examscribble = es)
 	context['table'] =  _get_ev_table(request, verdicts)
 	if request.method == "POST":
-		# TODO make this check for things
-		matchform = forms.ExamScribbleMatchRobustForm(\
-				user = request.user, examscribble = es)
+		form = forms.ExamScribbleMatchRobustForm(
+				request.POST, examscribble = es, user = request.user)
+		if form.is_valid(): 
+			prev_entity = form.cleaned_data['entity']
+			messages.success(request, "Matched exam for %s" %prev_entity)
+			matchform = forms.ExamScribbleMatchRobustForm(\
+					user = request.user, examscribble = es)
+		else:
+			matchform = form
 	else:
 		matchform = forms.ExamScribbleMatchRobustForm(\
 				user = request.user, examscribble = es)
