@@ -1,0 +1,2131 @@
+- model: auth.user
+  pk: 12
+  fields:
+    password: pbkdf2_sha256$24000$T8wKwTWBHwkm$SBmDOHVb7QRLbbHwY490e8ewh6At07DZa3JS852qVBg=
+    last_login: 2016-10-29 23:43:36.337771+00:00
+    is_superuser: true
+    username: evan
+    first_name: ''
+    last_name: ''
+    email: evanchen@mit.edu
+    is_staff: true
+    is_active: true
+    date_joined: 2016-10-08 14:07:38.305539+00:00
+    groups: []
+    user_permissions: []
+- model: auth.user
+  pk: 15
+  fields:
+    password: pbkdf2_sha256$24000$o4AKawvX0Ek1$yIqZ+EZaSKtoU3rhdCypI/KhqvfU6cTq6+298lSP34g=
+    last_login: 2016-10-30 00:08:51.244743+00:00
+    is_superuser: false
+    username: staff1
+    first_name: Staff
+    last_name: One
+    email: ''
+    is_staff: true
+    is_active: true
+    date_joined: 2016-10-29 15:10:36+00:00
+    groups: []
+    user_permissions: []
+- model: helium.entity
+  pk: 9
+  fields: {name: Evan Chen, shortname: '', team: null, is_team: false, number: null}
+- model: helium.entity
+  pk: 10
+  fields: {name: Opera, shortname: '', team: null, is_team: true, number: null}
+- model: helium.entity
+  pk: 11
+  fields: {name: Madame Giry, shortname: '', team: 10, is_team: false, number: null}
+- model: helium.entity
+  pk: 12
+  fields: {name: Carlotta Guidicelli, shortname: '', team: 10, is_team: false, number: null}
+- model: helium.entity
+  pk: 13
+  fields: {name: Christine Daae, shortname: '', team: 10, is_team: false, number: null}
+- model: helium.entity
+  pk: 14
+  fields: {name: Raoul de Chagny, shortname: '', team: 10, is_team: false, number: null}
+- model: helium.entity
+  pk: 15
+  fields: {name: Erik Fantasia, shortname: '', team: 10, is_team: false, number: null}
+- model: helium.entity
+  pk: 16
+  fields: {name: Misery, shortname: '', team: null, is_team: true, number: null}
+- model: helium.entity
+  pk: 17
+  fields: {name: Jean Valjean, shortname: '', team: 16, is_team: false, number: null}
+- model: helium.entity
+  pk: 18
+  fields: {name: Inspector Javert, shortname: '', team: 16, is_team: false, number: null}
+- model: helium.entity
+  pk: 19
+  fields: {name: Gavroche Thenardier, shortname: '', team: 16, is_team: false, number: null}
+- model: helium.entity
+  pk: 20
+  fields: {name: Marius Pontmercy, shortname: '', team: 16, is_team: false, number: null}
+- model: helium.entity
+  pk: 21
+  fields: {name: Cosette Tholomyes, shortname: '', team: 16, is_team: false, number: null}
+- model: helium.entity
+  pk: 22
+  fields: {name: Wicked, shortname: '', team: null, is_team: true, number: null}
+- model: helium.entity
+  pk: 23
+  fields: {name: Tin Woodman, shortname: '', team: 22, is_team: false, number: null}
+- model: helium.entity
+  pk: 24
+  fields: {name: Fiyero Tigelaar, shortname: '', team: 22, is_team: false, number: null}
+- model: helium.entity
+  pk: 25
+  fields: {name: Elphaba Thropp, shortname: '', team: 22, is_team: false, number: null}
+- model: helium.entity
+  pk: 26
+  fields: {name: Glinda Upland, shortname: '', team: 22, is_team: false, number: null}
+- model: helium.entity
+  pk: 27
+  fields: {name: Nessa Thropp, shortname: '', team: 22, is_team: false, number: null}
+- model: helium.exam
+  pk: 6
+  fields: {name: GEO!, color: '#EEFFEE', is_indiv: true, is_ready: true, is_alg_scoring: true,
+    is_scanned: true, min_grades: 2, min_override: 3}
+- model: helium.exam
+  pk: 7
+  fields: {name: Mock IMO, color: '#FFFFE0', is_indiv: false, is_ready: true, is_alg_scoring: false,
+    is_scanned: false, min_grades: 2, min_override: 3}
+- model: helium.problem
+  pk: 16
+  fields: {exam: 6, problem_number: 1, answer: '2, 6', weight: 1.0, allow_partial: false}
+- model: helium.problem
+  pk: 17
+  fields: {exam: 6, problem_number: 2, answer: '14', weight: 1.0, allow_partial: false}
+- model: helium.problem
+  pk: 18
+  fields: {exam: 6, problem_number: 3, answer: '$\frac{25\sqrt3}{12}-\frac{4\pi}{3}$',
+    weight: 1.0, allow_partial: false}
+- model: helium.problem
+  pk: 19
+  fields: {exam: 6, problem_number: 4, answer: '$\frac{7\sqrt3}{3}$', weight: 1.0,
+    allow_partial: false}
+- model: helium.problem
+  pk: 20
+  fields: {exam: 6, problem_number: 5, answer: '462', weight: 1.0, allow_partial: false}
+- model: helium.problem
+  pk: 21
+  fields: {exam: 6, problem_number: 6, answer: '$\frac{21\sqrt3}{8}$', weight: 1.0,
+    allow_partial: false}
+- model: helium.problem
+  pk: 22
+  fields: {exam: 6, problem_number: 7, answer: '1021', weight: 1.0, allow_partial: false}
+- model: helium.problem
+  pk: 23
+  fields: {exam: 6, problem_number: 8, answer: $2+4\log(2)$, weight: 1.0, allow_partial: false}
+- model: helium.problem
+  pk: 24
+  fields: {exam: 6, problem_number: 9, answer: '$\frac{28}{5}\sqrt{69}$', weight: 1.0,
+    allow_partial: false}
+- model: helium.problem
+  pk: 25
+  fields: {exam: 6, problem_number: 10, answer: '$\sqrt{\frac{7+2\sqrt{13}}{3}}$',
+    weight: 1.0, allow_partial: false}
+- model: helium.problem
+  pk: 26
+  fields: {exam: 7, problem_number: 1, answer: '', weight: 7.0, allow_partial: true}
+- model: helium.problem
+  pk: 27
+  fields: {exam: 7, problem_number: 2, answer: '', weight: 7.0, allow_partial: true}
+- model: helium.problem
+  pk: 28
+  fields: {exam: 7, problem_number: 3, answer: '', weight: 7.0, allow_partial: true}
+- model: helium.verdict
+  pk: 1057
+  fields: {problem: 16, entity: 24, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1058
+  fields: {problem: 17, entity: 24, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1059
+  fields: {problem: 18, entity: 24, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1060
+  fields: {problem: 19, entity: 24, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1061
+  fields: {problem: 20, entity: 24, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1062
+  fields: {problem: 21, entity: 24, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1063
+  fields: {problem: 22, entity: 24, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1064
+  fields: {problem: 23, entity: 24, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1065
+  fields: {problem: 24, entity: 24, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1066
+  fields: {problem: 25, entity: 24, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1067
+  fields: {problem: 16, entity: 25, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1068
+  fields: {problem: 17, entity: 25, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1069
+  fields: {problem: 18, entity: 25, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1070
+  fields: {problem: 19, entity: 25, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1071
+  fields: {problem: 20, entity: 25, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1072
+  fields: {problem: 21, entity: 25, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1073
+  fields: {problem: 22, entity: 25, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1074
+  fields: {problem: 23, entity: 25, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1075
+  fields: {problem: 24, entity: 25, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1076
+  fields: {problem: 25, entity: 25, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1077
+  fields: {problem: 16, entity: 26, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1078
+  fields: {problem: 17, entity: 26, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1079
+  fields: {problem: 18, entity: 26, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1080
+  fields: {problem: 19, entity: 26, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1081
+  fields: {problem: 20, entity: 26, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1082
+  fields: {problem: 21, entity: 26, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1083
+  fields: {problem: 22, entity: 26, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1084
+  fields: {problem: 23, entity: 26, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1085
+  fields: {problem: 24, entity: 26, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1086
+  fields: {problem: 25, entity: 26, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1087
+  fields: {problem: 16, entity: 27, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1088
+  fields: {problem: 17, entity: 27, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1089
+  fields: {problem: 18, entity: 27, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1090
+  fields: {problem: 19, entity: 27, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1091
+  fields: {problem: 20, entity: 27, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1092
+  fields: {problem: 21, entity: 27, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1093
+  fields: {problem: 22, entity: 27, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1094
+  fields: {problem: 23, entity: 27, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1095
+  fields: {problem: 24, entity: 27, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1096
+  fields: {problem: 25, entity: 27, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1097
+  fields: {problem: 16, entity: 9, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1098
+  fields: {problem: 17, entity: 9, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1099
+  fields: {problem: 18, entity: 9, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1100
+  fields: {problem: 19, entity: 9, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1101
+  fields: {problem: 20, entity: 9, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1102
+  fields: {problem: 21, entity: 9, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1103
+  fields: {problem: 22, entity: 9, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1104
+  fields: {problem: 23, entity: 9, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1105
+  fields: {problem: 24, entity: 9, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1106
+  fields: {problem: 25, entity: 9, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1107
+  fields: {problem: 16, entity: 11, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1108
+  fields: {problem: 17, entity: 11, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1109
+  fields: {problem: 18, entity: 11, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1110
+  fields: {problem: 19, entity: 11, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1111
+  fields: {problem: 20, entity: 11, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1112
+  fields: {problem: 21, entity: 11, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1113
+  fields: {problem: 22, entity: 11, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1114
+  fields: {problem: 23, entity: 11, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1115
+  fields: {problem: 24, entity: 11, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1116
+  fields: {problem: 25, entity: 11, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1117
+  fields: {problem: 16, entity: 12, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1118
+  fields: {problem: 17, entity: 12, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1119
+  fields: {problem: 18, entity: 12, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1120
+  fields: {problem: 19, entity: 12, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1121
+  fields: {problem: 20, entity: 12, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1122
+  fields: {problem: 21, entity: 12, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1123
+  fields: {problem: 22, entity: 12, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1124
+  fields: {problem: 23, entity: 12, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1125
+  fields: {problem: 24, entity: 12, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1126
+  fields: {problem: 25, entity: 12, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1127
+  fields: {problem: 16, entity: 13, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1128
+  fields: {problem: 17, entity: 13, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1129
+  fields: {problem: 18, entity: 13, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1130
+  fields: {problem: 19, entity: 13, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1131
+  fields: {problem: 20, entity: 13, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1132
+  fields: {problem: 21, entity: 13, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1133
+  fields: {problem: 22, entity: 13, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1134
+  fields: {problem: 23, entity: 13, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1135
+  fields: {problem: 24, entity: 13, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1136
+  fields: {problem: 25, entity: 13, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1137
+  fields: {problem: 16, entity: 14, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1138
+  fields: {problem: 17, entity: 14, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1139
+  fields: {problem: 18, entity: 14, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1140
+  fields: {problem: 19, entity: 14, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1141
+  fields: {problem: 20, entity: 14, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1142
+  fields: {problem: 21, entity: 14, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1143
+  fields: {problem: 22, entity: 14, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1144
+  fields: {problem: 23, entity: 14, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1145
+  fields: {problem: 24, entity: 14, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1146
+  fields: {problem: 25, entity: 14, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1147
+  fields: {problem: 16, entity: 15, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1148
+  fields: {problem: 17, entity: 15, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1149
+  fields: {problem: 18, entity: 15, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1150
+  fields: {problem: 19, entity: 15, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1151
+  fields: {problem: 20, entity: 15, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1152
+  fields: {problem: 21, entity: 15, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1153
+  fields: {problem: 22, entity: 15, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1154
+  fields: {problem: 23, entity: 15, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1155
+  fields: {problem: 24, entity: 15, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1156
+  fields: {problem: 25, entity: 15, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1157
+  fields: {problem: 16, entity: 17, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1158
+  fields: {problem: 17, entity: 17, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1159
+  fields: {problem: 18, entity: 17, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1160
+  fields: {problem: 19, entity: 17, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1161
+  fields: {problem: 20, entity: 17, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1162
+  fields: {problem: 21, entity: 17, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1163
+  fields: {problem: 22, entity: 17, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1164
+  fields: {problem: 23, entity: 17, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1165
+  fields: {problem: 24, entity: 17, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1166
+  fields: {problem: 25, entity: 17, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1167
+  fields: {problem: 16, entity: 18, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1168
+  fields: {problem: 17, entity: 18, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1169
+  fields: {problem: 18, entity: 18, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1170
+  fields: {problem: 19, entity: 18, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1171
+  fields: {problem: 20, entity: 18, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1172
+  fields: {problem: 21, entity: 18, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1173
+  fields: {problem: 22, entity: 18, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1174
+  fields: {problem: 23, entity: 18, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1175
+  fields: {problem: 24, entity: 18, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1176
+  fields: {problem: 25, entity: 18, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1177
+  fields: {problem: 16, entity: 19, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1178
+  fields: {problem: 17, entity: 19, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1179
+  fields: {problem: 18, entity: 19, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1180
+  fields: {problem: 19, entity: 19, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1181
+  fields: {problem: 20, entity: 19, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1182
+  fields: {problem: 21, entity: 19, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1183
+  fields: {problem: 22, entity: 19, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1184
+  fields: {problem: 23, entity: 19, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1185
+  fields: {problem: 24, entity: 19, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1186
+  fields: {problem: 25, entity: 19, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1187
+  fields: {problem: 16, entity: 20, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1188
+  fields: {problem: 17, entity: 20, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1189
+  fields: {problem: 18, entity: 20, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1190
+  fields: {problem: 19, entity: 20, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1191
+  fields: {problem: 20, entity: 20, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1192
+  fields: {problem: 21, entity: 20, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1193
+  fields: {problem: 22, entity: 20, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1194
+  fields: {problem: 23, entity: 20, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1195
+  fields: {problem: 24, entity: 20, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1196
+  fields: {problem: 25, entity: 20, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1197
+  fields: {problem: 16, entity: 21, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1198
+  fields: {problem: 17, entity: 21, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1199
+  fields: {problem: 18, entity: 21, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1200
+  fields: {problem: 19, entity: 21, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1201
+  fields: {problem: 20, entity: 21, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1202
+  fields: {problem: 21, entity: 21, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1203
+  fields: {problem: 22, entity: 21, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1204
+  fields: {problem: 23, entity: 21, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1205
+  fields: {problem: 24, entity: 21, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1206
+  fields: {problem: 25, entity: 21, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1207
+  fields: {problem: 16, entity: 23, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1208
+  fields: {problem: 17, entity: 23, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1209
+  fields: {problem: 18, entity: 23, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1210
+  fields: {problem: 19, entity: 23, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1211
+  fields: {problem: 20, entity: 23, score: 1, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1212
+  fields: {problem: 21, entity: 23, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1213
+  fields: {problem: 22, entity: 23, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1214
+  fields: {problem: 23, entity: 23, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1215
+  fields: {problem: 24, entity: 23, score: 0, is_valid: true, is_done: true}
+- model: helium.verdict
+  pk: 1216
+  fields: {problem: 25, entity: 23, score: 0, is_valid: true, is_done: true}
+- model: helium.entirepdfscribble
+  pk: 15
+  fields: {name: batchY-samplescans.pdf, scan_file: scans/pdfs/batchY-samplescans.pdf,
+    is_done: true}
+- model: helium.entirepdfscribble
+  pk: 16
+  fields: {name: batchX-samplescans.pdf, scan_file: scans/pdfs/batchX-samplescans.pdf,
+    is_done: true}
+- model: helium.examscribble
+  pk: 33
+  fields: {pdf_scribble: 15, exam: 6, entity: 24, full_image: scans/full/batchY-samplescans.pdf-sheet0001-full.jpg,
+    name_image: scans/names/batchY-samplescans.pdf-sheet0001-name.jpg}
+- model: helium.examscribble
+  pk: 34
+  fields: {pdf_scribble: 15, exam: 6, entity: 25, full_image: scans/full/batchY-samplescans.pdf-sheet0002-full.jpg,
+    name_image: scans/names/batchY-samplescans.pdf-sheet0002-name.jpg}
+- model: helium.examscribble
+  pk: 35
+  fields: {pdf_scribble: 15, exam: 6, entity: 26, full_image: scans/full/batchY-samplescans.pdf-sheet0003-full.jpg,
+    name_image: scans/names/batchY-samplescans.pdf-sheet0003-name.jpg}
+- model: helium.examscribble
+  pk: 36
+  fields: {pdf_scribble: 15, exam: 6, entity: 27, full_image: scans/full/batchY-samplescans.pdf-sheet0004-full.jpg,
+    name_image: scans/names/batchY-samplescans.pdf-sheet0004-name.jpg}
+- model: helium.examscribble
+  pk: 37
+  fields: {pdf_scribble: 16, exam: 6, entity: 9, full_image: scans/full/batchX-samplescans.pdf-sheet0001-full.jpg,
+    name_image: scans/names/batchX-samplescans.pdf-sheet0001-name.jpg}
+- model: helium.examscribble
+  pk: 38
+  fields: {pdf_scribble: 16, exam: 6, entity: 11, full_image: scans/full/batchX-samplescans.pdf-sheet0002-full.jpg,
+    name_image: scans/names/batchX-samplescans.pdf-sheet0002-name.jpg}
+- model: helium.examscribble
+  pk: 39
+  fields: {pdf_scribble: 16, exam: 6, entity: 12, full_image: scans/full/batchX-samplescans.pdf-sheet0003-full.jpg,
+    name_image: scans/names/batchX-samplescans.pdf-sheet0003-name.jpg}
+- model: helium.examscribble
+  pk: 40
+  fields: {pdf_scribble: 16, exam: 6, entity: 13, full_image: scans/full/batchX-samplescans.pdf-sheet0004-full.jpg,
+    name_image: scans/names/batchX-samplescans.pdf-sheet0004-name.jpg}
+- model: helium.examscribble
+  pk: 41
+  fields: {pdf_scribble: 16, exam: 6, entity: 14, full_image: scans/full/batchX-samplescans.pdf-sheet0005-full.jpg,
+    name_image: scans/names/batchX-samplescans.pdf-sheet0005-name.jpg}
+- model: helium.examscribble
+  pk: 42
+  fields: {pdf_scribble: 16, exam: 6, entity: 15, full_image: scans/full/batchX-samplescans.pdf-sheet0006-full.jpg,
+    name_image: scans/names/batchX-samplescans.pdf-sheet0006-name.jpg}
+- model: helium.examscribble
+  pk: 43
+  fields: {pdf_scribble: 16, exam: 6, entity: 17, full_image: scans/full/batchX-samplescans.pdf-sheet0007-full.jpg,
+    name_image: scans/names/batchX-samplescans.pdf-sheet0007-name.jpg}
+- model: helium.examscribble
+  pk: 44
+  fields: {pdf_scribble: 16, exam: 6, entity: 18, full_image: scans/full/batchX-samplescans.pdf-sheet0008-full.jpg,
+    name_image: scans/names/batchX-samplescans.pdf-sheet0008-name.jpg}
+- model: helium.examscribble
+  pk: 45
+  fields: {pdf_scribble: 16, exam: 6, entity: 19, full_image: scans/full/batchX-samplescans.pdf-sheet0009-full.jpg,
+    name_image: scans/names/batchX-samplescans.pdf-sheet0009-name.jpg}
+- model: helium.examscribble
+  pk: 46
+  fields: {pdf_scribble: 16, exam: 6, entity: 20, full_image: scans/full/batchX-samplescans.pdf-sheet0010-full.jpg,
+    name_image: scans/names/batchX-samplescans.pdf-sheet0010-name.jpg}
+- model: helium.examscribble
+  pk: 47
+  fields: {pdf_scribble: 16, exam: 6, entity: 21, full_image: scans/full/batchX-samplescans.pdf-sheet0011-full.jpg,
+    name_image: scans/names/batchX-samplescans.pdf-sheet0011-name.jpg}
+- model: helium.examscribble
+  pk: 48
+  fields: {pdf_scribble: 16, exam: 6, entity: 23, full_image: scans/full/batchX-samplescans.pdf-sheet0012-full.jpg,
+    name_image: scans/names/batchX-samplescans.pdf-sheet0012-name.jpg}
+- model: helium.problemscribble
+  pk: 1045
+  fields: {examscribble: 33, verdict: 1057, prob_image: scans/problems/batchY-samplescans.pdf-sheet0001-prob-01.jpg}
+- model: helium.problemscribble
+  pk: 1046
+  fields: {examscribble: 33, verdict: 1058, prob_image: scans/problems/batchY-samplescans.pdf-sheet0001-prob-02.jpg}
+- model: helium.problemscribble
+  pk: 1047
+  fields: {examscribble: 33, verdict: 1059, prob_image: scans/problems/batchY-samplescans.pdf-sheet0001-prob-03.jpg}
+- model: helium.problemscribble
+  pk: 1048
+  fields: {examscribble: 33, verdict: 1060, prob_image: scans/problems/batchY-samplescans.pdf-sheet0001-prob-04.jpg}
+- model: helium.problemscribble
+  pk: 1049
+  fields: {examscribble: 33, verdict: 1061, prob_image: scans/problems/batchY-samplescans.pdf-sheet0001-prob-05.jpg}
+- model: helium.problemscribble
+  pk: 1050
+  fields: {examscribble: 33, verdict: 1062, prob_image: scans/problems/batchY-samplescans.pdf-sheet0001-prob-06.jpg}
+- model: helium.problemscribble
+  pk: 1051
+  fields: {examscribble: 33, verdict: 1063, prob_image: scans/problems/batchY-samplescans.pdf-sheet0001-prob-07.jpg}
+- model: helium.problemscribble
+  pk: 1052
+  fields: {examscribble: 33, verdict: 1064, prob_image: scans/problems/batchY-samplescans.pdf-sheet0001-prob-08.jpg}
+- model: helium.problemscribble
+  pk: 1053
+  fields: {examscribble: 33, verdict: 1065, prob_image: scans/problems/batchY-samplescans.pdf-sheet0001-prob-09.jpg}
+- model: helium.problemscribble
+  pk: 1054
+  fields: {examscribble: 33, verdict: 1066, prob_image: scans/problems/batchY-samplescans.pdf-sheet0001-prob-10.jpg}
+- model: helium.problemscribble
+  pk: 1055
+  fields: {examscribble: 34, verdict: 1067, prob_image: scans/problems/batchY-samplescans.pdf-sheet0002-prob-01.jpg}
+- model: helium.problemscribble
+  pk: 1056
+  fields: {examscribble: 34, verdict: 1068, prob_image: scans/problems/batchY-samplescans.pdf-sheet0002-prob-02.jpg}
+- model: helium.problemscribble
+  pk: 1057
+  fields: {examscribble: 34, verdict: 1069, prob_image: scans/problems/batchY-samplescans.pdf-sheet0002-prob-03.jpg}
+- model: helium.problemscribble
+  pk: 1058
+  fields: {examscribble: 34, verdict: 1070, prob_image: scans/problems/batchY-samplescans.pdf-sheet0002-prob-04.jpg}
+- model: helium.problemscribble
+  pk: 1059
+  fields: {examscribble: 34, verdict: 1071, prob_image: scans/problems/batchY-samplescans.pdf-sheet0002-prob-05.jpg}
+- model: helium.problemscribble
+  pk: 1060
+  fields: {examscribble: 34, verdict: 1072, prob_image: scans/problems/batchY-samplescans.pdf-sheet0002-prob-06.jpg}
+- model: helium.problemscribble
+  pk: 1061
+  fields: {examscribble: 34, verdict: 1073, prob_image: scans/problems/batchY-samplescans.pdf-sheet0002-prob-07.jpg}
+- model: helium.problemscribble
+  pk: 1062
+  fields: {examscribble: 34, verdict: 1074, prob_image: scans/problems/batchY-samplescans.pdf-sheet0002-prob-08.jpg}
+- model: helium.problemscribble
+  pk: 1063
+  fields: {examscribble: 34, verdict: 1075, prob_image: scans/problems/batchY-samplescans.pdf-sheet0002-prob-09.jpg}
+- model: helium.problemscribble
+  pk: 1064
+  fields: {examscribble: 34, verdict: 1076, prob_image: scans/problems/batchY-samplescans.pdf-sheet0002-prob-10.jpg}
+- model: helium.problemscribble
+  pk: 1065
+  fields: {examscribble: 35, verdict: 1077, prob_image: scans/problems/batchY-samplescans.pdf-sheet0003-prob-01.jpg}
+- model: helium.problemscribble
+  pk: 1066
+  fields: {examscribble: 35, verdict: 1078, prob_image: scans/problems/batchY-samplescans.pdf-sheet0003-prob-02.jpg}
+- model: helium.problemscribble
+  pk: 1067
+  fields: {examscribble: 35, verdict: 1079, prob_image: scans/problems/batchY-samplescans.pdf-sheet0003-prob-03.jpg}
+- model: helium.problemscribble
+  pk: 1068
+  fields: {examscribble: 35, verdict: 1080, prob_image: scans/problems/batchY-samplescans.pdf-sheet0003-prob-04.jpg}
+- model: helium.problemscribble
+  pk: 1069
+  fields: {examscribble: 35, verdict: 1081, prob_image: scans/problems/batchY-samplescans.pdf-sheet0003-prob-05.jpg}
+- model: helium.problemscribble
+  pk: 1070
+  fields: {examscribble: 35, verdict: 1082, prob_image: scans/problems/batchY-samplescans.pdf-sheet0003-prob-06.jpg}
+- model: helium.problemscribble
+  pk: 1071
+  fields: {examscribble: 35, verdict: 1083, prob_image: scans/problems/batchY-samplescans.pdf-sheet0003-prob-07.jpg}
+- model: helium.problemscribble
+  pk: 1072
+  fields: {examscribble: 35, verdict: 1084, prob_image: scans/problems/batchY-samplescans.pdf-sheet0003-prob-08.jpg}
+- model: helium.problemscribble
+  pk: 1073
+  fields: {examscribble: 35, verdict: 1085, prob_image: scans/problems/batchY-samplescans.pdf-sheet0003-prob-09.jpg}
+- model: helium.problemscribble
+  pk: 1074
+  fields: {examscribble: 35, verdict: 1086, prob_image: scans/problems/batchY-samplescans.pdf-sheet0003-prob-10.jpg}
+- model: helium.problemscribble
+  pk: 1075
+  fields: {examscribble: 36, verdict: 1087, prob_image: scans/problems/batchY-samplescans.pdf-sheet0004-prob-01.jpg}
+- model: helium.problemscribble
+  pk: 1076
+  fields: {examscribble: 36, verdict: 1088, prob_image: scans/problems/batchY-samplescans.pdf-sheet0004-prob-02.jpg}
+- model: helium.problemscribble
+  pk: 1077
+  fields: {examscribble: 36, verdict: 1089, prob_image: scans/problems/batchY-samplescans.pdf-sheet0004-prob-03.jpg}
+- model: helium.problemscribble
+  pk: 1078
+  fields: {examscribble: 36, verdict: 1090, prob_image: scans/problems/batchY-samplescans.pdf-sheet0004-prob-04.jpg}
+- model: helium.problemscribble
+  pk: 1079
+  fields: {examscribble: 36, verdict: 1091, prob_image: scans/problems/batchY-samplescans.pdf-sheet0004-prob-05.jpg}
+- model: helium.problemscribble
+  pk: 1080
+  fields: {examscribble: 36, verdict: 1092, prob_image: scans/problems/batchY-samplescans.pdf-sheet0004-prob-06.jpg}
+- model: helium.problemscribble
+  pk: 1081
+  fields: {examscribble: 36, verdict: 1093, prob_image: scans/problems/batchY-samplescans.pdf-sheet0004-prob-07.jpg}
+- model: helium.problemscribble
+  pk: 1082
+  fields: {examscribble: 36, verdict: 1094, prob_image: scans/problems/batchY-samplescans.pdf-sheet0004-prob-08.jpg}
+- model: helium.problemscribble
+  pk: 1083
+  fields: {examscribble: 36, verdict: 1095, prob_image: scans/problems/batchY-samplescans.pdf-sheet0004-prob-09.jpg}
+- model: helium.problemscribble
+  pk: 1084
+  fields: {examscribble: 36, verdict: 1096, prob_image: scans/problems/batchY-samplescans.pdf-sheet0004-prob-10.jpg}
+- model: helium.problemscribble
+  pk: 1085
+  fields: {examscribble: 37, verdict: 1097, prob_image: scans/problems/batchX-samplescans.pdf-sheet0001-prob-01.jpg}
+- model: helium.problemscribble
+  pk: 1086
+  fields: {examscribble: 37, verdict: 1098, prob_image: scans/problems/batchX-samplescans.pdf-sheet0001-prob-02.jpg}
+- model: helium.problemscribble
+  pk: 1087
+  fields: {examscribble: 37, verdict: 1099, prob_image: scans/problems/batchX-samplescans.pdf-sheet0001-prob-03.jpg}
+- model: helium.problemscribble
+  pk: 1088
+  fields: {examscribble: 37, verdict: 1100, prob_image: scans/problems/batchX-samplescans.pdf-sheet0001-prob-04.jpg}
+- model: helium.problemscribble
+  pk: 1089
+  fields: {examscribble: 37, verdict: 1101, prob_image: scans/problems/batchX-samplescans.pdf-sheet0001-prob-05.jpg}
+- model: helium.problemscribble
+  pk: 1090
+  fields: {examscribble: 37, verdict: 1102, prob_image: scans/problems/batchX-samplescans.pdf-sheet0001-prob-06.jpg}
+- model: helium.problemscribble
+  pk: 1091
+  fields: {examscribble: 37, verdict: 1103, prob_image: scans/problems/batchX-samplescans.pdf-sheet0001-prob-07.jpg}
+- model: helium.problemscribble
+  pk: 1092
+  fields: {examscribble: 37, verdict: 1104, prob_image: scans/problems/batchX-samplescans.pdf-sheet0001-prob-08.jpg}
+- model: helium.problemscribble
+  pk: 1093
+  fields: {examscribble: 37, verdict: 1105, prob_image: scans/problems/batchX-samplescans.pdf-sheet0001-prob-09.jpg}
+- model: helium.problemscribble
+  pk: 1094
+  fields: {examscribble: 37, verdict: 1106, prob_image: scans/problems/batchX-samplescans.pdf-sheet0001-prob-10.jpg}
+- model: helium.problemscribble
+  pk: 1095
+  fields: {examscribble: 38, verdict: 1107, prob_image: scans/problems/batchX-samplescans.pdf-sheet0002-prob-01.jpg}
+- model: helium.problemscribble
+  pk: 1096
+  fields: {examscribble: 38, verdict: 1108, prob_image: scans/problems/batchX-samplescans.pdf-sheet0002-prob-02.jpg}
+- model: helium.problemscribble
+  pk: 1097
+  fields: {examscribble: 38, verdict: 1109, prob_image: scans/problems/batchX-samplescans.pdf-sheet0002-prob-03.jpg}
+- model: helium.problemscribble
+  pk: 1098
+  fields: {examscribble: 38, verdict: 1110, prob_image: scans/problems/batchX-samplescans.pdf-sheet0002-prob-04.jpg}
+- model: helium.problemscribble
+  pk: 1099
+  fields: {examscribble: 38, verdict: 1111, prob_image: scans/problems/batchX-samplescans.pdf-sheet0002-prob-05.jpg}
+- model: helium.problemscribble
+  pk: 1100
+  fields: {examscribble: 38, verdict: 1112, prob_image: scans/problems/batchX-samplescans.pdf-sheet0002-prob-06.jpg}
+- model: helium.problemscribble
+  pk: 1101
+  fields: {examscribble: 38, verdict: 1113, prob_image: scans/problems/batchX-samplescans.pdf-sheet0002-prob-07.jpg}
+- model: helium.problemscribble
+  pk: 1102
+  fields: {examscribble: 38, verdict: 1114, prob_image: scans/problems/batchX-samplescans.pdf-sheet0002-prob-08.jpg}
+- model: helium.problemscribble
+  pk: 1103
+  fields: {examscribble: 38, verdict: 1115, prob_image: scans/problems/batchX-samplescans.pdf-sheet0002-prob-09.jpg}
+- model: helium.problemscribble
+  pk: 1104
+  fields: {examscribble: 38, verdict: 1116, prob_image: scans/problems/batchX-samplescans.pdf-sheet0002-prob-10.jpg}
+- model: helium.problemscribble
+  pk: 1105
+  fields: {examscribble: 39, verdict: 1117, prob_image: scans/problems/batchX-samplescans.pdf-sheet0003-prob-01.jpg}
+- model: helium.problemscribble
+  pk: 1106
+  fields: {examscribble: 39, verdict: 1118, prob_image: scans/problems/batchX-samplescans.pdf-sheet0003-prob-02.jpg}
+- model: helium.problemscribble
+  pk: 1107
+  fields: {examscribble: 39, verdict: 1119, prob_image: scans/problems/batchX-samplescans.pdf-sheet0003-prob-03.jpg}
+- model: helium.problemscribble
+  pk: 1108
+  fields: {examscribble: 39, verdict: 1120, prob_image: scans/problems/batchX-samplescans.pdf-sheet0003-prob-04.jpg}
+- model: helium.problemscribble
+  pk: 1109
+  fields: {examscribble: 39, verdict: 1121, prob_image: scans/problems/batchX-samplescans.pdf-sheet0003-prob-05.jpg}
+- model: helium.problemscribble
+  pk: 1110
+  fields: {examscribble: 39, verdict: 1122, prob_image: scans/problems/batchX-samplescans.pdf-sheet0003-prob-06.jpg}
+- model: helium.problemscribble
+  pk: 1111
+  fields: {examscribble: 39, verdict: 1123, prob_image: scans/problems/batchX-samplescans.pdf-sheet0003-prob-07.jpg}
+- model: helium.problemscribble
+  pk: 1112
+  fields: {examscribble: 39, verdict: 1124, prob_image: scans/problems/batchX-samplescans.pdf-sheet0003-prob-08.jpg}
+- model: helium.problemscribble
+  pk: 1113
+  fields: {examscribble: 39, verdict: 1125, prob_image: scans/problems/batchX-samplescans.pdf-sheet0003-prob-09.jpg}
+- model: helium.problemscribble
+  pk: 1114
+  fields: {examscribble: 39, verdict: 1126, prob_image: scans/problems/batchX-samplescans.pdf-sheet0003-prob-10.jpg}
+- model: helium.problemscribble
+  pk: 1115
+  fields: {examscribble: 40, verdict: 1127, prob_image: scans/problems/batchX-samplescans.pdf-sheet0004-prob-01.jpg}
+- model: helium.problemscribble
+  pk: 1116
+  fields: {examscribble: 40, verdict: 1128, prob_image: scans/problems/batchX-samplescans.pdf-sheet0004-prob-02.jpg}
+- model: helium.problemscribble
+  pk: 1117
+  fields: {examscribble: 40, verdict: 1129, prob_image: scans/problems/batchX-samplescans.pdf-sheet0004-prob-03.jpg}
+- model: helium.problemscribble
+  pk: 1118
+  fields: {examscribble: 40, verdict: 1130, prob_image: scans/problems/batchX-samplescans.pdf-sheet0004-prob-04.jpg}
+- model: helium.problemscribble
+  pk: 1119
+  fields: {examscribble: 40, verdict: 1131, prob_image: scans/problems/batchX-samplescans.pdf-sheet0004-prob-05.jpg}
+- model: helium.problemscribble
+  pk: 1120
+  fields: {examscribble: 40, verdict: 1132, prob_image: scans/problems/batchX-samplescans.pdf-sheet0004-prob-06.jpg}
+- model: helium.problemscribble
+  pk: 1121
+  fields: {examscribble: 40, verdict: 1133, prob_image: scans/problems/batchX-samplescans.pdf-sheet0004-prob-07.jpg}
+- model: helium.problemscribble
+  pk: 1122
+  fields: {examscribble: 40, verdict: 1134, prob_image: scans/problems/batchX-samplescans.pdf-sheet0004-prob-08.jpg}
+- model: helium.problemscribble
+  pk: 1123
+  fields: {examscribble: 40, verdict: 1135, prob_image: scans/problems/batchX-samplescans.pdf-sheet0004-prob-09.jpg}
+- model: helium.problemscribble
+  pk: 1124
+  fields: {examscribble: 40, verdict: 1136, prob_image: scans/problems/batchX-samplescans.pdf-sheet0004-prob-10.jpg}
+- model: helium.problemscribble
+  pk: 1125
+  fields: {examscribble: 41, verdict: 1137, prob_image: scans/problems/batchX-samplescans.pdf-sheet0005-prob-01.jpg}
+- model: helium.problemscribble
+  pk: 1126
+  fields: {examscribble: 41, verdict: 1138, prob_image: scans/problems/batchX-samplescans.pdf-sheet0005-prob-02.jpg}
+- model: helium.problemscribble
+  pk: 1127
+  fields: {examscribble: 41, verdict: 1139, prob_image: scans/problems/batchX-samplescans.pdf-sheet0005-prob-03.jpg}
+- model: helium.problemscribble
+  pk: 1128
+  fields: {examscribble: 41, verdict: 1140, prob_image: scans/problems/batchX-samplescans.pdf-sheet0005-prob-04.jpg}
+- model: helium.problemscribble
+  pk: 1129
+  fields: {examscribble: 41, verdict: 1141, prob_image: scans/problems/batchX-samplescans.pdf-sheet0005-prob-05.jpg}
+- model: helium.problemscribble
+  pk: 1130
+  fields: {examscribble: 41, verdict: 1142, prob_image: scans/problems/batchX-samplescans.pdf-sheet0005-prob-06.jpg}
+- model: helium.problemscribble
+  pk: 1131
+  fields: {examscribble: 41, verdict: 1143, prob_image: scans/problems/batchX-samplescans.pdf-sheet0005-prob-07.jpg}
+- model: helium.problemscribble
+  pk: 1132
+  fields: {examscribble: 41, verdict: 1144, prob_image: scans/problems/batchX-samplescans.pdf-sheet0005-prob-08.jpg}
+- model: helium.problemscribble
+  pk: 1133
+  fields: {examscribble: 41, verdict: 1145, prob_image: scans/problems/batchX-samplescans.pdf-sheet0005-prob-09.jpg}
+- model: helium.problemscribble
+  pk: 1134
+  fields: {examscribble: 41, verdict: 1146, prob_image: scans/problems/batchX-samplescans.pdf-sheet0005-prob-10.jpg}
+- model: helium.problemscribble
+  pk: 1135
+  fields: {examscribble: 42, verdict: 1147, prob_image: scans/problems/batchX-samplescans.pdf-sheet0006-prob-01.jpg}
+- model: helium.problemscribble
+  pk: 1136
+  fields: {examscribble: 42, verdict: 1148, prob_image: scans/problems/batchX-samplescans.pdf-sheet0006-prob-02.jpg}
+- model: helium.problemscribble
+  pk: 1137
+  fields: {examscribble: 42, verdict: 1149, prob_image: scans/problems/batchX-samplescans.pdf-sheet0006-prob-03.jpg}
+- model: helium.problemscribble
+  pk: 1138
+  fields: {examscribble: 42, verdict: 1150, prob_image: scans/problems/batchX-samplescans.pdf-sheet0006-prob-04.jpg}
+- model: helium.problemscribble
+  pk: 1139
+  fields: {examscribble: 42, verdict: 1151, prob_image: scans/problems/batchX-samplescans.pdf-sheet0006-prob-05.jpg}
+- model: helium.problemscribble
+  pk: 1140
+  fields: {examscribble: 42, verdict: 1152, prob_image: scans/problems/batchX-samplescans.pdf-sheet0006-prob-06.jpg}
+- model: helium.problemscribble
+  pk: 1141
+  fields: {examscribble: 42, verdict: 1153, prob_image: scans/problems/batchX-samplescans.pdf-sheet0006-prob-07.jpg}
+- model: helium.problemscribble
+  pk: 1142
+  fields: {examscribble: 42, verdict: 1154, prob_image: scans/problems/batchX-samplescans.pdf-sheet0006-prob-08.jpg}
+- model: helium.problemscribble
+  pk: 1143
+  fields: {examscribble: 42, verdict: 1155, prob_image: scans/problems/batchX-samplescans.pdf-sheet0006-prob-09.jpg}
+- model: helium.problemscribble
+  pk: 1144
+  fields: {examscribble: 42, verdict: 1156, prob_image: scans/problems/batchX-samplescans.pdf-sheet0006-prob-10.jpg}
+- model: helium.problemscribble
+  pk: 1145
+  fields: {examscribble: 43, verdict: 1157, prob_image: scans/problems/batchX-samplescans.pdf-sheet0007-prob-01.jpg}
+- model: helium.problemscribble
+  pk: 1146
+  fields: {examscribble: 43, verdict: 1158, prob_image: scans/problems/batchX-samplescans.pdf-sheet0007-prob-02.jpg}
+- model: helium.problemscribble
+  pk: 1147
+  fields: {examscribble: 43, verdict: 1159, prob_image: scans/problems/batchX-samplescans.pdf-sheet0007-prob-03.jpg}
+- model: helium.problemscribble
+  pk: 1148
+  fields: {examscribble: 43, verdict: 1160, prob_image: scans/problems/batchX-samplescans.pdf-sheet0007-prob-04.jpg}
+- model: helium.problemscribble
+  pk: 1149
+  fields: {examscribble: 43, verdict: 1161, prob_image: scans/problems/batchX-samplescans.pdf-sheet0007-prob-05.jpg}
+- model: helium.problemscribble
+  pk: 1150
+  fields: {examscribble: 43, verdict: 1162, prob_image: scans/problems/batchX-samplescans.pdf-sheet0007-prob-06.jpg}
+- model: helium.problemscribble
+  pk: 1151
+  fields: {examscribble: 43, verdict: 1163, prob_image: scans/problems/batchX-samplescans.pdf-sheet0007-prob-07.jpg}
+- model: helium.problemscribble
+  pk: 1152
+  fields: {examscribble: 43, verdict: 1164, prob_image: scans/problems/batchX-samplescans.pdf-sheet0007-prob-08.jpg}
+- model: helium.problemscribble
+  pk: 1153
+  fields: {examscribble: 43, verdict: 1165, prob_image: scans/problems/batchX-samplescans.pdf-sheet0007-prob-09.jpg}
+- model: helium.problemscribble
+  pk: 1154
+  fields: {examscribble: 43, verdict: 1166, prob_image: scans/problems/batchX-samplescans.pdf-sheet0007-prob-10.jpg}
+- model: helium.problemscribble
+  pk: 1155
+  fields: {examscribble: 44, verdict: 1167, prob_image: scans/problems/batchX-samplescans.pdf-sheet0008-prob-01.jpg}
+- model: helium.problemscribble
+  pk: 1156
+  fields: {examscribble: 44, verdict: 1168, prob_image: scans/problems/batchX-samplescans.pdf-sheet0008-prob-02.jpg}
+- model: helium.problemscribble
+  pk: 1157
+  fields: {examscribble: 44, verdict: 1169, prob_image: scans/problems/batchX-samplescans.pdf-sheet0008-prob-03.jpg}
+- model: helium.problemscribble
+  pk: 1158
+  fields: {examscribble: 44, verdict: 1170, prob_image: scans/problems/batchX-samplescans.pdf-sheet0008-prob-04.jpg}
+- model: helium.problemscribble
+  pk: 1159
+  fields: {examscribble: 44, verdict: 1171, prob_image: scans/problems/batchX-samplescans.pdf-sheet0008-prob-05.jpg}
+- model: helium.problemscribble
+  pk: 1160
+  fields: {examscribble: 44, verdict: 1172, prob_image: scans/problems/batchX-samplescans.pdf-sheet0008-prob-06.jpg}
+- model: helium.problemscribble
+  pk: 1161
+  fields: {examscribble: 44, verdict: 1173, prob_image: scans/problems/batchX-samplescans.pdf-sheet0008-prob-07.jpg}
+- model: helium.problemscribble
+  pk: 1162
+  fields: {examscribble: 44, verdict: 1174, prob_image: scans/problems/batchX-samplescans.pdf-sheet0008-prob-08.jpg}
+- model: helium.problemscribble
+  pk: 1163
+  fields: {examscribble: 44, verdict: 1175, prob_image: scans/problems/batchX-samplescans.pdf-sheet0008-prob-09.jpg}
+- model: helium.problemscribble
+  pk: 1164
+  fields: {examscribble: 44, verdict: 1176, prob_image: scans/problems/batchX-samplescans.pdf-sheet0008-prob-10.jpg}
+- model: helium.problemscribble
+  pk: 1165
+  fields: {examscribble: 45, verdict: 1177, prob_image: scans/problems/batchX-samplescans.pdf-sheet0009-prob-01.jpg}
+- model: helium.problemscribble
+  pk: 1166
+  fields: {examscribble: 45, verdict: 1178, prob_image: scans/problems/batchX-samplescans.pdf-sheet0009-prob-02.jpg}
+- model: helium.problemscribble
+  pk: 1167
+  fields: {examscribble: 45, verdict: 1179, prob_image: scans/problems/batchX-samplescans.pdf-sheet0009-prob-03.jpg}
+- model: helium.problemscribble
+  pk: 1168
+  fields: {examscribble: 45, verdict: 1180, prob_image: scans/problems/batchX-samplescans.pdf-sheet0009-prob-04.jpg}
+- model: helium.problemscribble
+  pk: 1169
+  fields: {examscribble: 45, verdict: 1181, prob_image: scans/problems/batchX-samplescans.pdf-sheet0009-prob-05.jpg}
+- model: helium.problemscribble
+  pk: 1170
+  fields: {examscribble: 45, verdict: 1182, prob_image: scans/problems/batchX-samplescans.pdf-sheet0009-prob-06.jpg}
+- model: helium.problemscribble
+  pk: 1171
+  fields: {examscribble: 45, verdict: 1183, prob_image: scans/problems/batchX-samplescans.pdf-sheet0009-prob-07.jpg}
+- model: helium.problemscribble
+  pk: 1172
+  fields: {examscribble: 45, verdict: 1184, prob_image: scans/problems/batchX-samplescans.pdf-sheet0009-prob-08.jpg}
+- model: helium.problemscribble
+  pk: 1173
+  fields: {examscribble: 45, verdict: 1185, prob_image: scans/problems/batchX-samplescans.pdf-sheet0009-prob-09.jpg}
+- model: helium.problemscribble
+  pk: 1174
+  fields: {examscribble: 45, verdict: 1186, prob_image: scans/problems/batchX-samplescans.pdf-sheet0009-prob-10.jpg}
+- model: helium.problemscribble
+  pk: 1175
+  fields: {examscribble: 46, verdict: 1187, prob_image: scans/problems/batchX-samplescans.pdf-sheet0010-prob-01.jpg}
+- model: helium.problemscribble
+  pk: 1176
+  fields: {examscribble: 46, verdict: 1188, prob_image: scans/problems/batchX-samplescans.pdf-sheet0010-prob-02.jpg}
+- model: helium.problemscribble
+  pk: 1177
+  fields: {examscribble: 46, verdict: 1189, prob_image: scans/problems/batchX-samplescans.pdf-sheet0010-prob-03.jpg}
+- model: helium.problemscribble
+  pk: 1178
+  fields: {examscribble: 46, verdict: 1190, prob_image: scans/problems/batchX-samplescans.pdf-sheet0010-prob-04.jpg}
+- model: helium.problemscribble
+  pk: 1179
+  fields: {examscribble: 46, verdict: 1191, prob_image: scans/problems/batchX-samplescans.pdf-sheet0010-prob-05.jpg}
+- model: helium.problemscribble
+  pk: 1180
+  fields: {examscribble: 46, verdict: 1192, prob_image: scans/problems/batchX-samplescans.pdf-sheet0010-prob-06.jpg}
+- model: helium.problemscribble
+  pk: 1181
+  fields: {examscribble: 46, verdict: 1193, prob_image: scans/problems/batchX-samplescans.pdf-sheet0010-prob-07.jpg}
+- model: helium.problemscribble
+  pk: 1182
+  fields: {examscribble: 46, verdict: 1194, prob_image: scans/problems/batchX-samplescans.pdf-sheet0010-prob-08.jpg}
+- model: helium.problemscribble
+  pk: 1183
+  fields: {examscribble: 46, verdict: 1195, prob_image: scans/problems/batchX-samplescans.pdf-sheet0010-prob-09.jpg}
+- model: helium.problemscribble
+  pk: 1184
+  fields: {examscribble: 46, verdict: 1196, prob_image: scans/problems/batchX-samplescans.pdf-sheet0010-prob-10.jpg}
+- model: helium.problemscribble
+  pk: 1185
+  fields: {examscribble: 47, verdict: 1197, prob_image: scans/problems/batchX-samplescans.pdf-sheet0011-prob-01.jpg}
+- model: helium.problemscribble
+  pk: 1186
+  fields: {examscribble: 47, verdict: 1198, prob_image: scans/problems/batchX-samplescans.pdf-sheet0011-prob-02.jpg}
+- model: helium.problemscribble
+  pk: 1187
+  fields: {examscribble: 47, verdict: 1199, prob_image: scans/problems/batchX-samplescans.pdf-sheet0011-prob-03.jpg}
+- model: helium.problemscribble
+  pk: 1188
+  fields: {examscribble: 47, verdict: 1200, prob_image: scans/problems/batchX-samplescans.pdf-sheet0011-prob-04.jpg}
+- model: helium.problemscribble
+  pk: 1189
+  fields: {examscribble: 47, verdict: 1201, prob_image: scans/problems/batchX-samplescans.pdf-sheet0011-prob-05.jpg}
+- model: helium.problemscribble
+  pk: 1190
+  fields: {examscribble: 47, verdict: 1202, prob_image: scans/problems/batchX-samplescans.pdf-sheet0011-prob-06.jpg}
+- model: helium.problemscribble
+  pk: 1191
+  fields: {examscribble: 47, verdict: 1203, prob_image: scans/problems/batchX-samplescans.pdf-sheet0011-prob-07.jpg}
+- model: helium.problemscribble
+  pk: 1192
+  fields: {examscribble: 47, verdict: 1204, prob_image: scans/problems/batchX-samplescans.pdf-sheet0011-prob-08.jpg}
+- model: helium.problemscribble
+  pk: 1193
+  fields: {examscribble: 47, verdict: 1205, prob_image: scans/problems/batchX-samplescans.pdf-sheet0011-prob-09.jpg}
+- model: helium.problemscribble
+  pk: 1194
+  fields: {examscribble: 47, verdict: 1206, prob_image: scans/problems/batchX-samplescans.pdf-sheet0011-prob-10.jpg}
+- model: helium.problemscribble
+  pk: 1195
+  fields: {examscribble: 48, verdict: 1207, prob_image: scans/problems/batchX-samplescans.pdf-sheet0012-prob-01.jpg}
+- model: helium.problemscribble
+  pk: 1196
+  fields: {examscribble: 48, verdict: 1208, prob_image: scans/problems/batchX-samplescans.pdf-sheet0012-prob-02.jpg}
+- model: helium.problemscribble
+  pk: 1197
+  fields: {examscribble: 48, verdict: 1209, prob_image: scans/problems/batchX-samplescans.pdf-sheet0012-prob-03.jpg}
+- model: helium.problemscribble
+  pk: 1198
+  fields: {examscribble: 48, verdict: 1210, prob_image: scans/problems/batchX-samplescans.pdf-sheet0012-prob-04.jpg}
+- model: helium.problemscribble
+  pk: 1199
+  fields: {examscribble: 48, verdict: 1211, prob_image: scans/problems/batchX-samplescans.pdf-sheet0012-prob-05.jpg}
+- model: helium.problemscribble
+  pk: 1200
+  fields: {examscribble: 48, verdict: 1212, prob_image: scans/problems/batchX-samplescans.pdf-sheet0012-prob-06.jpg}
+- model: helium.problemscribble
+  pk: 1201
+  fields: {examscribble: 48, verdict: 1213, prob_image: scans/problems/batchX-samplescans.pdf-sheet0012-prob-07.jpg}
+- model: helium.problemscribble
+  pk: 1202
+  fields: {examscribble: 48, verdict: 1214, prob_image: scans/problems/batchX-samplescans.pdf-sheet0012-prob-08.jpg}
+- model: helium.problemscribble
+  pk: 1203
+  fields: {examscribble: 48, verdict: 1215, prob_image: scans/problems/batchX-samplescans.pdf-sheet0012-prob-09.jpg}
+- model: helium.problemscribble
+  pk: 1204
+  fields: {examscribble: 48, verdict: 1216, prob_image: scans/problems/batchX-samplescans.pdf-sheet0012-prob-10.jpg}
+- model: helium.evidence
+  pk: 264
+  fields: {verdict: 1177, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 265
+  fields: {verdict: 1057, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 266
+  fields: {verdict: 1187, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 267
+  fields: {verdict: 1147, user: 12, score: 1, god_mode: true}
+- model: helium.evidence
+  pk: 268
+  fields: {verdict: 1077, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 269
+  fields: {verdict: 1157, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 270
+  fields: {verdict: 1117, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 271
+  fields: {verdict: 1127, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 272
+  fields: {verdict: 1207, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 273
+  fields: {verdict: 1107, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 274
+  fields: {verdict: 1167, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 275
+  fields: {verdict: 1067, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 276
+  fields: {verdict: 1137, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 277
+  fields: {verdict: 1097, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 278
+  fields: {verdict: 1197, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 279
+  fields: {verdict: 1087, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 296
+  fields: {verdict: 1078, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 297
+  fields: {verdict: 1138, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 298
+  fields: {verdict: 1068, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 299
+  fields: {verdict: 1118, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 300
+  fields: {verdict: 1208, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 301
+  fields: {verdict: 1178, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 302
+  fields: {verdict: 1088, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 303
+  fields: {verdict: 1168, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 304
+  fields: {verdict: 1158, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 305
+  fields: {verdict: 1128, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 306
+  fields: {verdict: 1108, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 307
+  fields: {verdict: 1198, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 308
+  fields: {verdict: 1058, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 309
+  fields: {verdict: 1188, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 310
+  fields: {verdict: 1117, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 311
+  fields: {verdict: 1098, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 312
+  fields: {verdict: 1147, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 313
+  fields: {verdict: 1148, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 314
+  fields: {verdict: 1137, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 315
+  fields: {verdict: 1107, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 316
+  fields: {verdict: 1077, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 317
+  fields: {verdict: 1187, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 318
+  fields: {verdict: 1097, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 319
+  fields: {verdict: 1127, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 320
+  fields: {verdict: 1177, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 321
+  fields: {verdict: 1069, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 322
+  fields: {verdict: 1197, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 323
+  fields: {verdict: 1119, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 324
+  fields: {verdict: 1087, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 325
+  fields: {verdict: 1189, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 326
+  fields: {verdict: 1207, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 327
+  fields: {verdict: 1167, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 328
+  fields: {verdict: 1149, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 329
+  fields: {verdict: 1157, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 330
+  fields: {verdict: 1139, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 331
+  fields: {verdict: 1057, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 332
+  fields: {verdict: 1199, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 333
+  fields: {verdict: 1079, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 334
+  fields: {verdict: 1067, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 335
+  fields: {verdict: 1089, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 336
+  fields: {verdict: 1109, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 337
+  fields: {verdict: 1099, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 338
+  fields: {verdict: 1159, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 339
+  fields: {verdict: 1209, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 340
+  fields: {verdict: 1129, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 341
+  fields: {verdict: 1169, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 342
+  fields: {verdict: 1059, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 343
+  fields: {verdict: 1179, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 344
+  fields: {verdict: 1200, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 345
+  fields: {verdict: 1130, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 346
+  fields: {verdict: 1180, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 347
+  fields: {verdict: 1110, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 348
+  fields: {verdict: 1080, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 349
+  fields: {verdict: 1140, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 350
+  fields: {verdict: 1100, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 351
+  fields: {verdict: 1150, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 352
+  fields: {verdict: 1138, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 353
+  fields: {verdict: 1210, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 354
+  fields: {verdict: 1168, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 355
+  fields: {verdict: 1090, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 356
+  fields: {verdict: 1170, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 357
+  fields: {verdict: 1120, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 358
+  fields: {verdict: 1088, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 359
+  fields: {verdict: 1160, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 360
+  fields: {verdict: 1060, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 361
+  fields: {verdict: 1078, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 362
+  fields: {verdict: 1070, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 363
+  fields: {verdict: 1068, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 364
+  fields: {verdict: 1190, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 365
+  fields: {verdict: 1098, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 366
+  fields: {verdict: 1188, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 367
+  fields: {verdict: 1178, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 368
+  fields: {verdict: 1108, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 369
+  fields: {verdict: 1148, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 370
+  fields: {verdict: 1058, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 371
+  fields: {verdict: 1208, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 372
+  fields: {verdict: 1118, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 373
+  fields: {verdict: 1158, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 374
+  fields: {verdict: 1128, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 375
+  fields: {verdict: 1141, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 376
+  fields: {verdict: 1198, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 377
+  fields: {verdict: 1101, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 378
+  fields: {verdict: 1081, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 379
+  fields: {verdict: 1061, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 380
+  fields: {verdict: 1121, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 381
+  fields: {verdict: 1111, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 382
+  fields: {verdict: 1211, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 383
+  fields: {verdict: 1201, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 384
+  fields: {verdict: 1181, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 385
+  fields: {verdict: 1091, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 386
+  fields: {verdict: 1161, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 387
+  fields: {verdict: 1071, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 388
+  fields: {verdict: 1171, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 389
+  fields: {verdict: 1151, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 390
+  fields: {verdict: 1191, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 391
+  fields: {verdict: 1169, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 392
+  fields: {verdict: 1131, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 393
+  fields: {verdict: 1069, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 394
+  fields: {verdict: 1199, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 395
+  fields: {verdict: 1159, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 396
+  fields: {verdict: 1099, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 397
+  fields: {verdict: 1182, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 398
+  fields: {verdict: 1179, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 399
+  fields: {verdict: 1092, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 400
+  fields: {verdict: 1059, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 401
+  fields: {verdict: 1202, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 402
+  fields: {verdict: 1139, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 403
+  fields: {verdict: 1212, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 404
+  fields: {verdict: 1089, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 405
+  fields: {verdict: 1129, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 406
+  fields: {verdict: 1109, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 407
+  fields: {verdict: 1189, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 408
+  fields: {verdict: 1119, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 409
+  fields: {verdict: 1082, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 410
+  fields: {verdict: 1209, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 411
+  fields: {verdict: 1152, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 412
+  fields: {verdict: 1142, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 413
+  fields: {verdict: 1162, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 414
+  fields: {verdict: 1149, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 415
+  fields: {verdict: 1122, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 416
+  fields: {verdict: 1079, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 417
+  fields: {verdict: 1102, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 418
+  fields: {verdict: 1062, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 419
+  fields: {verdict: 1112, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 420
+  fields: {verdict: 1132, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 421
+  fields: {verdict: 1072, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 422
+  fields: {verdict: 1172, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 423
+  fields: {verdict: 1192, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 424
+  fields: {verdict: 1163, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 425
+  fields: {verdict: 1083, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 426
+  fields: {verdict: 1100, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 427
+  fields: {verdict: 1073, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 428
+  fields: {verdict: 1063, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 429
+  fields: {verdict: 1190, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 430
+  fields: {verdict: 1133, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 431
+  fields: {verdict: 1070, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 432
+  fields: {verdict: 1193, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 433
+  fields: {verdict: 1120, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 434
+  fields: {verdict: 1153, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 435
+  fields: {verdict: 1110, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 436
+  fields: {verdict: 1113, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 437
+  fields: {verdict: 1093, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 438
+  fields: {verdict: 1160, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 439
+  fields: {verdict: 1103, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 440
+  fields: {verdict: 1173, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 441
+  fields: {verdict: 1130, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 442
+  fields: {verdict: 1183, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 443
+  fields: {verdict: 1203, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 444
+  fields: {verdict: 1200, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 445
+  fields: {verdict: 1060, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 446
+  fields: {verdict: 1170, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 447
+  fields: {verdict: 1213, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 448
+  fields: {verdict: 1080, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 449
+  fields: {verdict: 1143, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 450
+  fields: {verdict: 1123, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 451
+  fields: {verdict: 1210, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 452
+  fields: {verdict: 1150, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 453
+  fields: {verdict: 1140, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 454
+  fields: {verdict: 1180, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 455
+  fields: {verdict: 1090, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 456
+  fields: {verdict: 1144, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 457
+  fields: {verdict: 1114, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 458
+  fields: {verdict: 1174, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 459
+  fields: {verdict: 1134, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 460
+  fields: {verdict: 1124, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 461
+  fields: {verdict: 1184, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 462
+  fields: {verdict: 1064, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 463
+  fields: {verdict: 1154, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 464
+  fields: {verdict: 1204, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 465
+  fields: {verdict: 1104, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 466
+  fields: {verdict: 1084, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 467
+  fields: {verdict: 1214, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 468
+  fields: {verdict: 1194, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 469
+  fields: {verdict: 1101, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 470
+  fields: {verdict: 1164, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 471
+  fields: {verdict: 1081, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 472
+  fields: {verdict: 1074, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 473
+  fields: {verdict: 1171, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 474
+  fields: {verdict: 1094, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 475
+  fields: {verdict: 1181, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 476
+  fields: {verdict: 1131, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 477
+  fields: {verdict: 1061, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 478
+  fields: {verdict: 1151, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 479
+  fields: {verdict: 1191, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 480
+  fields: {verdict: 1211, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 481
+  fields: {verdict: 1141, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 482
+  fields: {verdict: 1071, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 483
+  fields: {verdict: 1115, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 484
+  fields: {verdict: 1201, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 485
+  fields: {verdict: 1091, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 486
+  fields: {verdict: 1161, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 487
+  fields: {verdict: 1111, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 488
+  fields: {verdict: 1085, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 489
+  fields: {verdict: 1121, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 490
+  fields: {verdict: 1135, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 491
+  fields: {verdict: 1195, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 492
+  fields: {verdict: 1105, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 493
+  fields: {verdict: 1205, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 494
+  fields: {verdict: 1165, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 495
+  fields: {verdict: 1175, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 496
+  fields: {verdict: 1065, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 497
+  fields: {verdict: 1155, user: 12, score: 1, god_mode: true}
+- model: helium.evidence
+  pk: 498
+  fields: {verdict: 1125, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 499
+  fields: {verdict: 1145, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 500
+  fields: {verdict: 1095, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 501
+  fields: {verdict: 1215, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 502
+  fields: {verdict: 1212, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 503
+  fields: {verdict: 1075, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 504
+  fields: {verdict: 1185, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 505
+  fields: {verdict: 1112, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 506
+  fields: {verdict: 1172, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 507
+  fields: {verdict: 1072, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 508
+  fields: {verdict: 1182, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 509
+  fields: {verdict: 1142, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 510
+  fields: {verdict: 1082, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 511
+  fields: {verdict: 1062, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 512
+  fields: {verdict: 1152, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 513
+  fields: {verdict: 1086, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 514
+  fields: {verdict: 1132, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 515
+  fields: {verdict: 1216, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 516
+  fields: {verdict: 1206, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 517
+  fields: {verdict: 1122, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 518
+  fields: {verdict: 1106, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 519
+  fields: {verdict: 1146, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 520
+  fields: {verdict: 1186, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 521
+  fields: {verdict: 1196, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 522
+  fields: {verdict: 1116, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 523
+  fields: {verdict: 1162, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 524
+  fields: {verdict: 1156, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 525
+  fields: {verdict: 1126, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 526
+  fields: {verdict: 1176, user: 12, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 527
+  fields: {verdict: 1066, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 528
+  fields: {verdict: 1166, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 529
+  fields: {verdict: 1096, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 530
+  fields: {verdict: 1076, user: 12, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 531
+  fields: {verdict: 1092, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 532
+  fields: {verdict: 1136, user: 12, score: 0, god_mode: true}
+- model: helium.evidence
+  pk: 533
+  fields: {verdict: 1102, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 534
+  fields: {verdict: 1202, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 535
+  fields: {verdict: 1192, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 536
+  fields: {verdict: 1153, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 537
+  fields: {verdict: 1183, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 538
+  fields: {verdict: 1093, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 539
+  fields: {verdict: 1073, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 540
+  fields: {verdict: 1143, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 541
+  fields: {verdict: 1173, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 542
+  fields: {verdict: 1193, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 543
+  fields: {verdict: 1163, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 544
+  fields: {verdict: 1203, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 545
+  fields: {verdict: 1083, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 546
+  fields: {verdict: 1063, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 547
+  fields: {verdict: 1123, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 548
+  fields: {verdict: 1103, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 549
+  fields: {verdict: 1113, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 550
+  fields: {verdict: 1133, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 551
+  fields: {verdict: 1213, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 552
+  fields: {verdict: 1104, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 553
+  fields: {verdict: 1074, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 554
+  fields: {verdict: 1134, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 555
+  fields: {verdict: 1204, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 556
+  fields: {verdict: 1214, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 557
+  fields: {verdict: 1144, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 558
+  fields: {verdict: 1184, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 559
+  fields: {verdict: 1194, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 560
+  fields: {verdict: 1114, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 561
+  fields: {verdict: 1154, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 562
+  fields: {verdict: 1174, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 563
+  fields: {verdict: 1124, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 564
+  fields: {verdict: 1064, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 565
+  fields: {verdict: 1094, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 566
+  fields: {verdict: 1084, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 567
+  fields: {verdict: 1164, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 568
+  fields: {verdict: 1145, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 569
+  fields: {verdict: 1085, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 570
+  fields: {verdict: 1195, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 571
+  fields: {verdict: 1155, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 572
+  fields: {verdict: 1125, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 573
+  fields: {verdict: 1075, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 574
+  fields: {verdict: 1115, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 575
+  fields: {verdict: 1175, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 576
+  fields: {verdict: 1185, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 577
+  fields: {verdict: 1215, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 578
+  fields: {verdict: 1165, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 579
+  fields: {verdict: 1205, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 580
+  fields: {verdict: 1135, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 581
+  fields: {verdict: 1065, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 582
+  fields: {verdict: 1095, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 583
+  fields: {verdict: 1105, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 584
+  fields: {verdict: 1086, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 585
+  fields: {verdict: 1206, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 586
+  fields: {verdict: 1146, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 587
+  fields: {verdict: 1216, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 588
+  fields: {verdict: 1116, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 589
+  fields: {verdict: 1166, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 590
+  fields: {verdict: 1106, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 591
+  fields: {verdict: 1186, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 592
+  fields: {verdict: 1176, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 593
+  fields: {verdict: 1156, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 594
+  fields: {verdict: 1126, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 595
+  fields: {verdict: 1136, user: 15, score: 1, god_mode: false}
+- model: helium.evidence
+  pk: 596
+  fields: {verdict: 1196, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 597
+  fields: {verdict: 1076, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 598
+  fields: {verdict: 1096, user: 15, score: 0, god_mode: false}
+- model: helium.evidence
+  pk: 599
+  fields: {verdict: 1066, user: 15, score: 0, god_mode: false}
