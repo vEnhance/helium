@@ -457,9 +457,9 @@ def upload_scans(request):
 				pdfscribble = He.models.EntirePDFScribble(
 						name = pdf_name, scan_file = pdf_file)
 				pdfscribble.save()
+				pdf_file.seek(0) # reset PDF file so we can read it again to get its scans
 				def target_function():
-					with pdfscribble.scan_file.file as f:
-						sheets = scanimage.get_answer_sheets(f, filename = pdf_name)
+					sheets = scanimage.get_answer_sheets(pdf_file, filename = pdf_name)
 					for sheet in sheets:
 						es = He.models.ExamScribble(
 								pdf_scribble = pdfscribble,
