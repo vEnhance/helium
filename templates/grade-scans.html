@@ -28,23 +28,54 @@ If enabled, you don't need to press "return".)
 
 {% block scripts %}
 <script type="text/javascript">
-// Copied from https://docs.djangoproject.com/en/1.9/ref/csrf/. Blah.
 $(document).ready(function() {
 	var sid = -1; // ID number of scribble we're grading
-	function next_scan() {
+	// Queue of SID's and URL's. We'll preload images using this.
+	// Items added to head of array and pop to recover.
+	// Items are ordered pairs (sid, url)
+	var queue = [];
+
+	var is_waiting = true;
+	// This flag is set to true if the queue is empty
+	// and load_next_scan cannot find an image.
+	// This causes the preload_next_scan to call
+	// load_next_scan when it finishes.
+
+	function preload_next_scan() {
 		$.ajax({
 			url  : "/helium/ajax/next-scan/",
 			type : "POST",
 			data : { problem_id : {{ problem.id }} },
 		}).done(function(result) {
-			console.log(result);
-			sid = result[0];
-			if (sid == 0) $("#controls").html('');
-			else $("#scan_id").html(sid);
-			$("#scan_img").attr('src', result[1]);
+			queue.unshift(result);
+			var image_url = result[1];
+			$('<img />').attr('src', image_url);
+			console.log("Preload " + result);
+			if (is_waiting) {
+				load_next_scan();
+				is_waiting = false;
+			}
 		});
 	}
-	next_scan();
+
+	for (var i=0; i<5; ++i) {
+		preload_next_scan();
+	}
+	function load_next_scan() {
+		if (queue.length == 0) {
+			// Defer function execution until post next preload
+			is_waiting = true;
+		}
+		else {
+			var result = queue.pop();
+			sid = result[0];
+			var image_url = result[1];
+			if (sid == 0) $("#controls").html('');
+			else $("#scan_id").html(sid);
+			$("#scan_img").attr('src', image_url);
+		}
+	}
+
 	$("#score").keyup(function (e) {
 		var ludicrous_speed = $("#ludicrous_speed").is(":checked");
 		if (e.which == 13 || ludicrous_speed) {
@@ -53,15 +84,13 @@ $(document).ready(function() {
 			// For non-partial problem require binary scores
 			if (score != "0" && score != "1") return;
 			{% endif %}
-			console.log("Submitting score for " + sid);
 			$.ajax({
 				url  : "/helium/ajax/submit-scan/",
 				type : "POST",
 				data : { scribble_id : sid, score : score },
-			}).done(function(result) {
-				console.log(result);
 			});
-			next_scan();
+			preload_next_scan();
+			load_next_scan();
 			$("#score").val(''); // reset
 		}
 	});
