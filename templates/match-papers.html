@@ -5,12 +5,8 @@
 
 {% block layout-content %}
 
-
 <h3>Name Matching System for {{ exam }}</h3>
-
-<div class="scanstage">
-	<img class="scan" src="{{ scribble_url }}" id="scan_img" width="100%" />
-</div>
+{% include "_scanstage.html" with examscribble=scribble image_url=scribble.name_image.url %}
 
 {% if form %}
 {% include "_form.html" with form=form submit_name="Match Exam" %}

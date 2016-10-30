@@ -22,7 +22,8 @@ div.scanstage {
 	clear: both;
 }
 
-a.zoom {
+a.scanzoom {
+	/* For links "(click to view full paper)" */
 	clear: both;
 	float: right;
 	font-size: 9pt;
