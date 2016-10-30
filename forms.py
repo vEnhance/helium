@@ -195,16 +195,16 @@ class ExamScribbleMatchRobustForm(forms.Form):
 		# check if it's okay to update
 		bad_v = self.examscribble.checkConflictVerdict(
 				entity, purge = data.get('force', False))
-		if bad_v is None:
+		if bad_v is None: # we are OK
 			data['entity'] = entity
 			self.examscribble.assign(entity)
 			# Now update all the verdicts attached to the exam scribble
 		else:
-			admin_url = "/admin/helium/verdict/" + str(bad_v.id) + "/change/"
+			target_url = "/helium/view-verdict/%d/" % bad_v.id
 			self.add_error(None, django.utils.safestring.mark_safe(
 					'A verdict already exists for a problem/user pair. '
 					'Something is wrong! Consult '
-					'<a href="%s">%s</a>. ' %(admin_url, bad_v)))
+					'<a href="%s">%s</a>. ' %(target_url, bad_v)))
 		return data
 
 # vim: fdm=indent foldnestmax=2
