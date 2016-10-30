@@ -9,7 +9,9 @@
 <h4>Match Exam</h4>
 {% include "_form.html" with form=matchform submit_name="Match Exam" %}
 
-<div><img class="scan" src="{{ examscribble.full_image.url }}" /></div>
+<div class="scanstage">
+	<img class="scan" src="{{ examscribble.full_image.url }}" />
+</div>
 
 <h4>Verdicts</h4>
 {% include "_table.html" %}

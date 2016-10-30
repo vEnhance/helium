@@ -7,8 +7,14 @@
 <h3>{{ verdict.problem }} for {{ verdict.entity }}</h3>
 
 {% if verdict.problemscribble %}
-<div><img class="scan" src="{{ verdict.problemscribble.prob_image.url }}" /></div>
+<div class="scanstage">
+	<img class="scan" src="{{ verdict.problemscribble.prob_image.url }}" />
+	<a class="zoom" href="/helium/view-paper/scan/{{ verdict.problemscribble.examscribble.id }}">
+	(View Full Scan)
+	</a>
+</div>
 {% endif %}
+
 
 <h4>Submit Evidence</h4>
 {% include "_form.html" with form=form submit_name="Submit Evidence" %}

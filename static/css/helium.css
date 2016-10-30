@@ -13,6 +13,19 @@ ul.errorlist {
 
 img.scan {
 	width: 95%;
+	border: 1px solid black;
+	margin-top: 4px;
+	margin-bottom: 4px;
+}
+
+div.scanstage {
+	clear: both;
+}
+
+a.zoom {
+	clear: both;
+	float: right;
+	font-size: 9pt;
 }
 
 /* Suppress number inputs from being bad */
