@@ -14,7 +14,7 @@ This file is divided into roughly a few parts:
 
 ## Grading views: for example
 * The classical grader (old_grader_*), grade by name and test/problem
-* The exam scan matching interface (match_exam_scans)
+* The interface matching papers to students (match_papers)
 * Interfaces view_* for viewing previous evidences and maybe fixing them
 * The scan grader (grade_scans), grading problem scans
 
@@ -102,8 +102,8 @@ HELIUM (c) 2016 Evan Chen
 
 def _redir_obj_id(request, key, form_type):
 	"""To be used with a select form. Redirects to page with correct ID.
-	For example, if you use an ExamSelectForm and POST to /helium/match-exam-scans/
-	this will send a redirect to /helium/match-exam-scans/<exam.id>"""
+	For example, if you use an ExamSelectForm and POST to /helium/match-papers/
+	this will send a redirect to /helium/match-papers/<exam.id>"""
 	if not request.method == "POST":
 		return HttpResponseRedirect('/helium')
 	form = form_type(request.POST)
@@ -181,12 +181,12 @@ def old_grader_problem(request, problem_id):
 
 ## VIEWS FOR SCAN GRADER
 @staff_member_required
-def match_exam_scans_redir(request):
+def match_papers_redir(request):
 	return _redir_obj_id(request,
 			key = 'exam',
 			form_type = forms.ExamScanSelectForm)
 @staff_member_required
-def match_exam_scans(request, exam_id):
+def match_papers(request, exam_id):
 	try:
 		exam = He.models.Exam.objects.get(id=exam_id)
 	except He.models.Exam.DoesNotExist:
@@ -211,7 +211,7 @@ def match_exam_scans(request, exam_id):
 					'scribble_url' : examscribble.name_image.url,
 					'exam' : exam,
 					}
-			return render(request, "match-exam-scans.html", context)
+			return render(request, "match-papers.html", context)
 
 	# Now we're set, so get the next scribble, or alert none left
 	queryset = He.models.ExamScribble.objects.filter(entity=None, exam=exam)
@@ -233,7 +233,7 @@ def match_exam_scans(request, exam_id):
 				'scribble_url' : examscribble.name_image.url,
 				'exam' : exam,
 				}
-	return render(request, "match-exam-scans.html", context)
+	return render(request, "match-papers.html", context)
 
 @staff_member_required
 def grade_scans_redir(request):
