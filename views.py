@@ -333,31 +333,35 @@ def ajax_submit_scan(request):
 	user = request.user
 	scribble = He.models.ProblemScribble.objects.get(id=scribble_id)
 	scribble.submitEvidence(user=user, score=score, god_mode=False)
+	scribble.last_sent_time = None
+	scribble.save()
 	return HttpResponse("OK", content_type="text/plain")
 @staff_member_required
 @require_POST
 def ajax_next_scan(request):
-	"""POST arguments: problem_id. RETURN: (scribble id, scribble url)"""
+	"""POST arguments: num_to_load, problem_id.
+	RETURN: list of (scribble id, scribble url)"""
+
 	problem_id = int(request.POST['problem_id'])
 	if problem_id == 0: return
-
 	problem = He.models.Problem.objects.get(id=problem_id)
+	n = int(request.POST['num_to_load'])
+
 	scribbles = He.models.ProblemScribble.objects.filter(
-			verdict__problem=problem,
-			verdict__is_done=False)
-	random_indices = range(0,scribbles.count())
-	random.shuffle(random_indices)
-	for i in random_indices:
-		ps = scribbles[i]
-		# If seen before, toss out
-		if ps.verdict.evidence_set.filter(user=request.user).exists():
-			continue
-		else:
-			return HttpResponse( json.dumps([ps.id, ps.prob_image.url]), \
-					content_type = 'application/json' )
-	else: # done grading!
-		return HttpResponse( json.dumps([0, DONE_IMAGE_URL]), \
-				content_type = 'application/json' )
+			verdict__problem=problem, verdict__is_done=False)
+	scribbles = scribbles.exclude(verdict__evidence__user = request.user)
+	# wait 10 seconds before giving out the same scribble again
+	scribbles = scribbles.exclude(last_sent_time__gte = time.time() - 10)
+
+	ret = []
+	for ps in scribbles[0:n]:
+		ps.last_sent_time = time.time()
+		ps.save()
+		ret.append([ps.id, ps.prob_image.url])
+	if len(ret) < n: # didn't finish
+		ret.append([0, DONE_IMAGE_URL])
+	return HttpResponse( json.dumps(ret), content_type = 'application/json' )
+
 @staff_member_required
 @require_POST
 def ajax_prev_evidence(request):

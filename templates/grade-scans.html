@@ -41,38 +41,40 @@ $(document).ready(function() {
 	// This causes the preload_next_scan to call
 	// load_next_scan when it finishes.
 
-	function preload_next_scan() {
+	function preload_next_scan(n) {
 		$.ajax({
 			url  : "/helium/ajax/next-scan/",
 			type : "POST",
-			data : { problem_id : {{ problem.id }} },
+			data : { problem_id : {{ problem.id }}, num_to_load : n},
 		}).done(function(result) {
-			queue.unshift(result);
-			var image_url = result[1];
-			$('<img />').attr('src', image_url);
-			console.log("Preload " + result);
-			if (is_waiting) {
-				load_next_scan();
-				is_waiting = false;
+			console.log(result);
+			for (var i=0; i<result.length; i++) {
+				var pair = result[i];
+				queue.unshift(pair);
+				var image_url = pair[1];
+				$('<img />').attr('src', image_url);
+				console.log("Preload " + image_url);
+				if (is_waiting) {
+					is_waiting = false;
+					load_next_scan();
+				}
 			}
 		});
 	}
 
-	for (var i=0; i<5; ++i) {
-		preload_next_scan();
-	}
+	preload_next_scan(3);
+
 	function load_next_scan() {
 		if (queue.length == 0) {
 			// Defer function execution until post next preload
 			is_waiting = true;
 		}
 		else {
-			var result = queue.pop();
-			sid = result[0];
-			var image_url = result[1];
+			var next_pair = queue.pop();
+			sid = next_pair[0];
 			if (sid == 0) $("#controls").html('');
 			else $("#scan_id").html(sid);
-			$("#scan_img").attr('src', image_url);
+			$("#scan_img").attr('src', next_pair[1]);
 		}
 	}
 
@@ -89,7 +91,7 @@ $(document).ready(function() {
 				type : "POST",
 				data : { scribble_id : sid, score : score },
 			});
-			preload_next_scan();
+			preload_next_scan(1);
 			load_next_scan();
 			$("#score").val(''); // reset
 		}
