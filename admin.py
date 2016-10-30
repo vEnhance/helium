@@ -19,10 +19,13 @@ class EntityInline(admin.TabularInline):
 	fields = ('name', 'number') 
 class ProblemInline(admin.TabularInline):
 	model = He.models.Problem
+	fields = ('problem_number', 'answer', 'weight', 'allow_partial')
 class EvidenceInline(admin.TabularInline):
 	model = He.models.Evidence
+	fields = ('verdict', 'user', 'score', 'god_mode')
 class ProblemScribbleInline(admin.TabularInline):
 	model = He.models.ProblemScribble
+	fields = ('verdict', 'prob_image', 'most_recent_grab')
 
 
 class TeamFilter(admin.SimpleListFilter):
