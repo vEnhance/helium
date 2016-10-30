@@ -11,6 +11,10 @@ ul.errorlist {
 	font-size: 8pt;
 }
 
+img.scan {
+	width: 100%;
+}
+
 /* Suppress number inputs from being bad */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {

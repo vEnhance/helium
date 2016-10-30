@@ -6,8 +6,8 @@
 {% block layout-content %}
 <h3>{{ verdict.problem }} for {{ verdict.entity }}</h3>
 
-{% if verdict.problemscribble.image_url %}
-<div><img class="scan" src="{{ verdict.problemscribble.image_url }}" /></div>
+{% if verdict.problemscribble %}
+<div><img class="scan" src="{{ verdict.problemscribble.prob_image.url }}" /></div>
 {% endif %}
 
 <h4>Submit Evidence</h4>

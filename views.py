@@ -295,7 +295,6 @@ def view_verdict(request, verdict_id):
 		table.append(tr)
 	context = {'columns' : columns, 'table' : table, 'form' : form, 'verdict' : verdict}
 	return render(request, "view-verdict.html", context)
-
 @staff_member_required
 def find_paper(request):
 	if request.method == "POST":
@@ -324,11 +323,13 @@ def view_paper(request, examscribble_id):
 	verdicts = He.models.Verdict.objects.filter(problemscribble__examscribble = es)
 	context['table'] =  _get_ev_table(request, verdicts)
 	if request.method == "POST":
-		pass
+		# TODO make this check for things
+		matchform = forms.ExamScribbleMatchRobustForm(\
+				user = request.user, examscribble = es)
 	else:
 		matchform = forms.ExamScribbleMatchRobustForm(\
 				user = request.user, examscribble = es)
-		context['matchform'] = matchform
+	context['matchform'] = matchform
 	return render(request, "view-paper.html", context)
 
 @staff_member_required
