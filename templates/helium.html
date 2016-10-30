@@ -71,22 +71,30 @@
 </form>
 
 <ul>
-	<li><a href="/helium/estimation-calc">Guts Estimation Grader</a></li>
+	<li><a href="/helium/estimation-calc">Guts Estimation Calculator</a></li>
 </ul>
 
 <h4>Information</h4>
 <ul>
-	<li><a href="/helium/progress-problems/">Progress Grading</a></li>
-	<li><a href="/helium/progress-scans/">Progress Matching Scans</a></li>
-	<li><a href="/helium/view-conflicts/own/">View Grading Conflicts</a></li>
 	<li><a href="/helium/find-paper">Find Paper</a></li>
+	<li><a href="/helium/view-conflicts/own/">View Your Conflicts</a></li>
+	{% if request.user.is_superuser %}
+	<li><a href="/helium/view-conflicts/all/">View All Grading Conflicts</a> (admin)</li>
+	<li><a href="/admin/helium/">Admin Interface</a> (admin)</li>
+	{% endif %}
 </ul>
 
 <h4>Results (not realtime)</h4>
 <ul>
+	<li><a href="/helium/progress-problems/">Progress Grading</a></li>
+	<li><a href="/helium/progress-scans/">Progress Matching Scans</a></li>
 	<li><a href="/helium/reports/short/">Print Short Results</a></li>
 	<li><a href="/helium/reports/extended/">Print Extended Results</a></li>
 	<li><a href="/helium/reports/teaser/">Print Teaser</a></li>
+	{% if request.user.is_superuser %}
+	<li><a href="/helium/reports/full/">Print Full Results</a> (admin)</li>
+	<li><a href="/helium/spreadsheet/">Score Spreadsheet</a> (admin)</li>
+	{% endif %}
 </ul>
 
 {% if request.user.is_superuser %}
@@ -96,14 +104,6 @@
 	<li><a href="/helium/management/computeverdicts/">Compute Verdicts</a></li>
 	<li><a href="/helium/management/updatescribbles/">Update Scribbles</a></li>
 	<li><a href="/helium/management/heliumimport/">Import Entities from Reg</a></li>
-</ul>
-
-<h4>Administration Commands</h4>
-<ul>
-	<li><a href="/helium/view-conflicts/all/">View All Grading Conflicts</a></li>
-	<li><a href="/helium/reports/full/">Print Full Results</a></li>
-	<li><a href="/helium/spreadsheet/">Score Spreadsheet</a></li>
-	<li><a href="/admin/helium/">Admin Interface</a></li>
 </ul>
 {% endif %}
 
