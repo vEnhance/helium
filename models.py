@@ -270,13 +270,11 @@ class Verdict(models.Model):
 # Scribble objects
 class EntirePDFScribble(models.Model):
 	"""This holds only two properties: the filename of an uploaded PDF,
-	and a FileField to a scan PDF"""
+	and a boolean indicating it is done processing."""
 	name = models.CharField(max_length = 80, unique = True,
 			help_text = "The name of the PDF file, which must be unique "\
 			"(this is a safety feature to prevent accidental double uploads). ")
-	scan_file = models.FileField(upload_to = 'scans/pdfs/', blank=False, null=True,
-			help_text = "The scanned PDF file itself.")
-	is_done = models.BooleanField(default=False, help_text = "Whether the PDF is done scanning.")
+	is_done = models.BooleanField(default=False, help_text = "Whether the PDF is done converting.")
 	def __unicode__(self): return unicode(self.name)
 
 class ExamScribble(models.Model):
