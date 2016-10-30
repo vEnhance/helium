@@ -18,27 +18,37 @@ You will then automatically be shown a different scan.</p>
 <p>(Enable ludicrous speed only if you plan to enter one-digit answers only.
 If enabled, you don't need to press "return".)
 </p>
+
 <div class="scanstage">
-	<img class="scan" src="" id="scan_img"/>
+	<img class="scan" src="" id="scan_img" />
+	<a class="scanzoom" src="" id="zoom_url" target="_blank"/>(View Full Scan)</a>
+	<a class="scanzoom" src="" id="full_url" target="_blank"/>(View Full Judgment)</a>
 </div>
+
 <div id="controls">
-<p>Input Score: <input id="score" name="score" type="number" /></p>
 <h4>Answer: {{ problem.answer }}</h4>
+<p>Input Score: <input id="score" name="score" type="number" /></p>
 </div>
+<div><button id="button_decr_index">Go Back</button>
+	<button id="button_incr_index">Skip</button></div>
 {% endblock %}
 
 {% block scripts %}
 <script type="text/javascript">
 $(document).ready(function() {
-	var sid = -1; // ID number of scribble we're grading
-	// Queue of SID's and URL's. We'll preload images using this.
-	// Items added to head of array and pop to recover.
-	// Items are ordered pairs (sid, url)
-	var queue = [];
+	// We have a stream of data objects, which are tuples of ID's and whatnot
+	// current_index points to the one we are currently reading
+
+	// Stream of data objects. We'll preload images using this.
+	// Items are ordered tuples (scribble id, image url, examscribble id, verdict id)
+	// current_index describes which one we currently have
+	var stream = [];
+	var current_index = 0; // the current index inside the stream
+	var sid = 0; // current scribble's ID
 
 	var is_waiting = true;
 	// This flag is set to true if the queue is empty
-	// and load_next_scan cannot find an image.
+	// and load_scan_at_current_index cannot find an image.
 	// This causes the preload_next_scan to call
 	// load_next_scan when it finishes.
 
@@ -48,55 +58,85 @@ $(document).ready(function() {
 			type : "POST",
 			data : { problem_id : {{ problem.id }}, num_to_load : n},
 		}).done(function(result) {
-			console.log(result);
 			for (var i=0; i<result.length; i++) {
-				var pair = result[i];
-				queue.unshift(pair);
-				var image_url = pair[1];
-				$('<img />').attr('src', image_url);
-				console.log("Preload " + image_url);
-				if (is_waiting) {
+				var data = result[i];
+				stream.push(data);
+				var image_url = data[1];
+				$('<img />').attr('src', image_url); // preload the image
+				if (is_waiting) { // If pending, load next scan
 					is_waiting = false;
-					load_next_scan();
+					load_scan_at_current_index(); // try again
 				}
 			}
 		});
 	}
+	preload_next_scan(3); // preload 3 scans
 
-	preload_next_scan(3);
-
-	function load_next_scan() {
-		if (queue.length == 0) {
-			// Defer function execution until post next preload
+	function load_scan_at_current_index() {
+		if (stream.length <= current_index) {
+			// No next item to grab: defer until after next preload call
 			is_waiting = true;
 		}
 		else {
-			var next_pair = queue.pop();
-			sid = next_pair[0];
-			if (sid == 0) $("#controls").html('');
-			else $("#scan_id").html(sid);
-			$("#scan_img").attr('src', next_pair[1]);
+			// Push to next guy
+			next_data = stream[current_index];
+			
+			// Meow
+			sid = next_data[0];
+			var image_url  = next_data[1];
+			var examscribble_id = next_data[2];
+			var vid = next_data[3];
+			$("#scan_img").attr('src', next_data[1]);
+			if (sid != 0) {
+				$("#scan_id").html(sid);
+				$("#zoom_url").attr('href',
+						'/helium/view-paper/scan/' + examscribble_id + '/');
+				$("#zoom_url").attr('href',
+						'/helium/view-paper/scan/' + examscribble_id + '/');
+				$("#full_url").attr('href',
+						'/helium/view-verdict/' + vid + '/');
+			}
 		}
+		console.log(stream);
+		console.log(current_index);
 	}
 
 	$("#score").keyup(function (e) {
+		if (sid == 0) return; // nothing to do
 		var ludicrous_speed = $("#ludicrous_speed").is(":checked");
 		if (e.which == 13 || ludicrous_speed) {
 			score = $("#score").val()
 			{% if not problem.allow_partial %}
-			// For non-partial problem require binary scores
-			if (score != "0" && score != "1") return;
+				// For non-partial problem require binary scores
+				if (score != "0" && score != "1") return;
 			{% endif %}
+
+			// Now submit this
 			$.ajax({
 				url  : "/helium/ajax/submit-scan/",
 				type : "POST",
 				data : { scribble_id : sid, score : score },
 			});
 			preload_next_scan(1);
-			load_next_scan();
+
+			current_index++; // Move to next one
+			load_scan_at_current_index();
 			$("#score").val(''); // reset
 		}
 	});
+
+	$("#button_decr_index").click(function() {
+		if (current_index > 0) current_index--;
+		load_scan_at_current_index();
+	});
+	$("#button_incr_index").click(function() {
+		if (sid == 0) return;
+		current_index++;
+		preload_next_scan(1);
+		load_scan_at_current_index();
+	});
+
+	load_scan_at_current_index(); // load first image
 	$("#score").focus();
 });
 </script>

@@ -374,7 +374,7 @@ def ajax_submit_scan(request):
 @require_POST
 def ajax_next_scan(request):
 	"""POST arguments: num_to_load, problem_id.
-	RETURN: list of (scribble id, scribble url)"""
+	RETURN: list of (scribble id, scribble url, examscribble id, verdict id)"""
 
 	problem_id = int(request.POST['problem_id'])
 	if problem_id == 0: return
@@ -391,9 +391,9 @@ def ajax_next_scan(request):
 	for ps in scribbles[0:n]:
 		ps.last_sent_time = time.time()
 		ps.save()
-		ret.append([ps.id, ps.prob_image.url])
+		ret.append([ps.id, ps.prob_image.url, ps.examscribble.id, ps.verdict.id])
 	if len(ret) < n: # didn't finish
-		ret.append([0, DONE_IMAGE_URL])
+		ret.append([0, DONE_IMAGE_URL, 0, 0])
 	return HttpResponse( json.dumps(ret), content_type = 'application/json' )
 
 @staff_member_required
