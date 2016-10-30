@@ -139,484 +139,484 @@
   fields: {exam: 7, problem_number: 3, answer: '', weight: 7.0, allow_partial: true}
 - model: helium.verdict
   pk: 1057
-  fields: {problem: 16, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 16, entity: 24, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1058
-  fields: {problem: 17, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 17, entity: 24, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1059
-  fields: {problem: 18, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 18, entity: 24, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1060
-  fields: {problem: 19, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 19, entity: 24, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1061
-  fields: {problem: 20, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 20, entity: 24, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1062
-  fields: {problem: 21, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 21, entity: 24, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1063
-  fields: {problem: 22, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 22, entity: 24, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1064
-  fields: {problem: 23, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 23, entity: 24, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1065
-  fields: {problem: 24, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 24, entity: 24, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1066
-  fields: {problem: 25, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 25, entity: 24, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1067
-  fields: {problem: 16, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 16, entity: 25, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1068
-  fields: {problem: 17, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 17, entity: 25, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1069
-  fields: {problem: 18, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 18, entity: 25, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1070
-  fields: {problem: 19, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 19, entity: 25, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1071
-  fields: {problem: 20, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 20, entity: 25, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1072
-  fields: {problem: 21, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 21, entity: 25, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1073
-  fields: {problem: 22, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 22, entity: 25, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1074
-  fields: {problem: 23, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 23, entity: 25, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1075
-  fields: {problem: 24, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 24, entity: 25, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1076
-  fields: {problem: 25, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 25, entity: 25, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1077
-  fields: {problem: 16, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 16, entity: 26, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1078
-  fields: {problem: 17, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 17, entity: 26, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1079
-  fields: {problem: 18, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 18, entity: 26, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1080
-  fields: {problem: 19, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 19, entity: 26, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1081
-  fields: {problem: 20, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 20, entity: 26, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1082
-  fields: {problem: 21, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 21, entity: 26, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1083
-  fields: {problem: 22, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 22, entity: 26, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1084
-  fields: {problem: 23, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 23, entity: 26, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1085
-  fields: {problem: 24, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 24, entity: 26, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1086
-  fields: {problem: 25, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 25, entity: 26, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1087
-  fields: {problem: 16, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 16, entity: 27, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1088
-  fields: {problem: 17, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 17, entity: 27, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1089
-  fields: {problem: 18, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 18, entity: 27, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1090
-  fields: {problem: 19, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 19, entity: 27, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1091
-  fields: {problem: 20, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 20, entity: 27, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1092
-  fields: {problem: 21, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 21, entity: 27, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1093
-  fields: {problem: 22, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 22, entity: 27, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1094
-  fields: {problem: 23, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 23, entity: 27, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1095
-  fields: {problem: 24, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 24, entity: 27, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1096
-  fields: {problem: 25, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 25, entity: 27, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1097
-  fields: {problem: 16, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 16, entity: 9, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1098
-  fields: {problem: 17, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 17, entity: 9, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1099
-  fields: {problem: 18, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 18, entity: 9, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1100
-  fields: {problem: 19, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 19, entity: 9, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1101
-  fields: {problem: 20, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 20, entity: 9, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1102
-  fields: {problem: 21, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 21, entity: 9, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1103
-  fields: {problem: 22, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 22, entity: 9, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1104
-  fields: {problem: 23, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 23, entity: 9, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1105
-  fields: {problem: 24, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 24, entity: 9, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1106
-  fields: {problem: 25, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 25, entity: 9, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1107
-  fields: {problem: 16, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 16, entity: 11, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1108
-  fields: {problem: 17, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 17, entity: 11, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1109
-  fields: {problem: 18, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 18, entity: 11, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1110
-  fields: {problem: 19, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 19, entity: 11, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1111
-  fields: {problem: 20, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 20, entity: 11, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1112
-  fields: {problem: 21, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 21, entity: 11, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1113
-  fields: {problem: 22, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 22, entity: 11, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1114
-  fields: {problem: 23, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 23, entity: 11, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1115
-  fields: {problem: 24, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 24, entity: 11, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1116
-  fields: {problem: 25, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 25, entity: 11, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1117
-  fields: {problem: 16, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 16, entity: 12, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1118
-  fields: {problem: 17, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 17, entity: 12, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1119
-  fields: {problem: 18, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 18, entity: 12, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1120
-  fields: {problem: 19, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 19, entity: 12, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1121
-  fields: {problem: 20, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 20, entity: 12, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1122
-  fields: {problem: 21, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 21, entity: 12, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1123
-  fields: {problem: 22, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 22, entity: 12, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1124
-  fields: {problem: 23, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 23, entity: 12, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1125
-  fields: {problem: 24, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 24, entity: 12, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1126
-  fields: {problem: 25, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 25, entity: 12, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1127
-  fields: {problem: 16, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 16, entity: 13, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1128
-  fields: {problem: 17, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 17, entity: 13, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1129
-  fields: {problem: 18, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 18, entity: 13, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1130
-  fields: {problem: 19, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 19, entity: 13, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1131
-  fields: {problem: 20, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 20, entity: 13, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1132
-  fields: {problem: 21, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 21, entity: 13, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1133
-  fields: {problem: 22, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 22, entity: 13, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1134
-  fields: {problem: 23, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 23, entity: 13, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1135
-  fields: {problem: 24, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 24, entity: 13, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1136
-  fields: {problem: 25, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 25, entity: 13, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1137
-  fields: {problem: 16, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 16, entity: 14, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1138
-  fields: {problem: 17, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 17, entity: 14, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1139
-  fields: {problem: 18, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 18, entity: 14, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1140
-  fields: {problem: 19, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 19, entity: 14, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1141
-  fields: {problem: 20, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 20, entity: 14, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1142
-  fields: {problem: 21, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 21, entity: 14, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1143
-  fields: {problem: 22, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 22, entity: 14, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1144
-  fields: {problem: 23, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 23, entity: 14, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1145
-  fields: {problem: 24, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 24, entity: 14, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1146
-  fields: {problem: 25, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 25, entity: 14, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1147
-  fields: {problem: 16, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 16, entity: 15, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1148
-  fields: {problem: 17, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 17, entity: 15, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1149
-  fields: {problem: 18, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 18, entity: 15, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1150
-  fields: {problem: 19, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 19, entity: 15, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1151
-  fields: {problem: 20, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 20, entity: 15, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1152
-  fields: {problem: 21, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 21, entity: 15, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1153
-  fields: {problem: 22, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 22, entity: 15, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1154
-  fields: {problem: 23, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 23, entity: 15, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1155
-  fields: {problem: 24, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 24, entity: 15, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1156
-  fields: {problem: 25, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 25, entity: 15, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1157
-  fields: {problem: 16, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 16, entity: 17, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1158
-  fields: {problem: 17, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 17, entity: 17, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1159
-  fields: {problem: 18, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 18, entity: 17, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1160
-  fields: {problem: 19, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 19, entity: 17, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1161
-  fields: {problem: 20, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 20, entity: 17, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1162
-  fields: {problem: 21, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 21, entity: 17, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1163
-  fields: {problem: 22, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 22, entity: 17, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1164
-  fields: {problem: 23, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 23, entity: 17, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1165
-  fields: {problem: 24, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 24, entity: 17, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1166
-  fields: {problem: 25, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 25, entity: 17, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1167
-  fields: {problem: 16, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 16, entity: 18, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1168
-  fields: {problem: 17, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 17, entity: 18, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1169
-  fields: {problem: 18, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 18, entity: 18, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1170
-  fields: {problem: 19, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 19, entity: 18, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1171
-  fields: {problem: 20, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 20, entity: 18, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1172
-  fields: {problem: 21, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 21, entity: 18, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1173
-  fields: {problem: 22, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 22, entity: 18, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1174
-  fields: {problem: 23, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 23, entity: 18, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1175
-  fields: {problem: 24, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 24, entity: 18, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1176
-  fields: {problem: 25, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 25, entity: 18, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1177
-  fields: {problem: 16, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 16, entity: 19, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1178
-  fields: {problem: 17, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 17, entity: 19, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1179
-  fields: {problem: 18, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 18, entity: 19, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1180
-  fields: {problem: 19, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 19, entity: 19, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1181
-  fields: {problem: 20, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 20, entity: 19, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1182
-  fields: {problem: 21, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 21, entity: 19, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1183
-  fields: {problem: 22, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 22, entity: 19, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1184
-  fields: {problem: 23, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 23, entity: 19, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1185
-  fields: {problem: 24, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 24, entity: 19, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1186
-  fields: {problem: 25, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 25, entity: 19, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1187
-  fields: {problem: 16, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 16, entity: 20, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1188
-  fields: {problem: 17, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 17, entity: 20, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1189
-  fields: {problem: 18, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 18, entity: 20, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1190
-  fields: {problem: 19, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 19, entity: 20, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1191
-  fields: {problem: 20, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 20, entity: 20, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1192
-  fields: {problem: 21, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 21, entity: 20, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1193
-  fields: {problem: 22, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 22, entity: 20, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1194
-  fields: {problem: 23, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 23, entity: 20, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1195
-  fields: {problem: 24, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 24, entity: 20, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1196
-  fields: {problem: 25, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 25, entity: 20, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1197
-  fields: {problem: 16, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 16, entity: 21, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1198
-  fields: {problem: 17, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 17, entity: 21, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1199
-  fields: {problem: 18, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 18, entity: 21, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1200
-  fields: {problem: 19, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 19, entity: 21, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1201
-  fields: {problem: 20, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 20, entity: 21, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1202
-  fields: {problem: 21, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 21, entity: 21, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1203
-  fields: {problem: 22, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 22, entity: 21, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1204
-  fields: {problem: 23, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 23, entity: 21, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1205
-  fields: {problem: 24, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 24, entity: 21, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1206
-  fields: {problem: 25, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 25, entity: 21, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1207
-  fields: {problem: 16, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 16, entity: 23, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1208
-  fields: {problem: 17, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 17, entity: 23, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1209
-  fields: {problem: 18, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 18, entity: 23, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1210
-  fields: {problem: 19, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 19, entity: 23, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1211
-  fields: {problem: 20, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 20, entity: 23, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1212
-  fields: {problem: 21, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 21, entity: 23, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1213
-  fields: {problem: 22, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 22, entity: 23, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1214
-  fields: {problem: 23, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 23, entity: 23, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1215
-  fields: {problem: 24, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 24, entity: 23, score: null, is_valid: true, is_done: false}
 - model: helium.verdict
   pk: 1216
-  fields: {problem: 25, entity: null, score: null, is_valid: true, is_done: false}
+  fields: {problem: 25, entity: 23, score: null, is_valid: true, is_done: false}
 - model: helium.entirepdfscribble
   pk: 15
   fields: {name: batchY-samplescans.pdf, scan_file: scans/pdfs/batchY-samplescans.pdf,
@@ -627,67 +627,67 @@
     is_done: true}
 - model: helium.examscribble
   pk: 33
-  fields: {pdf_scribble: 15, exam: 6, entity: null, full_image: scans/full/batchY-samplescans.pdf-sheet0001-full.jpg,
+  fields: {pdf_scribble: 15, exam: 6, entity: 24, full_image: scans/full/batchY-samplescans.pdf-sheet0001-full.jpg,
     name_image: scans/names/batchY-samplescans.pdf-sheet0001-name.jpg}
 - model: helium.examscribble
   pk: 34
-  fields: {pdf_scribble: 15, exam: 6, entity: null, full_image: scans/full/batchY-samplescans.pdf-sheet0002-full.jpg,
+  fields: {pdf_scribble: 15, exam: 6, entity: 25, full_image: scans/full/batchY-samplescans.pdf-sheet0002-full.jpg,
     name_image: scans/names/batchY-samplescans.pdf-sheet0002-name.jpg}
 - model: helium.examscribble
   pk: 35
-  fields: {pdf_scribble: 15, exam: 6, entity: null, full_image: scans/full/batchY-samplescans.pdf-sheet0003-full.jpg,
+  fields: {pdf_scribble: 15, exam: 6, entity: 26, full_image: scans/full/batchY-samplescans.pdf-sheet0003-full.jpg,
     name_image: scans/names/batchY-samplescans.pdf-sheet0003-name.jpg}
 - model: helium.examscribble
   pk: 36
-  fields: {pdf_scribble: 15, exam: 6, entity: null, full_image: scans/full/batchY-samplescans.pdf-sheet0004-full.jpg,
+  fields: {pdf_scribble: 15, exam: 6, entity: 27, full_image: scans/full/batchY-samplescans.pdf-sheet0004-full.jpg,
     name_image: scans/names/batchY-samplescans.pdf-sheet0004-name.jpg}
 - model: helium.examscribble
   pk: 37
-  fields: {pdf_scribble: 16, exam: 6, entity: null, full_image: scans/full/batchX-samplescans.pdf-sheet0001-full.jpg,
+  fields: {pdf_scribble: 16, exam: 6, entity: 9, full_image: scans/full/batchX-samplescans.pdf-sheet0001-full.jpg,
     name_image: scans/names/batchX-samplescans.pdf-sheet0001-name.jpg}
 - model: helium.examscribble
   pk: 38
-  fields: {pdf_scribble: 16, exam: 6, entity: null, full_image: scans/full/batchX-samplescans.pdf-sheet0002-full.jpg,
+  fields: {pdf_scribble: 16, exam: 6, entity: 11, full_image: scans/full/batchX-samplescans.pdf-sheet0002-full.jpg,
     name_image: scans/names/batchX-samplescans.pdf-sheet0002-name.jpg}
 - model: helium.examscribble
   pk: 39
-  fields: {pdf_scribble: 16, exam: 6, entity: null, full_image: scans/full/batchX-samplescans.pdf-sheet0003-full.jpg,
+  fields: {pdf_scribble: 16, exam: 6, entity: 12, full_image: scans/full/batchX-samplescans.pdf-sheet0003-full.jpg,
     name_image: scans/names/batchX-samplescans.pdf-sheet0003-name.jpg}
 - model: helium.examscribble
   pk: 40
-  fields: {pdf_scribble: 16, exam: 6, entity: null, full_image: scans/full/batchX-samplescans.pdf-sheet0004-full.jpg,
+  fields: {pdf_scribble: 16, exam: 6, entity: 13, full_image: scans/full/batchX-samplescans.pdf-sheet0004-full.jpg,
     name_image: scans/names/batchX-samplescans.pdf-sheet0004-name.jpg}
 - model: helium.examscribble
   pk: 41
-  fields: {pdf_scribble: 16, exam: 6, entity: null, full_image: scans/full/batchX-samplescans.pdf-sheet0005-full.jpg,
+  fields: {pdf_scribble: 16, exam: 6, entity: 14, full_image: scans/full/batchX-samplescans.pdf-sheet0005-full.jpg,
     name_image: scans/names/batchX-samplescans.pdf-sheet0005-name.jpg}
 - model: helium.examscribble
   pk: 42
-  fields: {pdf_scribble: 16, exam: 6, entity: null, full_image: scans/full/batchX-samplescans.pdf-sheet0006-full.jpg,
+  fields: {pdf_scribble: 16, exam: 6, entity: 15, full_image: scans/full/batchX-samplescans.pdf-sheet0006-full.jpg,
     name_image: scans/names/batchX-samplescans.pdf-sheet0006-name.jpg}
 - model: helium.examscribble
   pk: 43
-  fields: {pdf_scribble: 16, exam: 6, entity: null, full_image: scans/full/batchX-samplescans.pdf-sheet0007-full.jpg,
+  fields: {pdf_scribble: 16, exam: 6, entity: 17, full_image: scans/full/batchX-samplescans.pdf-sheet0007-full.jpg,
     name_image: scans/names/batchX-samplescans.pdf-sheet0007-name.jpg}
 - model: helium.examscribble
   pk: 44
-  fields: {pdf_scribble: 16, exam: 6, entity: null, full_image: scans/full/batchX-samplescans.pdf-sheet0008-full.jpg,
+  fields: {pdf_scribble: 16, exam: 6, entity: 18, full_image: scans/full/batchX-samplescans.pdf-sheet0008-full.jpg,
     name_image: scans/names/batchX-samplescans.pdf-sheet0008-name.jpg}
 - model: helium.examscribble
   pk: 45
-  fields: {pdf_scribble: 16, exam: 6, entity: null, full_image: scans/full/batchX-samplescans.pdf-sheet0009-full.jpg,
+  fields: {pdf_scribble: 16, exam: 6, entity: 19, full_image: scans/full/batchX-samplescans.pdf-sheet0009-full.jpg,
     name_image: scans/names/batchX-samplescans.pdf-sheet0009-name.jpg}
 - model: helium.examscribble
   pk: 46
-  fields: {pdf_scribble: 16, exam: 6, entity: null, full_image: scans/full/batchX-samplescans.pdf-sheet0010-full.jpg,
+  fields: {pdf_scribble: 16, exam: 6, entity: 20, full_image: scans/full/batchX-samplescans.pdf-sheet0010-full.jpg,
     name_image: scans/names/batchX-samplescans.pdf-sheet0010-name.jpg}
 - model: helium.examscribble
   pk: 47
-  fields: {pdf_scribble: 16, exam: 6, entity: null, full_image: scans/full/batchX-samplescans.pdf-sheet0011-full.jpg,
+  fields: {pdf_scribble: 16, exam: 6, entity: 21, full_image: scans/full/batchX-samplescans.pdf-sheet0011-full.jpg,
     name_image: scans/names/batchX-samplescans.pdf-sheet0011-name.jpg}
 - model: helium.examscribble
   pk: 48
-  fields: {pdf_scribble: 16, exam: 6, entity: null, full_image: scans/full/batchX-samplescans.pdf-sheet0012-full.jpg,
+  fields: {pdf_scribble: 16, exam: 6, entity: 23, full_image: scans/full/batchX-samplescans.pdf-sheet0012-full.jpg,
     name_image: scans/names/batchX-samplescans.pdf-sheet0012-name.jpg}
 - model: helium.problemscribble
   pk: 1045

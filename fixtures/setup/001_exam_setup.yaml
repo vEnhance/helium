@@ -1,7 +1,7 @@
 - model: helium.exam
   pk: 6
   fields: {name: GEO!, color: '#EEFFEE', is_indiv: true, is_ready: true, is_alg_scoring: true,
-    is_scanned: true, min_grades: 3, min_override: 3}
+    is_scanned: true, min_grades: 2, min_override: 3}
 - model: helium.exam
   pk: 7
   fields: {name: Mock IMO, color: '#FFFFE0', is_indiv: false, is_ready: true, is_alg_scoring: false,
