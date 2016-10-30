@@ -21,6 +21,7 @@ This file is divided into roughly a few parts:
 ## Verdict views
 The interfaces view_verdict and find_verdicts, etc.
 These are used so that e.g. you can look at your own grading conflicts.
+Also view_paper for viewing an entire examscribble
 
 ## AJAX hooks
 These are ajax_*. Used by scan grading.
@@ -205,7 +206,7 @@ def match_exam_scans(request, exam_id):
 			messages.success(request, "Matched exam for %s" %prev_entity)
 		else: # validation errors
 			context = {
-					'matchform' : form,
+					'form' : form,
 					'scribble' : examscribble,
 					'scribble_url' : examscribble.name_image.url,
 					'exam' : exam,
@@ -217,7 +218,7 @@ def match_exam_scans(request, exam_id):
 
 	if len(queryset) == 0:
 		context = {
-				'matchform' : None,
+				'form' : None,
 				'scribble' : None,
 				'scribble_url' : DONE_IMAGE_URL,
 				'exam' : exam,
@@ -227,7 +228,7 @@ def match_exam_scans(request, exam_id):
 		form = forms.ExamScribbleMatchRobustForm(
 				examscribble = examscribble, user = request.user)
 		context = {
-				'matchform' : form,
+				'form' : form,
 				'scribble' : examscribble,
 				'scribble_url' : examscribble.name_image.url,
 				'exam' : exam,
@@ -245,10 +246,10 @@ def grade_scans(request, problem_id):
 	return render(request, "grade-scans.html",
 			{'problem' : problem, 'exam': problem.exam})
 
-## VIEWS FOR VERDICTS
-def _show_evidences(request, verdicts):
+## VIEWS FOR VERDICTS AND SCANS
+def _get_ev_table(request, verdicts):
 	table = []
-	columns = ['Entity', 'Problem', 'Score', 'User', 'More']
+	columns = ['Entity', 'Problem', 'Score', 'User', 'View']
 	for verdict in verdicts:
 		for evidence in verdict.evidence_set.all():
 			tr = collections.OrderedDict()
@@ -258,11 +259,10 @@ def _show_evidences(request, verdicts):
 			tr['User'] = evidence.user
 			if request.user == evidence.user:
 				tr['User'] = '<b>' + str(tr['User']) + '</b>'
-			tr['More'] = "<a href=\"/helium/view-verdict/%d/\">Open</a>" \
+			tr['View'] = "<a href=\"/helium/view-verdict/%d/\">Open</a>" \
 					% verdict.id
 			table.append(tr)
-	context = {'columns' : columns, 'table' : table, 'pagetitle' : 'View Evidences'}
-	return render(request, "table-only.html", context)
+	return table
 @staff_member_required
 def view_verdict(request, verdict_id):
 	verdict = He.models.Verdict.objects.get(id = int(verdict_id))
@@ -294,32 +294,56 @@ def view_verdict(request, verdict_id):
 		tr['God Mode'] = str(evidence.god_mode)
 		table.append(tr)
 	context = {'columns' : columns, 'table' : table, 'form' : form, 'verdict' : verdict}
-	if hasattr(verdict, 'problemscribble'):
-		context['image_url'] = verdict.problemscribble.prob_image.url
-
 	return render(request, "view-verdict.html", context)
+
 @staff_member_required
-def find_verdicts(request):
+def find_paper(request):
 	if request.method == "POST":
 		form = forms.EntityExamSelectForm(request.POST)
 		if form.is_valid():
 			entity = form.cleaned_data['entity']
 			exam = form.cleaned_data['exam']
-			return _show_evidences(request, He.models.Verdict.objects\
-					.filter(problem__exam = exam, entity = entity))
+			try:
+				es = He.models.ExamScribble.objects.get(entity=entity, exam=exam)
+			except He.models.ExamScribble.DoesNotExist:
+				table = _get_ev_table(request, He.models.Verdict.objects\
+						.filter(entity = entity, problem__exam = exam))
+				context = {'table' : table, 'pagetitle' : 'Problem Judgments'}
+				return render(request, "table-only.html", context)
+			else:
+				return HttpResponseRedirect("/helium/view-paper/%d/" % es.id)
 	else:
 		form = forms.EntityExamSelectForm()
 	context = { 'eesform' : form }
-	return render(request, "find-verdicts.html", context)
+	return render(request, "find-paper.html", context)
+@staff_member_required
+def view_paper(request, examscribble_id):
+	es = He.models.ExamScribble.objects.get(id = int(examscribble_id))
+	context = {}
+	context['examscribble'] = es
+	verdicts = He.models.Verdict.objects.filter(problemscribble__examscribble = es)
+	context['table'] =  _get_ev_table(request, verdicts)
+	if request.method == "POST":
+		pass
+	else:
+		matchform = forms.ExamScribbleMatchRobustForm(\
+				user = request.user, examscribble = es)
+		context['matchform'] = matchform
+	return render(request, "view-paper.html", context)
+
 @staff_member_required
 def view_conflicts_all(request):
-	return _show_evidences(request, He.models.Verdict.objects\
+	table = _get_ev_table(request, He.models.Verdict.objects\
 			.filter(is_valid=False, problem__exam__is_ready = True) )
+	context = {'table' : table, 'pagetitle' : 'All Grading Conflicts'}
+	return render(request, "table-only.html", context)
 @staff_member_required
 def view_conflicts_own(request):
-	return _show_evidences(request, He.models.Verdict.objects\
+	table = _get_ev_table(request, He.models.Verdict.objects\
 			.filter(is_valid=False, problem__exam__is_ready = True,
 				evidence__user = request.user) )
+	context = {'table' : table, 'pagetitle' : 'Own Grading Conflicts'}
+	return render(request, "table-only.html", context)
 
 ## AJAX HOOKS
 @staff_member_required

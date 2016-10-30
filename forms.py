@@ -182,7 +182,8 @@ class ExamScribbleMatchRobustForm(forms.Form):
 			self.fields['force'] = forms.BooleanField(
 					label = 'Override',
 					required = False,
-					help_text = "Super-users can use this to cause havoc.")
+					help_text = "Super-users can use this to cause havoc. "\
+							"Please avoid using unless you know what it does.")
 
 	def clean(self):
 		data = super(ExamScribbleMatchRobustForm, self).clean()

@@ -6,17 +6,17 @@
 {% block layout-content %}
 <h3>{{ verdict.problem }} for {{ verdict.entity }}</h3>
 
-{% if image_url %}
-<div><img class="scan" src="{{ image_url }}" /></div>
+{% if verdict.problemscribble.image_url %}
+<div><img class="scan" src="{{ verdict.problemscribble.image_url }}" /></div>
 {% endif %}
 
-<h3>Submit Evidence</h3>
+<h4>Submit Evidence</h4>
 {% include "_form.html" with form=form submit_name="Submit Evidence" %}
 
-<h3>Existing Evidences</h3>
+<h4>Existing Evidences</h4>
 {% include "_table.html" %}
 
-<h3>Final Judgment</h3>
+<h4>Final Judgment</h4>
 <ul>
 	<li>Assigned Score: <b>{{ verdict.score }}</b></li>
 	<li>Judgment Done: <b>{{ verdict.is_done }}</b></li>
