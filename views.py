@@ -262,7 +262,7 @@ def _get_ev_table(request, verdicts):
 			tr['View'] = "<a href=\"/helium/view-verdict/%d/\">Open</a>" \
 					% verdict.id
 			table.append(tr)
-	return table
+	return columns, table
 @staff_member_required
 def view_verdict(request, verdict_id):
 	verdict = He.models.Verdict.objects.get(id = int(verdict_id))
@@ -302,26 +302,30 @@ def find_paper(request):
 		if form.is_valid():
 			entity = form.cleaned_data['entity']
 			exam = form.cleaned_data['exam']
-			try:
-				es = He.models.ExamScribble.objects.get(entity=entity, exam=exam)
-			except He.models.ExamScribble.DoesNotExist:
-				table = _get_ev_table(request, He.models.Verdict.objects\
-						.filter(entity = entity, problem__exam = exam))
-				context = {'table' : table, 'pagetitle' : 'Problem Judgments'}
-				return render(request, "table-only.html", context)
-			else:
-				return HttpResponseRedirect("/helium/view-paper/%d/" % es.id)
+			return HttpResponseRedirect("/helium/view-paper/%d/%d/" %(entity.id,exam.id))
 	else:
 		form = forms.EntityExamSelectForm()
 	context = { 'eesform' : form }
 	return render(request, "find-paper.html", context)
 @staff_member_required
-def view_paper(request, examscribble_id):
-	es = He.models.ExamScribble.objects.get(id = int(examscribble_id))
+def view_paper(request, *args):
+	if len(args) == 1: # view-paper/scan/examscribble.id/
+		es = He.models.ExamScribble.objects.get(id = int(args[0]))
+	elif len(args) == 2: # view-paper/entity.id/exam.id/
+		entity = He.models.Entity.objects.get(id = int(args[0]))
+		exam = He.models.Exam.objects.get(id = int(args[1]))
+		try:
+			es = He.models.ExamScribble.objects.get(entity=entity, exam=exam)
+		except He.models.ExamScribble.DoesNotExist:
+			columns, table = _get_ev_table(request, He.models.Verdict.objects\
+					.filter(entity = entity, problem__exam = exam))
+			context = {'columns' : columns, 'table' : table,
+					'pagetitle' : '%s for %s' %(entity, exam)}
+			return render(request, "table-only.html", context)
 	context = {}
 	context['examscribble'] = es
 	verdicts = He.models.Verdict.objects.filter(problemscribble__examscribble = es)
-	context['table'] =  _get_ev_table(request, verdicts)
+	context['columns'], context['table'] =  _get_ev_table(request, verdicts)
 	if request.method == "POST":
 		form = forms.ExamScribbleMatchRobustForm(
 				request.POST, examscribble = es, user = request.user)
@@ -340,16 +344,16 @@ def view_paper(request, examscribble_id):
 
 @staff_member_required
 def view_conflicts_all(request):
-	table = _get_ev_table(request, He.models.Verdict.objects\
+	columns, table = _get_ev_table(request, He.models.Verdict.objects\
 			.filter(is_valid=False, problem__exam__is_ready = True) )
-	context = {'table' : table, 'pagetitle' : 'All Grading Conflicts'}
+	context = {'colmuns' : columns, 'table' : table, 'pagetitle' : 'All Grading Conflicts'}
 	return render(request, "table-only.html", context)
 @staff_member_required
 def view_conflicts_own(request):
-	table = _get_ev_table(request, He.models.Verdict.objects\
+	columns, table = _get_ev_table(request, He.models.Verdict.objects\
 			.filter(is_valid=False, problem__exam__is_ready = True,
 				evidence__user = request.user) )
-	context = {'table' : table, 'pagetitle' : 'Own Grading Conflicts'}
+	context = {'columns' : columns, 'table' : table, 'pagetitle' : 'Own Grading Conflicts'}
 	return render(request, "table-only.html", context)
 
 ## AJAX HOOKS
