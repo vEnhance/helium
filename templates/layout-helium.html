@@ -55,6 +55,8 @@ $(document).ready(function() {
 			xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
 		}}});
 	$('#id_entity').selectToAutocomplete();
+	$('#id_mathlete').selectToAutocomplete();
+	$('#id_team').selectToAutocomplete();
 });
 </script>
 {% endblock %} 

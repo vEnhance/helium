@@ -1,4 +1,4 @@
-ul.errorlist {
+ul.errorlist, ul.form_error_messages {
 	color: red;
 	list-style-type: none;
 	font-weight: bold;
