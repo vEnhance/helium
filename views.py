@@ -244,21 +244,18 @@ def grade_scans(request, problem_id):
 			{'problem' : problem, 'exam': problem.exam})
 
 ## VIEWS FOR VERDICTS AND SCANS
-def _get_ev_table(request, verdicts):
+def _get_vtable(request, verdicts):
 	table = []
-	columns = ['Entity', 'Problem', 'Score', 'User', 'View']
+	columns = ['Entity', 'Problem', 'Score', 'Num Grades', 'View']
 	for verdict in verdicts:
-		for evidence in verdict.evidence_set.all():
-			tr = collections.OrderedDict()
-			tr['Entity'] = verdict.entity
-			tr['Problem'] = verdict.problem
-			tr['Score'] = evidence.score
-			tr['User'] = evidence.user
-			if request.user == evidence.user:
-				tr['User'] = '<b>' + str(tr['User']) + '</b>'
-			tr['View'] = "<a href=\"/helium/view-verdict/%d/\">Open</a>" \
-					% verdict.id
-			table.append(tr)
+		tr = collections.OrderedDict()
+		tr['Entity'] = verdict.entity
+		tr['Problem'] = verdict.problem
+		tr['Score'] = verdict.score if verdict.score is not None else "?"
+		tr['Num Grades'] = verdict.evidence_set.count()
+		tr['View'] = "<a href=\"/helium/view-verdict/%d/\">Open</a>" \
+				% verdict.id
+		table.append(tr)
 	return columns, table
 @staff_member_required
 def view_verdict(request, verdict_id):
@@ -314,7 +311,7 @@ def view_paper(request, *args):
 		try:
 			es = He.models.ExamScribble.objects.get(entity=entity, exam=exam)
 		except He.models.ExamScribble.DoesNotExist:
-			columns, table = _get_ev_table(request, He.models.Verdict.objects\
+			columns, table = _get_vtable(request, He.models.Verdict.objects\
 					.filter(entity = entity, problem__exam = exam))
 			context = {'columns' : columns, 'table' : table,
 					'pagetitle' : '%s for %s' %(entity, exam)}
@@ -322,7 +319,7 @@ def view_paper(request, *args):
 	context = {}
 	context['examscribble'] = es
 	verdicts = He.models.Verdict.objects.filter(problemscribble__examscribble = es)
-	context['columns'], context['table'] =  _get_ev_table(request, verdicts)
+	context['columns'], context['table'] =  _get_vtable(request, verdicts)
 	if request.method == "POST":
 		form = forms.ExamScribbleMatchRobustForm(
 				request.POST, examscribble = es, user = request.user)
@@ -341,13 +338,13 @@ def view_paper(request, *args):
 
 @staff_member_required
 def view_conflicts_all(request):
-	columns, table = _get_ev_table(request, He.models.Verdict.objects\
+	columns, table = _get_vtable(request, He.models.Verdict.objects\
 			.filter(is_valid=False, problem__exam__is_ready = True) )
-	context = {'colmuns' : columns, 'table' : table, 'pagetitle' : 'All Grading Conflicts'}
+	context = {'columns' : columns, 'table' : table, 'pagetitle' : 'All Grading Conflicts'}
 	return render(request, "table-only.html", context)
 @staff_member_required
 def view_conflicts_own(request):
-	columns, table = _get_ev_table(request, He.models.Verdict.objects\
+	columns, table = _get_vtable(request, He.models.Verdict.objects\
 			.filter(is_valid=False, problem__exam__is_ready = True,
 				evidence__user = request.user) )
 	context = {'columns' : columns, 'table' : table, 'pagetitle' : 'Own Grading Conflicts'}
