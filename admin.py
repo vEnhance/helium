@@ -54,11 +54,11 @@ class ExamAdmin(admin.ModelAdmin):
 
 @admin.register(He.models.Problem)
 class ProblemAdmin(admin.ModelAdmin):
-	list_display = ('__unicode__', 'weight', 'allow_partial', 'id')
+	list_display = ('id', 'exam', 'problem_number', 'weight', 'allow_partial')
 
 @admin.register(He.models.ExamScribble)
 class ExamScribbleAdmin(admin.ModelAdmin):
-	list_display = ('__unicode__', 'exam', 'entity', 'id')
+	list_display = ('id', 'exam', 'entity')
 	inlines = (ProblemScribbleInline,)
 
 @admin.register(He.models.Verdict)
@@ -68,7 +68,7 @@ class VerdictAdmin(admin.ModelAdmin):
 
 @admin.register(He.models.ProblemScribble)
 class ProblemScribbleAdmin(admin.ModelAdmin):
-	list_display = ('__unicode__', 'id', 'verdict', 'examscribble', 'last_sent_time')
+	list_display = ('id', 'verdict', 'examscribble', 'last_sent_time')
 
 @admin.register(He.models.Evidence)
 class EvidenceAdmin(admin.ModelAdmin):
@@ -79,9 +79,9 @@ class AlphaAdmin(admin.ModelAdmin):
 	list_display = ('entity', 'cached_alpha', 'id')
 
 @admin.register(He.models.GutsScoreFunc)
-class AlphaAdmin(admin.ModelAdmin):
+class GutsScoreFuncAdmin(admin.ModelAdmin):
 	list_display = ('problem_number', 'description', 'answer', 'problem_help_text')
 
 @admin.register(He.models.EntirePDFScribble)
-class AlphaAdmin(admin.ModelAdmin):
+class EntirePDFAdmin(admin.ModelAdmin):
 	list_display = ('name', 'is_done')
