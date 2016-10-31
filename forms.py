@@ -46,16 +46,28 @@ class EntityExamSelectForm(forms.Form):
 	"""Picks any exam (even one not marked ready) and any entity"""
 	exam = forms.ModelChoiceField(label = "Select exam",
 			queryset = He.models.Exam.objects.all())
-	entity = forms.ModelChoiceField(label = "Select entity",
-			queryset = He.models.Entity.objects.all())
+	team = forms.ModelChoiceField(label = "Select team", required = False,
+			queryset = He.models.Entity.teams.all(),
+			help_text = "Specify the team to look up. Ignored for individual exams.")
+	mathlete = forms.ModelChoiceField(label = "Select mathlete", required = False,
+			queryset = He.models.Entity.mathletes.all(),
+			help_text = "Specify the mathlete to look up. Ignored for team exams.")
 	def clean(self):
 		data = super(EntityExamSelectForm, self).clean()
+		if not self.is_valid():
+			return
 		exam = data['exam']
-		entity = data['entity']
-		if entity.is_team is True and exam.is_indiv is True:
-			self.add_error('entity', "Not compatible (team taking indiv exam)")
-		if entity.is_team is False and exam.is_indiv is False:
-			self.add_error('entity', "Not compatible (indiv taking team exam)")
+		if exam.is_indiv is True:
+			entity = data['mathlete']
+			if entity is None:
+				self.add_error('mathlete', "Need to specify mathlete for %s" %exam)
+				return
+		else:
+			entity = data['team']
+			if entity is None:
+				self.add_error('team', "Need to specify team for %s" %exam)
+				return
+		self.cleaned_data['entity'] = entity
 
 class UploadScanForm(forms.Form):
 	"""Takes an exam and a PDF scan of several pages"""
