@@ -33,8 +33,6 @@ from django.contrib.auth import models as auth
 from django.core.exceptions import ValidationError
 import logging
 import collections
-from django.db.models import Sum
-
 
 # Originally referenced registration models,
 # but it seemed cleaner to just create a copy of the data here,
