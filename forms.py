@@ -44,12 +44,12 @@ class ExamScanSelectForm(forms.Form):
 
 class EntityExamSelectForm(forms.Form):
 	"""Picks any exam (even one not marked ready) and any entity"""
-	exam = forms.ModelChoiceField(label = "Select exam",
+	exam = forms.ModelChoiceField(label = "Exam",
 			queryset = He.models.Exam.objects.all())
-	team = forms.ModelChoiceField(label = "Select team", required = False,
+	team = forms.ModelChoiceField(label = "Team", required = False,
 			queryset = He.models.Entity.teams.all(),
 			help_text = "Specify the team to look up. Ignored for individual exams.")
-	mathlete = forms.ModelChoiceField(label = "Select mathlete", required = False,
+	mathlete = forms.ModelChoiceField(label = "Mathlete", required = False,
 			queryset = He.models.Entity.mathletes.all(),
 			help_text = "Specify the mathlete to look up. Ignored for team exams.")
 	def clean(self):
@@ -72,7 +72,7 @@ class EntityExamSelectForm(forms.Form):
 class UploadScanForm(forms.Form):
 	"""Takes an exam and a PDF scan of several pages"""
 	exam = forms.ModelChoiceField(
-			label = "Select exam",
+			label = "Exam",
 			queryset = He.models.Exam.objects.filter(is_ready=True, is_scanned=True),
 			help_text = "Please, please, PLEASE check this is right!")
 	pdf = forms.FileField(label = "Upload PDF",
@@ -177,10 +177,12 @@ class ExamScribbleMatchRobustForm(forms.Form):
 
 		if self.exam.is_indiv:
 			self.fields['entity'] = forms.ModelChoiceField(\
-					queryset = He.models.Entity.mathletes.all())
+					queryset = He.models.Entity.mathletes.all(),
+					label = "Mathlete")
 		else:
 			self.fields['entity'] = forms.ModelChoiceField(\
-					queryset = He.models.Entity.teams.all())
+					queryset = He.models.Entity.teams.all(),
+					label = "Team")
 
 		# TODO it would be nice if there was an easy way
 		# to filter for mathletes / teams which aren't already matched
