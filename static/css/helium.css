@@ -43,8 +43,8 @@ input::-webkit-inner-spin-button {
 }
 input[type='number'] {
 	-moz-appearance: textfield;
-	width: 60px;
-	height: 9px;
+	width: 180px;
+	height: 24px;
 }
 
 /* Autocomplete full length */
