@@ -1,0 +1,78 @@
+\chapter{Instructions for Helium administrator}
+Here are some tasks you need to do to set up Helium
+to work before the tournament.
+
+\section{Create the exams}
+You need to produce the exams.
+Remember to input colors corresponding to how the answer sheets will be tinted.
+
+Right now the only way to do this is in the Django admin by hand,
+but eventually we will support importing these from HMMT Problems database.
+Sorry, this is a pain, I know.
+
+\section{Import entities from registration}
+In Babbage a command called ``import entities from reg'' will do this for you.
+It is careful, and will never import the same entity twice.
+
+\section{Printing and checking scans}
+You should make sure that a large number of answer sheets are printed,
+and in different colors between tests to avoid errors.
+
+Unfortunately, right now the scan regions (i.e.\ the cut-outs)
+are hard-coded into \verb+scanimage.py+.
+So before the tournament you should check the scanners being used
+and verify that the cut-out regions are compatible with the scanner.
+
+The file \verb+scanimage.py+ has a facility to make this easier.
+If you run
+\begin{center}
+\verb+python /path/to/scanimage.py FILENAME.pdf+
+\end{center}
+then it will generate (in the current directory)
+the images corresponding to the cut-outs.
+Thus you can test this locally and make adjustments to the regions if needed.
+
+\section{Test data}
+\subsection{Location}
+Some test data has been provided for you.
+You can look for it in the following places:
+\begin{itemize}
+	\ii \verb+:/helium/static/batchX-samplescans.pdf+
+	\ii \verb+:/helium/static/batchY-samplescans.pdf+
+	\ii \verb+:/helium/fixtures/*+
+\end{itemize}
+The easiest thing to do is to load the two fixtures in the ``setup'' directory,
+which will populate the exams and entities tables.
+The sample scans correspond exactly to the entities in these fixtures.
+
+You can also load fixtures in the \verb+:/helium/fixtures/scenarios+ directly
+which are snapshots of the entire database at various points in time
+in the test run
+(after matching exams, after grading, after algorithmic scoring, etc.).
+But note that the \verb+/media/+ folder is NOT included.
+
+\emph{Warning}: the scenarios folder contains a superuser
+with name and password ``evan''
+as well as a staff user with name and password ``staff1''.
+Consequently, be careful to NOT run these on production,
+as we will then have some very insecure user accounts!
+
+\subsection{Synopsis of test data}
+Synopsis of test data:
+
+\begin{itemize}
+\ii There is a single scan-based exam, called ``GEO!'',
+and there is a single non-scanned exam, called ``Mock IMO''.
+The former is $10$ problems scored algorithmically.
+The latter is $3$ problems worth $7$ points each.
+
+\ii There are $16$ mathletes split into three teams of five,
+corresponding to characters from \emph{L\'es Miserables},
+\emph{Wicked}, and the \emph{Phantom of the Opera},
+plus one unaffiliated individual named ``Evan Chen''.
+
+\ii The two sample batches contain all their ``GEO!'' exams.
+The answers to that exam corresponding exactly to the real answers
+to the HMMT February 2016 Geometry test.
+\end{itemize}
+

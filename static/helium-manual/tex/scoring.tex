@@ -1,0 +1,231 @@
+\chapter{HMMT Algorithmic Scoring Details}
+\section{Synopsis}
+\subsection{Input}
+Each exam contains at least one \textbf{problem}.
+The exams are taken by several \textbf{contestants}.
+
+This algorithm takes several \textbf{observations}:
+i.e.\ it takes as inputs pairs $(c,p)$ of contestants and problems,
+and for each such pair is told whether or not $c$ \textbf{solved} $p$.
+During the actual tournament, every problem is attempted by every contestant;
+however, the algorithm will not use this assumption.
+
+\subsection{Output}
+Based on this, the algorithm outputs:
+\begin{itemize}
+	\ii An \textbf{strength} $\alpha_c \in [0,\infty)$ for each competitor $c$, and
+	\ii A \textbf{weight} $\beta_p \in [3,8]$ for each problem $p$,
+	which represents its difficulty.
+\end{itemize}
+Note that the strength is \emph{not} the same as the score of a contestant.
+In particular, as described below,
+each contestant is given a single strength value across all exams.
+
+\subsection{Usage in contest}
+The calculation at the actual HMMT is done in one pass.
+For example, at HMMT February 2016, there were three exams with $10$ problems
+each and $700$ contestants.
+Thus there were $700 \cdot 10 \cdot 3 = 21000$ observations as input.
+Note that the algorithm is applied only once!
+For example the observations on the Algebra test
+affect the weights of the Geometry test.
+
+For each particular 10-problem \textbf{exam},
+the \textbf{score} of a contestant on that exam is the sum of the 
+difficulties $\beta_p$ for each problem that they solve.
+The score of a contestant is used to determine their rankings
+within each individual test.
+Scores across different exams are not comparable.
+
+For individual sweepstakes, the strength $\alpha_c$ is used instead
+(in order to ensure that no particular exam dominates
+in determining the aggregate individual score).
+Contestants are ranked based on the value of $\alpha_c$ assigned to them.
+When determining team sweepstakes,
+the individual contribution (out of $800$)
+is proportional to the sum of $\alpha_c$ across the team members $c$,
+scaled so that the strongest teams earns the maximal $800$ points.
+
+\section{Design}
+\subsection{Advantages}
+The scoring algorithm is designed to meet the following criterion:
+\begin{itemize}
+	\ii The system provides a careful way to
+	\textbf{compare scores across tests},
+	leading to less noise in the aggregate individual
+	and team rankings.
+
+	\ii The system \textbf{factors all possible inputs},
+	rather than for example merely the top 10 contestants or otherwise,
+	as occurred in previous HMMT tournaments.
+
+	\ii The system is \textbf{resistant to preconceived difficulty}.
+	Originally, problem czars were forced to estimate the difficulty
+	of every problem by assigning it a weight;
+	this leads to possible noise in the results.
+	The algorithmic system determines the difficulty based on the actual performance.
+
+	\ii The system is \textbf{hard to exploit},
+	in part because it takes inputs from all contestants,
+	and in part because it is so complicated
+	that a contestant is probably better off thinking about
+	the exam problems.
+\end{itemize}
+
+\subsection{Qualitative criteria}
+The following additional criteria are satisfied:
+\begin{itemize}
+	\ii The strength of each contestant is nonnegative,
+	\ii The strength of a contestant is unbounded,
+	but not infinite even if they solve every problem.
+	\ii The strength of a contestant is zero
+	if they solve no problems.
+	\ii Problem weights lie in the interval $(3,8)$.
+	\ii The distribution functions are smooth.
+\end{itemize}
+
+\subsection{Choice of priors}
+In light of this, we select the following parameters,
+which describe how the $\alpha_c$ and $\beta_p$ should be interpreted.
+\begin{itemize}
+	\ii The strength $\alpha = \alpha_c$ of each contestant
+	$c$ is \emph{a priori} distributed in $[0,\infty)$
+	according to
+	\begin{equation}
+		\mathbf P(\alpha) = \exp(-\alpha).
+		\label{eq:cprior}
+	\end{equation}
+	\ii The weight (difficulty) $\beta = \beta_p$ of each problem $p$ is
+	\emph{a priori} distributed in $[3,8]$ according to 
+	\begin{equation}
+		\mathbf P(\beta) = \exp\left( \frac{5}{(\beta-3)(8-\beta)} \right).
+		\label{eq:wprior}
+	\end{equation}
+\end{itemize}
+Now we relate the strength $\alpha = \alpha_c$ of contestant $c$
+to the difficulty $\beta = \beta_p$ of problem $p$ by
+postulating that the probability that $c$ solves $p$ is
+\begin{equation}
+	\mathbf P
+	\left( \text{$c$ solves $p$} 
+	\mid \alpha_c = \alpha \text{ and } \beta_p = \beta \right)
+	= \frac{\exp(-\beta/\alpha)}{1 + \exp(-\beta/\alpha)}.
+	\label{eq:prob}
+\end{equation}
+Assuming \eqref{eq:cprior}, \eqref{eq:wprior}, \eqref{eq:prob}
+and holding fixed the set of observations of the tournament:
+\begin{quote}
+\itshape
+The algorithm outputs the unique set of $\alpha_c$ and $\beta_p$
+for which the outcome of the tournament was most likely.
+\end{quote}
+The rest of the document describes how to actually compute
+the maximum.
+
+\section{Algorithm Description}
+The algorithm is a slightly modified version of the Rasch model.
+
+\subsection{Pseudocode}
+Let us for brevity denote the function in \eqref{eq:prob} by 
+\[ w(\alpha, \beta) \defeq \frac{\exp(-\beta/\alpha)}{1 + \exp(-\beta/\alpha)}. \]
+Note that $w(\alpha, \beta) \in (0,1)$,
+
+Now consider the following systems of equations,
+whose origin we explain below.
+First, for every $\alpha = \alpha_c$ we have the equation
+\begin{equation}
+	0 = -1 + \sum_{\text{$p$ solved by $c$}} \beta_p\alpha^{-2}
+		- \sum_{\text{$p$ took by $c$}} \beta_p \alpha^{-2} w(\alpha, \beta_p).
+	\label{eq:alpha}
+\end{equation}
+Moreover, for every $\beta = \beta_p$ we have the equation
+\begin{equation}
+	0 = \frac{1}{(\beta-3)^2} - \frac{1}{(8-\beta)^2}
+		+ \sum_{\text{$c$ taken by $p$}} \alpha_c^{-1} w(\alpha_c, \beta)
+		- \sum_{\text{$c$ solved by $p$}} \alpha_c\inv.
+	\label{eq:beta}
+\end{equation}
+The algorithm binary searches for a set of $\vec\alpha$ and $\vec\beta$
+which simultaneously satisfy \eqref{eq:alpha} and \eqref{eq:beta}.
+It is proved below that this set of parameters is unique;
+this is the output of the algorithm.
+
+
+\subsection{Derivation}
+We show the derivation of equations \eqref{eq:alpha} and \eqref{eq:beta}.
+
+Fix a set of observations for the tournament.
+Now consider a choice of $\vec\alpha$ and $\vec\beta$ is known.
+Then the probability of the observations is distributed according to
+\begin{equation}
+	F( \vec\alpha, \vec\beta )
+	= \prod_{c} \mathbf P(\alpha_c)
+	\prod_{p} \mathbf P(\beta_p)
+	\prod_{\text{$c$ solved $p$}} w(\alpha_c, \beta_p)
+	\prod_{\text{$c$ missed $p$}} (1-w(\alpha_c, \beta_p))
+	\label{eq:F}
+\end{equation}
+assuming the events are independent.
+
+We now claim that:
+\begin{proposition}
+	If a choice of $\vec\alpha$ and $\vec\beta$ optimizes $F$,
+	then it is a solution to \eqref{eq:alpha} and \eqref{eq:beta}.
+	In other words, the outputted $\vec\alpha$ and $\vec\beta$
+	are those for which the observed outcome was most probable.
+\end{proposition}
+
+\begin{proof}
+	Note that
+	\[
+		\prod_{\text{$c$ solved $p$}} w(\alpha_c, \beta_p)
+		\prod_{\text{$c$ missed $p$}} (1-w(\alpha_c, \beta_p))
+		=
+		\prod_{\text{$c$ solved $p$}} e^{-\beta_p/\alpha_c}
+		\prod_{\text{$c$ took $p$}} \frac{1}{1+e^{-\beta_p/\alpha_c}}.
+	\]
+	From this, and plugging in \eqref{eq:cprior} and \eqref{eq:wprior}, we get
+	\[
+		F(\vec\alpha, \vec\beta)
+		= \prod_{c} e^{-\alpha_c}
+		\prod_{p} e^{-\frac{5}{(8-\beta_p)(\beta_p-3)}}
+		\prod_{\text{$c$ solved $p$}} e^{-\beta_p/\alpha_c}
+		\prod_{\text{$c$ took $p$}} \frac{1}{1+e^{-\beta_p/\alpha_c}}.
+	\]
+	It is equivalent to maximize $\log F$, which is
+	\[
+		\log F
+		= -\sum_{c} \alpha_c
+		- \sum_{p} \frac{5}{(8-\beta_p)(\beta_p-3)}
+		- \sum_{\text{$c$ solved $p$}} \frac{\beta_p}{\alpha_c}
+		+ \sum_{\text{$c$ took $p$}} \log\frac{1}{1+e^{-\beta_p/\alpha_c}}.
+	\]
+	Then right-hand sides of \eqref{eq:alpha} and \eqref{eq:beta}
+	are the \emph{partial derivatives} of $\log F$ with respect
+	to $\alpha_c$ and $\beta_p$ for each $c$ and $p$.
+	The partial derivatives equal zero at any local maximum of $\log F$,
+	as desired.
+\end{proof}
+
+In fact, one can actually check that the right-hand sides of 
+\eqref{eq:alpha} and \eqref{eq:beta}
+are monotonic in $\alpha$ and $\beta$ respectively.
+Consequently, $F$ is convex.
+This implies:
+\begin{proposition}
+	The function $\log F$ has a unique point at which all partial
+	derivatives vanish, and that point is a maximum for $F$.
+\end{proposition}
+
+This also implies that one can numerically solve the equations
+by the following binary search procedure.
+We let $\vec\alpha_0$ be an arbitrary point.
+Then we let $\vec\beta_n$ be the solution to \eqref{eq:beta} given $\vec\alpha_{n-1}$.
+Notice that one can actually solve for each component $\beta_p$
+using binary search separately,
+as each equation of the form \eqref{eq:beta} involves only a single $\beta_p$.
+Similarly, we can let $\vec\alpha_n$ be the solution to \eqref{eq:alpha}
+given $\vec\beta_{n-1}$ in the same fashion.
+The pairs $(\vec\alpha_n, \vec\beta_n)$ will converge to the maximum
+since we are looking at partial derivatives of a concave function,
+so we now have an iterative procedure for computing the output.

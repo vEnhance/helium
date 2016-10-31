@@ -1,0 +1,89 @@
+\chapter{Notes for software team}
+This contains low-level technical notes on some of the non-obvious
+moving parts behind the whole system.
+This is intended to help you extend Helium in some way.
+
+Most of the code I tried to comment or \verb+help_text+ well.
+But if anything is still confusing, that's probably my fault.
+Feel free to contact me at \texttt{chen.evan6@gmail.com}.
+
+\section{Personal request}
+I have a personal request before you start editing,
+which is that my name remains intact in \texttt{LICENSE.txt},
+this documentation, and other places (for example file headers).
+You are free of course to add your own name
+should you make substantial contributions.
+
+The reason I ask this is because this system represents
+well over $100$ volunteered hours of my free time
+pooled into over $300$ commits.
+I built the entire system from scratch with no assistance from anyone else.
+Since I didn't collect any payment for this work,
+the least I ask is that I am recognized for it.
+
+Thanks!
+
+\section{Moving parts}
+When possible I tried to keep everything in Helium 
+self-contained, not relying on even files outside the directory.
+
+\subsection{Helium dependencies}
+Here is a partial list of things externally that Helium relies on;
+it may be incomplete.
+All this is at time of writing;
+other people move things around all the time so God knows
+if we will even have \texttt{core/settings.py} in a few years.
+
+\begin{itemize}
+	\ii \texttt{requirements.txt} in the root directory
+	has some Helium specific additions.
+	In particular \texttt{wand} which does image processing in Python.
+
+	\ii Helium needs to host its media on an external S3 server,
+	because scan images need to be distributed.
+	So currently I have an S3 bucket called \texttt{heliummedia}.
+	The connection is in \texttt{core/settings.py},
+	The S3 bucket itself lives inside AWS along with the entire HMMT application.
+
+	\ii Image installation is done through the EB extension \texttt{01yum}.
+	This installs \texttt{imagemagick}, \texttt{freetype}, \texttt{ghostscript},
+	which is used for the image processing.
+	
+	\ii \texttt{core/settings.py} should also have some basic applications
+	installed, such as
+	\begin{itemize}
+		\ii 'django.contrib.admin',
+		\ii 'django.contrib.auth',
+		\ii 'django.contrib.sessions',
+		\ii 'django.contrib.messages',
+		\ii 'django.contrib.staticfiles',
+		\ii 'storages'.
+	\end{itemize}
+\end{itemize}
+
+\subsection{Things depending on Helium}
+\begin{itemize}
+	\ii The Guts scoreboard reads its data from Helium.
+	So if you make changes to Helium, check there too.
+	
+	\ii Registration import into Helium, as described before.
+\end{itemize}
+
+\subsection{Other nice things to know}
+Some not terribly Helium-specific things, but you should still know:
+\begin{itemize}
+	\ii Logging configuration (not specific to Helium, but nice!)
+	is done by the EB extension \texttt{00logging}
+	and configured in \texttt{core/settings.py}.
+	
+	\ii Not Helium-specific, but the EB extension \texttt{05managepy}
+	is responsible for running \texttt{collectstatic} and \texttt{migrate}.
+\end{itemize}
+
+\section{A wishlist}
+Some possible to-do things to do:
+\begin{itemize}
+	\ii Image processing: auto align scan regions and cut-outs.
+	\ii Auto import exams from HMMT Problems Database.
+	\ii Proof grading (long shot).
+\end{itemize}

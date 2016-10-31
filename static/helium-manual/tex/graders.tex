@@ -1,0 +1,134 @@
+\chapter{Instructions for Graders}
+This details the tasks which should be performed by day-of graders.
+Most graders will only need to read this chapter of the manual
+(and maybe the terminology section).
+
+The two functions that you care about are ``Grade Scans''
+and ``Classical Grader''
+
+\section{Scan grading}
+This is pretty self-explanatory.
+
+\begin{center}
+	\includegraphics[width=0.8\textwidth]{images/scangrade.png}
+\end{center}
+
+%To do this, you should select a problem from the landing page,
+%which will open the scan grader for that page.
+\begin{itemize}
+	\ii Try to select one of the $10$ problems from an exam at random,
+	so that we don't end up with everyone problem $1$ or something.
+	\ii For all-or-nothing problems,
+	type $0$ for an incorrect answer and $1$ for a correct answer.
+	\ii Press ``go back'' if you made a mistake and want to fix it.
+\end{itemize}
+
+There is also an option ``view full scan'' if you need
+to see the entire paper (because for example the problem is cut off somehow).
+
+It's possible that you might have some problems
+where scores entered are not just $0$ or $1$.
+That's fine too.
+
+The option ``ludicrous speed'' is enabled by default (checkbox above),
+as long as the problem you are grading is not all-or-nothing).
+This means that you don't have to press enter.
+If you prefer to take things more slowly,
+or for some reason the problem you are grading accepts
+scores other than $0$ or $1$,
+you should disable this option.
+
+If configured, the background of the page may be tinted
+with the color of the test, so that you don't accidentally grade
+the wrong test.
+
+\section{Classical grader}
+Most importantly:
+\emph{do not use the classical grader on problems graded by scan}!
+(The interface disables this by default.)
+
+\begin{center}
+	\includegraphics[width=0.8\textwidth]{images/classicgrade.png}
+\end{center}
+
+Use the classical grader for tests which are not graded by scan
+(for example, the Guts round).
+There are two ways you can do this:
+\begin{itemize}
+	\ii Grade by exam, meaning you are grading many problems on that exam.
+	\ii Grade by problem, meaning that you are only grading 
+	a particular problem (for example a February proof-based team round problem).
+\end{itemize}
+Afterwards, this is self-explanatory;
+select the entity you want, enter their scores, and submit!
+
+This time, Helium will warn you if you are submitting
+a score that goes against a consensus for that problem
+(for example if Alice enters 1 and then Bob tries to enter 0 later,
+Helium will warn Bob).
+If you are confident you are correct, you can use the override option.
+However ideally when this happens you should find the person
+who submitted the wrong answer before and check with them first.
+
+Whenever you select an entity,
+the scores you previously entered for that
+entity will be automatically displayed.
+
+If configured, the background of the page may be tinted
+with the color of the test, so that you don't accidentally grade
+the wrong test.
+
+\section{Guts round}
+\begin{itemize}
+	\ii Guts round scoring is done using the classical grader.
+	\ii For the ``estimation problems'' you will have to compute the score
+	to assign to the problems at the end.
+	So a ``Guts estimation calculator'', self-explanatory,
+	has been provided.
+	\ii The old Babbage Guts scoreboard should still be working
+	(it now pulls data from Helium).
+\end{itemize}
+
+\section{Viewing conflicts}
+You can see any evidences you submitted which conflicted with other graders
+by pressing ``View Your Grading Conflicts''.
+This allows you to also open any particular verdict,
+and change your decision on it.
+
+\begin{center}
+	\includegraphics[width=0.8\textwidth]{images/viewconflict.png}
+\end{center}
+\begin{center}
+	\includegraphics[width=0.7\textwidth]{images/viewverdict.png}
+\end{center}
+
+This shouldn't really be necessary for scan grading,
+because verdicts are settled with a sufficiently large majority vote anyways.
+That is, if you mis-grade a scan, it will eventually sort itself out.
+
+\section{Progress grading}
+There are some progress reports on how far grading is going for each problem.
+You can use this if you're not sure which problems needs more help.
+(Officers may also use this so they can panic as they see things aren't getting done,
+or something like that.)
+
+\begin{center}
+	\includegraphics[width=0.8\textwidth]{images/progress.png}
+\end{center}
+
+\section{Sneak peek at results}
+Some of you may be curious at how teams or students are doing.
+While I can't endorse this, the interface lets you do so:
+you can poke around the results page,
+or look up student papers, etc.
+
+If you do look through this, note that:
+\begin{itemize}
+	\ii Nothing you see is final, and
+	\ii All results are confidential.
+\end{itemize}
+
+\section{Do not use ``Match Scans'' or ``Upload Scans''}
+Unless instructed to do so.
+Instructions for this are provided in the next chapter,
+because ideally they should mostly be done by superusers.

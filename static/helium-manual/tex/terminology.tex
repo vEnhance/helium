@@ -1,0 +1,103 @@
+\chapter{Terminology}
+
+The grading system is itself known by the name \vocab{Helium}.
+Each event will be referred to as a \vocab{contest}.
+
+\section{Participants}
+In each contest there are several participants.
+The students are referred to as \vocab{mathletes}.
+These students are often grouped into \vocab{teams}.
+A mathlete may have no team; in this case we say they
+are an \vocab{unaffiliated individual},
+or sometimes just ``individual'' for short although this is confusing.
+
+An \vocab{entity}\footnote{
+	This abstraction is useful because an exam doesn't care so much who takes it.}
+refers to someone,
+either a mathlete or a team,
+who takes an exam.
+
+A \vocab{user} refers to a staff member of the contest
+(not a student or coach).
+A \vocab{superuser} refers to a higher-level administrator of the contest;
+for example a head grader, or problem czar,
+or tournament director, or software director.
+To be more exact this is the set of users with administrative
+privileges on the Django website.
+
+\section{Exams and problems}
+A contest consists of several \vocab{exams}\footnote{
+	Helium deliberately avoids the word ``test'',
+	since this may be confused with ``testing'' and so on},
+each of which has several \vocab{problems},
+which are numbered $1$, $2$, \dots, $n$ in each exam.
+These exams are \vocab{taken} by entities,
+who must attempt to solve the problems on the exam.
+
+A problem has the following properties:
+\begin{itemize}
+	\ii The problem has a \vocab{weight},
+	which is the number of points a contestant earns for solving it.
+
+	\ii The problem may allow \vocab{partial} marks,
+	or it may be an ``all-or-nothing'' problem.
+\end{itemize}
+Exams may be ``individual'' or ``team'' exams,
+depending on which types of entities take them.
+
+\section{Scans}
+A \vocab{problem scribble} refers to the scan
+of a contestant's answer to a problem.
+An \vocab{exam scribble} refers to the scan
+of a contestant's entire answer sheet for an exam.
+You won't see these two terms much in the user interface,
+but they are used internally in the source code just about everywhere.
+
+A \vocab{paper} refers to the set of answers for
+a contestant to any given exam,
+regardless of whether the paper was fed into a scanner or not.
+
+\section{Grading}
+Suppose an entity $E$ attempts a problem $P$,
+Helium then needs to give a \vocab{verdict} to the pair $(E,P)$,
+which consists of a score assigned to the pair $(E,P)$.
+This represents the judgment handed down by Helium to $E$
+for this problem $P$.
+
+To generate this verdict,
+one or more users will input a score for the pair $(E,P)$.
+Each such score by a grader is termed an \vocab{evidence}
+contributing towards the verdict,
+and we say the user \vocab{submits} this evidence.
+The verdict is \vocab{valid} if there is a clear consensus what the final
+score should be (by default this is at least a 3-to-1 majority,
+but this may be adjusted per exam).
+The verdict is \vocab{done} once it is valid and there is enough evidence.
+
+There is one possible exception:
+super-users may submit a evidence in \vocab{God mode}.
+When this occurs, it overrides any and all evidence submitted by regular users.
+
+\section{Algorithmic scoring}
+At HMMT a complex algorithm is used for assigning
+the weights to the individual tests.
+Details of this algorithm are available at
+\begin{quote}
+	\url{https://www.hmmt.co/static/scoring-algorithm.pdf}
+\end{quote}
+A copy of this algorithm is also included in an appendix
+at the end of this document.
+
+Let $\mathcal A$ be the set of exams scored using this algorithm.
+Each problem on an exam in $\mathcal A$
+obtains a weight which is called a \vocab{beta value},
+denoted $3 \le \beta \le 8$.
+Moreover, each entity taking one or more exams in $\mathcal A$
+is then assigned an \vocab{alpha value},
+which represents their strength, and is denoted $\alpha \in [0,\infty)$.
+These $\alpha$ and $\beta$ values are stored in database,
+since they are quite hard to compute.
+
+At HMMT the alpha values are used to aggregate individual scores
+across all tests, and thus used to rank individuals.
+

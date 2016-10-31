@@ -1,0 +1,51 @@
+\documentclass[11pt]{scrreprt}
+\usepackage[sexy, titlemark]{evan}
+
+\begin{document}
+\title{Helium User Manual}
+\subtitle{Harvard-MIT Math Tournament}
+\author{Evan Chen}
+\date{\today}
+\maketitle
+
+\begin{abstract}
+	Helium is a grading system for math contests.
+	It was developed for HMMT in October of 2016 following inspiration
+	from the Stanford Math Tournament's new Atomic Grader.
+
+	Helium is built using Django to be compatible with
+	HMMT's then-existing structure.
+	It features scan-based grading, a rapid-fire score input system,
+	as well as support for direct score entry.
+	Conflict resolution is handled automatically,
+	as well as generating of results according to the
+	HMMT scoring algorithm.
+	The Django admin interface is built in.
+
+	This documentation is split into several parts.
+	Chapters are dedicated to graders (day-of volunteers),
+	officers (trusted staff members with extra responsibilities),
+	system administrators (who need to set up the system before the tournament),
+	and finally other developers (who wish to play with code),
+	with each section more technical and detailed than the last.
+
+	The appendix consists of a list of terminology which
+	will be used throughout the manual.
+
+	\begin{center}
+		\includegraphics[width=0.99\textwidth]{../img/balloons.png}
+	\end{center}
+\end{abstract}
+
+\tableofcontents
+
+\include{tex/graders}
+\include{tex/officers}
+\include{tex/setup}
+\include{tex/software}
+
+\appendix
+\include{tex/terminology}
+\include{tex/scoring}
+
+\end{document}
