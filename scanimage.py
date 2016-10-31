@@ -138,7 +138,7 @@ if __name__ == "__main__":
 	else:
 		filename = sys.argv[1]
 		with open(filename) as pdf:
-			sheets = get_answer_sheets(pdf)
+			sheets = get_answer_sheets(pdf, "example")
 			a = next(sheets) # answer sheet 1 only
 
 			saveDjangoFile(a.get_full_file())
