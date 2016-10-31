@@ -207,7 +207,7 @@ def match_papers(request, exam_id):
 		else: # validation errors
 			context = {
 					'form' : form,
-					'examscribble' : examscribble,
+					'scribble' : examscribble,
 					'exam' : exam,
 					}
 			return render(request, "match-papers.html", context)
@@ -219,7 +219,6 @@ def match_papers(request, exam_id):
 		context = {
 				'form' : None,
 				'scribble' : None,
-				'scribble_url' : DONE_IMAGE_URL,
 				'exam' : exam,
 				}
 	else:
@@ -229,7 +228,6 @@ def match_papers(request, exam_id):
 		context = {
 				'form' : form,
 				'scribble' : examscribble,
-				'scribble_url' : examscribble.name_image.url,
 				'exam' : exam,
 				}
 	return render(request, "match-papers.html", context)
