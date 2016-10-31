@@ -18,6 +18,12 @@ img.scan {
 	margin-bottom: 4px;
 }
 
+span.answer {
+	color: green;
+	font-weight: bold;
+	font-size: 18pt;
+}
+
 div.scanstage {
 	clear: both;
 }
