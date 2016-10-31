@@ -19,9 +19,9 @@ img.scan {
 }
 
 span.answer {
-	color: green;
-	font-weight: bold;
-	font-size: 18pt;
+	color: #006600; /* dark-ish green */
+	font-size: 140%;
+	background: white;
 }
 
 div.scanstage {

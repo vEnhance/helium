@@ -138,7 +138,8 @@ class ExamGradingRobustForm(forms.Form):
 			else:
 				kwargs['help_text'] = ""
 			if problem.answer.strip() != '':
-				kwargs['help_text'] = 'Answer is %s. ' %problem.answer + kwargs['help_text']
+				kwargs['help_text'] = 'Answer is <span class="answer">%s</span>. ' \
+						%problem.answer + kwargs['help_text']
 			self.fields['p' + str(n)] = forms.IntegerField(**kwargs)
 		self.fields['force'] = forms.BooleanField(
 				label = 'Override',

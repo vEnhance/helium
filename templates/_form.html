@@ -37,7 +37,7 @@ has_upload: a Boolean, if true, enctype="multipart/form-data" is set
 		<td class="field-tag">
 			{{ field }}
 			{% if field.help_text %}
-			<span class="helptext">{{ field.help_text }}</span>
+			<span class="helptext">{{ field.help_text|safe }}</span>
 			{% endif %}
 			{% if field.errors %}
 				<ul class="errorlist">
