@@ -104,7 +104,8 @@ class GradingTestCase(TestCase):
 		self.assertEqual(self.verdict.is_done, True)
 
 	def test_scribble_id(self):
-		es = He.models.ExamScribble.objects.create(exam=self.exam)
+		pdf = He.models.EntirePDFScribble.objects.create(name="scans.pdf")
+		es = He.models.ExamScribble.objects.create(pdf_scribble=pdf, exam=self.exam)
 		ps1 = He.models.ProblemScribble.objects.create(examscribble = es,\
 				verdict = self.verdict)
 		self.assertEqual(self.verdict.entity, None)
