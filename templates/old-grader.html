@@ -8,6 +8,12 @@
 
 <h3>Classical Grader: {{ exam }}</h3>
 
+{% if exam.is_scanned %}
+<p><b>Warning</b>: this exam is supposed to be graded by scan.
+Proceed with utmost caution.
+Do not use this grader unless you know what it does.</p>
+{% endif %}
+
 <p>Enter scores below, using binary scores for all-or-nothing problems.
 Ideally, you should enter all of data,
 but if you leave certain fields blank they will not be processed.</p>
