@@ -118,9 +118,9 @@ def index(request):
 	"""This prints the main landing page helium.html"""
 	context = {
 			'problemscanform' : forms.ProblemScanSelectForm(),
-			'problemform' : forms.ProblemSelectForm(),
-			'examform' : forms.ExamSelectForm(),
 			'examscanform' : forms.ExamScanSelectForm(),
+			'problemform' : forms.ProblemNoScanSelectForm(),
+			'examform' : forms.ExamNoScanSelectForm(),
 			}
 	return render(request, "helium.html", context)
 
@@ -160,7 +160,7 @@ def _old_grader(request, exam, problems):
 def old_grader_exam_redir(request):
 	return _redir_obj_id(request,
 			key = 'exam',
-			form_type = forms.ExamSelectForm)
+			form_type = forms.ExamNoScanSelectForm)
 @staff_member_required
 def old_grader_exam(request, exam_id):
 	exam = He.models.Exam.objects.get(id=int(exam_id))
@@ -171,7 +171,7 @@ def old_grader_exam(request, exam_id):
 def old_grader_problem_redir(request):
 	return _redir_obj_id(request,
 			key = 'problem',
-			form_type = forms.ProblemSelectForm)
+			form_type = forms.ProblemNoScanSelectForm)
 @staff_member_required
 def old_grader_problem(request, problem_id):
 	problem = He.models.Problem.objects.get(id=int(problem_id))

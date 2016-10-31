@@ -24,8 +24,14 @@ class ProblemSelectForm(forms.Form):
 			label = "Select problem",
 			queryset = He.models.Problem.objects\
 					.filter(exam__is_ready=True))
+class ProblemNoScanSelectForm(forms.Form):
+	"""Picks a problem marked ready for grading and NOT scanned"""
+	problem = forms.ModelChoiceField(
+			label = "Select non-scanned problem",
+			queryset = He.models.Problem.objects\
+					.filter(exam__is_ready=True, exam__is_scanned=False))
 class ProblemScanSelectForm(forms.Form):
-	"""Lets you pick a problem marked as ready for grading"""
+	"""Lets you pick a problem marked as ready for grading and scanned."""
 	problem = forms.ModelChoiceField(
 			label = "Read scans for problem",
 			queryset = He.models.Problem.objects\
@@ -36,6 +42,11 @@ class ExamSelectForm(forms.Form):
 	exam = forms.ModelChoiceField(
 			label = "Select exam",
 			queryset = He.models.Exam.objects.filter(is_ready=True))
+class ExamNoScanSelectForm(forms.Form):
+	"""Picks an exam marked as ready for grading and NOT scanned."""
+	exam = forms.ModelChoiceField(
+			label = "Select non-scanned exam",
+			queryset = He.models.Exam.objects.filter(is_ready=True, is_scanned=False))
 class ExamScanSelectForm(forms.Form):
 	"""Picks an exam marked as ready for grading and marked for scanning."""
 	exam = forms.ModelChoiceField(
