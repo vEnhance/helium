@@ -9,12 +9,13 @@
 {% block layout-content %}
 <div id="content-container">
 
-<h2>Helium</h2>
-
+<h2>Helium
+(<a href="{% static 'helium-manual/manual.pdf' %}">user manual</a>)</h2>
 <p>
 	This is <b>Helium</b>, brought to you by HMMT 2016-2017 Scripts Team.
 	It is inspired off of Stanford's <a href="http://atomicgrader.com/">Atomic Grader</a>,
 	and named in its honor.
+	Use the link above for user manual.
 </p>
 <hr />
 
@@ -79,28 +80,33 @@
 	<li><a href="/helium/estimation-calc">Guts Estimation Calculator</a></li>
 </ul>
 
-<h4>Information</h4>
-<ul>
-	<li><a href="/helium/find-paper">Find Paper</a></li>
-	<li><a href="/helium/view-conflicts/own/">View Your Conflicts</a></li>
-	{% if request.user.is_superuser %}
-	<li><a href="/helium/view-conflicts/all/">View All Grading Conflicts</a> (admin)</li>
-	<li><a href="/admin/helium/">Admin Interface</a> (admin)</li>
-	{% endif %}
-</ul>
+<h4>View</h4>
+<div class="clearfix">
+	<div class="col-xs-6">
+		<ul>
+		<li><a href="/helium/find-paper">Find Paper</a></li>
+		<li><a href="/helium/view-conflicts/own/">View Your Conflicts</a></li>
+		{% if request.user.is_superuser %}
+			<li><a href="/helium/view-conflicts/all/">View All Conflicts</a> (admin)</li>
+			<li><a href="/admin/helium/">Admin Interface</a> (admin)</li>
+		{% endif %}
+		</ul>
 
-<h4>Results (not realtime)</h4>
-<ul>
-	<li><a href="/helium/progress-problems/">Progress Grading</a></li>
-	<li><a href="/helium/progress-scans/">Progress Matching Scans</a></li>
-	<li><a href="/helium/reports/short/">Print Short Results</a></li>
-	<li><a href="/helium/reports/extended/">Print Extended Results</a></li>
-	<li><a href="/helium/reports/teaser/">Print Teaser</a></li>
-	{% if request.user.is_superuser %}
-	<li><a href="/helium/reports/full/">Print Full Results</a> (admin)</li>
-	<li><a href="/helium/spreadsheet/">Score Spreadsheet</a> (admin)</li>
-	{% endif %}
-</ul>
+	</div>
+	<div class="col-xs-6">
+		<ul>
+		<li><a href="/helium/progress-problems/">Progress Grading</a></li>
+		<li><a href="/helium/progress-scans/">Progress Matching Scans</a></li>
+		<li><a href="/helium/reports/short/">Print Short Results</a></li>
+		<li><a href="/helium/reports/extended/">Print Extended Results</a></li>
+		{# <li><a href="/helium/reports/teaser/">Print Teaser</a></li> #}
+		{% if request.user.is_superuser %}
+			<li><a href="/helium/reports/full/">Print Full Results</a> (admin)</li>
+			<li><a href="/helium/spreadsheet/">Score Spreadsheet</a> (admin)</li>
+		{% endif %}
+		</ul>
+	</div>
+</div>
 
 {% if request.user.is_superuser %}
 <h4>Management Commands</h4>
