@@ -1,6 +1,8 @@
 # This is taken from the old Babbage system
 # The "math" portion of algorithmic scoring is here
 
+# See https://www.hmmt.co/static/scoring-algorithm.pdf for English description
+
 from math import exp, fabs
 from operator import itemgetter
 
