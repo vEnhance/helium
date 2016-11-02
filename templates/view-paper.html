@@ -10,7 +10,8 @@
 {% include "_form.html" with form=matchform submit_name="Match Exam" %}
 
 <h4>Original Scan</h4>
-{% include "_scanstage.html" with examscribble=examscribble image_url=examscribble.full_image.url %}
+<a name="scan"></a>
+{% include "_scanstage.html" with examscribble=examscribble image_url=examscribble.full_image.url is_full=True %}
 
 <h4>Verdicts</h4>
 {% include "_table.html" %}

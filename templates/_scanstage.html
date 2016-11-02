@@ -1,9 +1,12 @@
 <div class="scanstage">
-	<a href="/helium/view-paper/scan/{{ examscribble.id }}" class="scanzoom" target="_blank">
-		(Click here to view full paper)
-	</a>
+	<img class="scan" src="{{ image_url }}" id="scan_img" />
+	{% if is_full %}
 	<a id="rotate_link" class="scanzoom">
 		(Click here to rotate 180 degrees)
 	</a>
-	<img class="scan" src="{{ image_url }}" id="scan_img" />
+	{% else %}
+	<a href="/helium/view-paper/scan/{{ examscribble.id }}/#scan" class="scanzoom" target="_blank">
+		(Click here to view full paper)
+	</a>
+	{% endif %}
 </div>
