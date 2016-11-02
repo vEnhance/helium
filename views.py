@@ -481,8 +481,8 @@ def upload_scans(request):
 		if form.is_valid():
 			pdf_file = request.FILES['pdf']
 			pdf_name = pdf_file.name
-			if not pdf_name.endswith(".pdf"):
-				messages.error(request, "File must be a PDF file.")
+			if not pdf_name.endswith(".pdf") and not pdf_name.endswith(".PDF"):
+				messages.error(request, "File must end with .pdf or .PDF.")
 			elif He.models.EntirePDFScribble.objects.filter(name = pdf_name).exists():
 				messages.error(request, "PDF with name %s was already uploaded. "\
 						"No action taken." % pdf_name)
