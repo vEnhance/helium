@@ -309,35 +309,42 @@ def find_paper(request):
 def view_paper(request, *args):
 	if len(args) == 1: # view-paper/scan/examscribble.id/
 		es = He.models.ExamScribble.objects.get(id = int(args[0]))
+		entity = es.entity
+		exam = es.exam
 	elif len(args) == 2: # view-paper/entity.id/exam.id/
 		entity = He.models.Entity.objects.get(id = int(args[0]))
 		exam = He.models.Exam.objects.get(id = int(args[1]))
 		try:
 			es = He.models.ExamScribble.objects.get(entity=entity, exam=exam)
 		except He.models.ExamScribble.DoesNotExist:
-			columns, table = _get_vtable(request, He.models.Verdict.objects\
-					.filter(entity = entity, problem__exam = exam))
-			context = {'columns' : columns, 'table' : table,
-					'pagetitle' : '%s for %s' %(entity, exam)}
-			return render(request, "table-only.html", context)
+			es = None
 	context = {}
-	context['examscribble'] = es
-	verdicts = He.models.Verdict.objects.filter(problemscribble__examscribble = es)
+	if es:
+		context['title'] = unicode(es)
+		context['examscribble'] = es
+		verdicts = He.models.Verdict.objects\
+				.filter(problemscribble__examscribble = es)
+	else:
+		context['title'] = "%s for %s" %(entity, exam)
+		verdicts = He.models.Verdict.objects\
+				.filter(problem__exam = exam, entity = entity)
 	context['columns'], context['table'] =  _get_vtable(request, verdicts)
-	if request.method == "POST":
-		form = forms.ExamScribbleMatchRobustForm(
-				request.POST, examscribble = es, user = request.user)
-		if form.is_valid(): 
-			prev_entity = form.cleaned_data['entity']
-			messages.success(request, "Matched exam for %s" %prev_entity)
+
+	if es is not None:
+		if request.method == "POST":
+			form = forms.ExamScribbleMatchRobustForm(
+					request.POST, examscribble = es, user = request.user)
+			if form.is_valid():
+				prev_entity = form.cleaned_data['entity']
+				messages.success(request, "Matched exam for %s" %prev_entity)
+				matchform = forms.ExamScribbleMatchRobustForm(\
+						user = request.user, examscribble = es)
+			else:
+				matchform = form
+		else:
 			matchform = forms.ExamScribbleMatchRobustForm(\
 					user = request.user, examscribble = es)
-		else:
-			matchform = form
-	else:
-		matchform = forms.ExamScribbleMatchRobustForm(\
-				user = request.user, examscribble = es)
-	context['matchform'] = matchform
+		context['matchform'] = matchform
 	return render(request, "view-paper.html", context)
 
 @staff_member_required

@@ -1,17 +1,20 @@
 {% extends 'layout-helium.html' %}
 {% load static %}
 
-{% block title %}Helium | View Scan{% endblock %}
+{% block title %}Helium | View Scan: {{ title }}{% endblock %}
 
 {% block layout-content %}
-<h3>{{ examscribble }}</h3>
+<h3>{{ title }}</h3>
 
+{% if examscribble %}
 <h4>Match Exam</h4>
 {% include "_form.html" with form=matchform submit_name="Match Exam" %}
 
 <h4>Original Scan</h4>
 <a name="scan"></a>
 {% include "_scanstage.html" with examscribble=examscribble image_url=examscribble.full_image.url is_full=True %}
+
+{% endif %}
 
 <h4>Verdicts</h4>
 {% include "_table.html" %}
