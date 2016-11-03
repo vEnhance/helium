@@ -183,7 +183,7 @@ def old_grader_problem(request, problem_id):
 	problems = [problem]
 	return _old_grader(request, exam, problems)
 
-## VIEWS FOR SCAN GRADER
+## VIEWS FOR SCAN MATCH
 @staff_member_required
 def match_papers_redir(request):
 	return _redir_obj_id(request,
@@ -217,7 +217,8 @@ def match_papers(request, exam_id):
 			return render(request, "match-papers.html", context)
 
 	# Now we're set, so get the next scribble, or alert none left
-	queryset = He.models.ExamScribble.objects.filter(entity=None, exam=exam)
+	queryset = He.models.ExamScribble.objects.filter\
+			(entity=None, exam=exam, needs_attention=False)
 
 	if len(queryset) == 0:
 		context = {
@@ -316,6 +317,7 @@ def find_paper(request):
 			tr['Entity'] = es.entity
 			tr['Open'] = '<a href="/helium/view-paper/scan/%d">Open</a>' %es.id
 			table.append(tr)
+		context['table'] = table
 	else:
 		context['show_attention'] = False
 		
@@ -415,6 +417,8 @@ def ajax_next_scan(request):
 	scribbles = He.models.ProblemScribble.objects.filter(
 			verdict__problem=problem, verdict__is_done=False)
 	scribbles = scribbles.exclude(verdict__evidence__user = request.user)
+	# exclude anything that needs attention
+	scribbles = scribbles.exclude(examscrible__needs_attention = True)
 	# wait 10 seconds before giving out the same scribble again
 	scribbles = scribbles.exclude(last_sent_time__gte = time.time() - 10)
 
