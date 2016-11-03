@@ -439,6 +439,7 @@ def progress_problems(request):
 	columns = ['Problem', 'Done', 'Pending', 'Unread', 'Conflict', 'Missing']
 
 	num_mathletes = He.models.Entity.mathletes.count()
+	num_teams = He.models.Entity.teams.count()
 	for problem, group in itertools.groupby(verdicts, key = lambda v : v.problem):
 		group = list(group) # dangit, this gotcha
 		tr = collections.OrderedDict()
@@ -449,7 +450,7 @@ def progress_problems(request):
 		tr['Unread']   = len([v for v in group if v.is_valid \
 				and not v.is_done and v.evidence_count() == 0])
 		tr['Conflict'] = len([v for v in group if not v.is_valid])
-		tr['Missing']  = num_mathletes - len(group)
+		tr['Missing']  = (num_mathletes if v.is_indiv else num_teams) - len(group)
 		table.append(tr)
 
 	context = {'columns' : columns, 'table' : table, 'pagetitle' : 'Grading Progress'}
