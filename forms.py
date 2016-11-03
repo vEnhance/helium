@@ -92,7 +92,7 @@ class UploadScanForm(forms.Form):
 class PDFSelectForm(forms.Form):
 	"""Selects a EntireScanPDF object"""
 	pdf = forms.ModelChoiceField(
-			label = "PDF",
+			label = "View PDF",
 			queryset = He.models.EntirePDFScribble.objects.all())
 
 # The following forms are ROBUST in the sense that

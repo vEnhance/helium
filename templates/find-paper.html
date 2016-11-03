@@ -10,6 +10,21 @@
 verdicts and evidence for a specific
 entity and exam.</p>
 
+<h4>Search by Name</h4>
 {% include '_form.html' with form=eesform submit_name="Look up" %}
+
+<h4>Search by PDF</h4>
+<form action="/helium/view-pdf/redir/" method="post">
+	<div class="clearfix">
+		<div class="col-xs-8">
+		{% csrf_token %}
+		{{ pdfform.as_p }}
+		</div>
+		<div class="col-xs-4">
+		<input type="submit" name="from_landing" value="View Pages" />
+		</div>
+	</div>
+</form>
+
 
 {% endblock %}

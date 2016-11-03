@@ -303,7 +303,7 @@ def find_paper(request):
 			return HttpResponseRedirect("/helium/view-paper/%d/%d/" %(entity.id,exam.id))
 	else:
 		form = forms.EntityExamSelectForm()
-	context = { 'eesform' : form }
+	context = { 'eesform' : form, 'pdfform' : forms.PDFSelectForm() }
 	return render(request, "find-paper.html", context)
 @staff_member_required
 def view_paper(request, *args):
@@ -516,7 +516,7 @@ def upload_scans(request):
 
 @staff_member_required
 def view_pdf_redir(request):
-	_redir_obj_id(request, 'pdf', forms.PDFSelectForm)
+	return _redir_obj_id(request, 'pdf', forms.PDFSelectForm)
 def view_pdf(request, pdfscribble_id):
 	"""This shows all pages in a PDF file"""
 	pdfscribble = He.models.EntirePDFScribble.objects.get(id = int(pdfscribble_id))
