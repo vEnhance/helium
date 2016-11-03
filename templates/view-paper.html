@@ -1,11 +1,9 @@
 {% extends 'layout-helium.html' %}
 {% load static %}
 
-{% block title %}Helium | View Scan: {{ title }}{% endblock %}
+{% block pagetitle %}View Scan: {{ title }}{% endblock %}
 
 {% block layout-content %}
-<h3>{{ title }}</h3>
-
 {% if examscribble %}
 <h4>Match Exam</h4>
 {% include "_form.html" with form=matchform submit_name="Match Exam" %}

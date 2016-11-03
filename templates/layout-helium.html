@@ -1,16 +1,6 @@
-{% extends 'base.html' %}
+{% extends 'base-helium.html' %}
 
 {% load static %}
-
-{% block stylesheets %}
-<link href="{% static 'css/layout.css' %}" rel="stylesheet">
-<link href="{% static 'css/helium.css' %}" rel="stylesheet">
-{% if exam %}
-<style type="text/css">
-body { background-color: {{ exam.color }}; }
-</style>
-{% endif %}
-{% endblock %}
 
 {% block content %}
   <div id="page-wrapper">
@@ -20,8 +10,8 @@ body { background-color: {{ exam.color }}; }
 
 
   <section id="body-form">
-	<div id="content-container">
-	<div class="btn-toolbar"><a href="/helium">&lt; Back to Helium home</a></div>
+    <div id="content-container">
+    <div class="btn-toolbar"><a href="/helium">&lt; Back to Helium home</a></div>
 
     {% if messages %}
     <ul class="messages">
@@ -31,38 +21,17 @@ body { background-color: {{ exam.color }}; }
     </ul>
     {% endif %}
 
+    <h3>{% block pagetitle %}{% endblock %}</h3>
     {% block layout-content %}
     {% endblock %}
-	</div>
-	<hr />
+    </div>
+    <hr />
   </section>
 
   {% block layout-footer %}
   <section id="footer">
-	<p><a href="/helium">&lt; Back to Helium home</a></p>
+    <p><a href="/helium">&lt; Back to Helium home</a></p>
   </section>
   <section id="banner"><img src="{% static 'img/balloons.png' %}"/></section>
   {% endblock %}
 {% endblock %}
-
-{% block helium-scripts %}
-<script type="text/javascript" src="{% static 'js/autoselect.js' %}"></script>
-<script type="text/javascript">
-$(document).ready(function() {
-	$.ajaxSetup({
-	beforeSend: function(xhr, settings) {
-		if (settings.type == 'POST' && !this.crossDomain) {
-			xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
-		}}});
-	$("#id_entity").selectToAutocomplete();
-	$("#id_mathlete").selectToAutocomplete();
-	$("#id_team").selectToAutocomplete();
-
-	var angle = 0;
-	$("#rotate_link").click(function() {
-		angle += 180;
-		$("#scan_img").css('transform', 'rotate('+angle+'deg)');
-	});
-});
-</script>
-{% endblock %} 

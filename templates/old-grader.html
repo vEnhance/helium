@@ -1,13 +1,9 @@
 {% extends 'layout-helium.html' %}
 {% load static %}
 
-{% block title %}Helium | Grade Exams{% endblock %}
+{% block pagetitle %}Classical Grader: {{ exam }}{% endblock %}
 
 {% block layout-content %}
-
-
-<h3>Classical Grader: {{ exam }}</h3>
-
 {% if exam.is_scanned %}
 <p><b>Warning</b>: this exam is supposed to be graded by scan.
 Proceed with utmost caution.

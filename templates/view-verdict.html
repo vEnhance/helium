@@ -1,10 +1,9 @@
 {% extends 'layout-helium.html' %}
 {% load static %}
 
-{% block title %}Helium | View Verdict{% endblock %}
+{% block pagetitle %}{{ verdict.problem }} for {{ verdict.entity }}{% endblock %}
 
 {% block layout-content %}
-<h3>{{ verdict.problem }} for {{ verdict.entity }}</h3>
 
 {% if verdict.problemscribble %}
 {% include "_scanstage.html" with image_url=verdict.problemscribble.prob_image.url examscribble=verdict.problemscribble.examscribble %}
