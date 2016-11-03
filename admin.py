@@ -58,7 +58,7 @@ class ProblemAdmin(admin.ModelAdmin):
 
 @admin.register(He.models.ExamScribble)
 class ExamScribbleAdmin(admin.ModelAdmin):
-	list_display = ('id', 'exam', 'entity')
+	list_display = ('id', 'exam', 'entity', 'pdf_scribble')
 	inlines = (ProblemScribbleInline,)
 
 @admin.register(He.models.Verdict)
@@ -84,4 +84,4 @@ class GutsScoreFuncAdmin(admin.ModelAdmin):
 
 @admin.register(He.models.EntirePDFScribble)
 class EntirePDFAdmin(admin.ModelAdmin):
-	list_display = ('name', 'is_done')
+	list_display = ('name', 'id', 'is_done')
