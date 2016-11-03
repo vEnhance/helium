@@ -300,10 +300,25 @@ def find_paper(request):
 		if form.is_valid():
 			entity = form.cleaned_data['entity']
 			exam = form.cleaned_data['exam']
-			return HttpResponseRedirect("/helium/view-paper/%d/%d/" %(entity.id,exam.id))
+			return HttpResponseRedirect("/helium/view-paper/%d/%d/" \
+					%(entity.id,exam.id))
 	else:
 		form = forms.EntityExamSelectForm()
 	context = { 'eesform' : form, 'pdfform' : forms.PDFSelectForm() }
+	if request.user.is_superuser:
+		context['show_attention'] = True
+		context['columns'] = ['PDF File', 'Exam', 'Entity', 'Open']
+		table = []
+		for es in He.models.ExamScribble.objects.filter(needs_attention=True):
+			tr = collections.OrderedDict()
+			tr['PDF File'] = es.pdf_scribble
+			tr['Exam'] = es.exam
+			tr['Entity'] = es.entity
+			tr['Open'] = '<a href="/helium/view-paper/scan/%d">Open</a>' %es.id
+			table.append(tr)
+	else:
+		context['show_attention'] = False
+		
 	return render(request, "find-paper.html", context)
 @staff_member_required
 def view_paper(request, *args):
@@ -344,6 +359,9 @@ def view_paper(request, *args):
 		context['matchform'] = forms.ExamScribbleMatchRobustForm(\
 					user = request.user, examscribble = es)
 		context['matchurl'] = "/helium/match-papers/%d/" %exam.id
+
+		if es.needs_attention:
+			messages.warning(request, "This exam scribble needs administrator attention.")
 
 	context['gradeform'] = forms.ExamGradingRobustForm(
 			user = request.user,

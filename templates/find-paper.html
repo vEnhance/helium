@@ -24,5 +24,10 @@ entity and exam.</p>
 	</div>
 </form>
 
+{% if show_attention %}
+<h4>Exam Scribbles Needing Attention</h4>
+{% include '_table.html' %}
+{% endif %}
+
 
 {% endblock %}
