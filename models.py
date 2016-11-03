@@ -267,11 +267,12 @@ class Verdict(models.Model):
 	
 # Scribble objects
 class EntirePDFScribble(models.Model):
-	"""This holds only two properties: the filename of an uploaded PDF,
-	and a boolean indicating it is done processing."""
+	"""This holds the name of a PDF (self.name) and the associated exam (self.exam),
+	as well as is_done boolean."""
 	name = models.CharField(max_length = 80, unique = True,
 			help_text = "The name of the PDF file, which must be unique "\
 			"(this is a safety feature to prevent accidental double uploads). ")
+	exam = models.ForeignKey(Exam, help_text = "The exam associated to this PDF.")
 	is_done = models.BooleanField(default=False, help_text = "Whether the PDF is done converting.")
 	def __unicode__(self): return unicode(self.name)
 
@@ -286,6 +287,7 @@ class ExamScribble(models.Model):
 			help_text = "The PDF from which the exam scribble comes from.")
 	exam = models.ForeignKey(Exam,
 			help_text = "The exam associated to an exam scribble file.")
+	# ^ technically redundant, TODO rewrite to pdf_scribble__exam
 	entity = models.ForeignKey(Entity, blank=True, null=True,
 			help_text = "This is the entity the scan belongs to. "
 			"It is None if the scan has not yet been identified.")

@@ -504,20 +504,21 @@ def upload_scans(request):
 		if form.is_valid():
 			pdf_file = request.FILES['pdf']
 			pdf_name = pdf_file.name
+			exam = form.cleaned_data['exam']
 			if not pdf_name.endswith(".pdf") and not pdf_name.endswith(".PDF"):
 				messages.error(request, "File must end with .pdf or .PDF.")
 			elif He.models.EntirePDFScribble.objects.filter(name = pdf_name).exists():
 				messages.error(request, "PDF with name %s was already uploaded. "\
 						"No action taken." % pdf_name)
 			else:
-				pdfscribble = He.models.EntirePDFScribble(name = pdf_name)
+				pdfscribble = He.models.EntirePDFScribble(name = pdf_name, exam = exam)
 				pdfscribble.save()
 				def target_function():
 					sheets = scanimage.get_answer_sheets(pdf_file, filename = pdf_name)
 					for sheet in sheets:
 						es = He.models.ExamScribble(
 								pdf_scribble = pdfscribble,
-								exam = form.cleaned_data['exam'],
+								exam = exam,
 								full_image = sheet.get_full_file(),
 								name_image = sheet.get_name_file())
 						es.save()
@@ -541,7 +542,7 @@ def view_pdf(request, pdfscribble_id):
 	"""This shows all pages in a PDF file"""
 	pdfscribble = He.models.EntirePDFScribble.objects.get(id = int(pdfscribble_id))
 	table = []
-	columns = ['Page', 'Thumbnail', 'Exam Scribble']
+	columns = ['Page', 'Thumbnail', 'Entity', 'Open']
 	n = 0
 	for examscribble in He.models.ExamScribble.objects\
 			.filter(pdf_scribble = pdfscribble):
@@ -550,10 +551,11 @@ def view_pdf(request, pdfscribble_id):
 		tr['Page'] = n
 		tr['Thumbnail'] = '<img class="thumbnail" src="%s" />' \
 				% examscribble.name_image.url
-		tr['Exam Scribble'] = '<a href="/helium/view-paper/scan/%d">%s</a>' \
-				% (examscribble.id, unicode(examscribble))
+		tr['Entity'] = examscribble.entity or "(Not Matched)"
+		tr['Open'] = '<a href="/helium/view-paper/scan/%d">Open</a>' % examscribble.id
 		table.append(tr)
-	context = {'columns' : columns, 'table' : table, 'pagetitle' : 'PDF Pages'}
+	context = {'columns' : columns, 'table' : table,
+			'pagetitle' : '%s (%s)' %(pdfscribble, pdfscribble.exam)}
 	return render(request, "table-only.html", context)
 
 ## SCORE REPORTS

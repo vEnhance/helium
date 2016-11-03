@@ -84,4 +84,4 @@ class GutsScoreFuncAdmin(admin.ModelAdmin):
 
 @admin.register(He.models.EntirePDFScribble)
 class EntirePDFAdmin(admin.ModelAdmin):
-	list_display = ('name', 'id', 'is_done')
+	list_display = ('name', 'id', 'is_done', 'exam')
