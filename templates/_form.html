@@ -5,15 +5,12 @@ It takes two arguments:
 form: the Django form object
 submit_name: the label to put on the Submit button
 has_upload: a Boolean, if true, enctype="multipart/form-data" is set
+action: the URL action to go to, defaults to request.path
 
 {% endcomment %}
 
-{% if has_upload %}
-<form action="{{ request.path }}" method="post" enctype="multipart/form-data">
-{% else %}
-<form action="{{ request.path }}" method="post">
-{% endif %}
-
+<form {% if action %}action="{{action}}"{% else %}action="{{ request.path }}" {% endif %}
+	method="post" {% if has_upload %}enctype="multipart/form-data"{% endif %}>
 {% csrf_token %}
 
 {% if form.non_field_errors %}
@@ -51,7 +48,7 @@ has_upload: a Boolean, if true, enctype="multipart/form-data" is set
 {% endfor %}
 
 </table>
-<input type="submit" value="{{ submit_name }}">
+<input type="submit" {% if submit_name %}value="{{ submit_name }}"{% endif %}>
 </form>
 
 {% comment %}

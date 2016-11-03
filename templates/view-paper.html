@@ -1,20 +1,24 @@
 {% extends 'layout-helium.html' %}
 {% load static %}
 
-{% block pagetitle %}View Scan: {{ title }}{% endblock %}
+{% block pagetitle %}View Paper: {{ title }}{% endblock %}
 
 {% block layout-content %}
 {% if examscribble %}
-<h4>Match Exam</h4>
-{% include "_form.html" with form=matchform submit_name="Match Exam" %}
+<h4>Change Name</h4>
+{% include "_form.html" with form=matchform action=matchurl submit_name="Match Exam" %}
 
 <h4>Original Scan</h4>
 <a name="scan"></a>
 {% include "_scanstage.html" with examscribble=examscribble image_url=examscribble.full_image.url is_full=True %}
-
 {% endif %}
 
 <h4>Verdicts</h4>
 {% include "_table.html" %}
+
+{% if request.user.is_superuser and entity %}
+<h4>Change Scores (Admin)</h4>
+{% include "_form.html" with form=gradeform action=gradeurl submit_name="Change Scores" %}
+{% endif %}
 
 {% endblock %}

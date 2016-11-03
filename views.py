@@ -329,6 +329,8 @@ def view_paper(request, *args):
 		verdicts = He.models.Verdict.objects\
 				.filter(problem__exam = exam, entity = entity)
 	context['columns'], context['table'] =  _get_vtable(request, verdicts)
+	context['exam'] = exam
+	context['entity'] = entity
 
 	if es is not None:
 		if request.method == "POST":
@@ -345,6 +347,15 @@ def view_paper(request, *args):
 			matchform = forms.ExamScribbleMatchRobustForm(\
 					user = request.user, examscribble = es)
 		context['matchform'] = matchform
+		context['matchurl'] = "/helium/match-papers/%d/" %exam.id
+
+	context['gradeform'] = forms.ExamGradingRobustForm(
+			user = request.user,
+			entity = entity,
+			exam = exam,
+			problems = exam.problem_set.all(),
+			show_god = True)
+	context['gradeurl'] = "/helium/old-grader/exam/%d/" %exam.id
 	return render(request, "view-paper.html", context)
 
 @staff_member_required
@@ -525,6 +536,7 @@ def upload_scans(request):
 @staff_member_required
 def view_pdf_redir(request):
 	return _redir_obj_id(request, 'pdf', forms.PDFSelectForm)
+@staff_member_required
 def view_pdf(request, pdfscribble_id):
 	"""This shows all pages in a PDF file"""
 	pdfscribble = He.models.EntirePDFScribble.objects.get(id = int(pdfscribble_id))

@@ -106,8 +106,9 @@ class ExamGradingRobustForm(forms.Form):
 	it will actually submit the changes to the database.
 	
 	Exam, user, problems fields are self-explanatory.
-	If the entity keyword is specified,
-	self.fields['entity'] is hidden and populated with that value
+	If the entity keyword is specified, self.fields['entity'] is removed and populated with that value
+	show_force shows the force button
+	show_god shows the God button
 	"""
 	def __init__(self, *args, **kwargs):
 		self.exam = kwargs.pop('exam')
@@ -118,7 +119,10 @@ class ExamGradingRobustForm(forms.Form):
 		self.show_god = kwargs.pop('show_god', False)
 		super(forms.Form, self).__init__(*args, **kwargs)
 		if self.entity is not None:
-			pass # no entity field
+			self.fields['entity'] = forms.ModelChoiceField(\
+					queryset = He.models.Entity.objects.all(),
+					initial = self.entity)
+			self.fields['entity'].widget = forms.HiddenInput()
 		elif self.exam.is_indiv:
 			self.fields['entity'] = forms.ModelChoiceField(\
 					queryset = He.models.Entity.mathletes.all())
