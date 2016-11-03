@@ -16,7 +16,6 @@ in the clean() method (not sure if this is the right thing to do).
 from django import forms
 import django.utils.safestring
 import helium as He
-import logging
 
 class ProblemSelectForm(forms.Form):
 	"""Picks a problem marked ready for grading"""

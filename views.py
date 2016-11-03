@@ -85,7 +85,7 @@ See <a href="https://www.hmmt.co/static/scoring-algorithm.pdf">https://www.hmmt.
 of the scoring algorithm used on the individual tests.
  """.strip()
 
-FINAL_TEXT_BANNER = """ 
+FINAL_TEXT_BANNER = """
  ('-. .-.   ('-.                               _   .-')    
 ( OO )  / _(  OO)                             ( '.( OO )_  
 ,--. ,--.(,------.,--.      ,-.-') ,--. ,--.   ,--.   ,--.)
@@ -196,12 +196,12 @@ def match_papers(request, exam_id):
 		try:
 			examscribble_id = int(request.POST['examscribble_id'])
 			examscribble = He.models.ExamScribble.objects.get(id=examscribble_id)
-		except ValueError, He.models.ExamScribble.DoesNotExist:
+		except (ValueError, He.models.ExamScribble.DoesNotExist):
 			return HttpResponse("What did you DO?", content_type="text/plain")
 
 		form = forms.ExamScribbleMatchRobustForm(
 				request.POST, examscribble = examscribble, user = request.user)
-		if form.is_valid(): 
+		if form.is_valid():
 			prev_entity = form.cleaned_data['entity']
 			messages.success(request, "Matched exam for %s" %prev_entity)
 		else: # validation errors
@@ -636,5 +636,6 @@ def run_management(request, command_name):
 		django.core.management.call_command(command_name)
 	threader.run_async(target_function, name = command_name)
 	return HttpResponse("Command %s started" % command_name, content_type="text/plain")
+
 
 # vim: fdm=indent foldnestmax=1

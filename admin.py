@@ -16,7 +16,7 @@ import helium as He
 class EntityInline(admin.TabularInline):
 	model = He.models.Entity
 	# only used to display indivs, so hide shortname, is_team
-	fields = ('name', 'number') 
+	fields = ('name', 'number')
 class ProblemInline(admin.TabularInline):
 	model = He.models.Problem
 	fields = ('problem_number', 'answer', 'weight', 'allow_partial')
