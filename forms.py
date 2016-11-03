@@ -89,6 +89,12 @@ class UploadScanForm(forms.Form):
 			help_text = "Note file names must be unique; "\
 			"this is a safety feature to prevent accidental double submission.")
 
+class NeedsAttentionForm(forms.ModelForm):
+	"""A simple form which toggles whether a exam scribble needs attention."""
+	class Meta:
+		model = He.models.ExamScribble
+		fields = ['needs_attention']
+
 class PDFSelectForm(forms.Form):
 	"""Selects a EntireScanPDF object"""
 	pdf = forms.ModelChoiceField(

@@ -334,19 +334,15 @@ def view_paper(request, *args):
 
 	if es is not None:
 		if request.method == "POST":
-			form = forms.ExamScribbleMatchRobustForm(
-					request.POST, examscribble = es, user = request.user)
+			form = forms.NeedsAttentionForm(request.POST, instance=es)
 			if form.is_valid():
-				prev_entity = form.cleaned_data['entity']
-				messages.success(request, "Matched exam for %s" %prev_entity)
-				matchform = forms.ExamScribbleMatchRobustForm(\
-						user = request.user, examscribble = es)
-			else:
-				matchform = form
+				messages.success(request, "Changed the status of this PDF")
+				form.save()
 		else:
-			matchform = forms.ExamScribbleMatchRobustForm(\
+			form = forms.NeedsAttentionForm(request.POST, instance=es)
+		context['attentionform'] = form
+		context['matchform'] = forms.ExamScribbleMatchRobustForm(\
 					user = request.user, examscribble = es)
-		context['matchform'] = matchform
 		context['matchurl'] = "/helium/match-papers/%d/" %exam.id
 
 	context['gradeform'] = forms.ExamGradingRobustForm(
@@ -684,6 +680,5 @@ def run_management(request, command_name):
 		django.core.management.call_command(command_name)
 	threader.run_async(target_function, name = command_name)
 	return HttpResponse("Command %s started" % command_name, content_type="text/plain")
-
 
 # vim: fdm=indent foldnestmax=1

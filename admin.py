@@ -58,7 +58,7 @@ class ProblemAdmin(admin.ModelAdmin):
 
 @admin.register(He.models.ExamScribble)
 class ExamScribbleAdmin(admin.ModelAdmin):
-	list_display = ('id', 'exam', 'entity', 'pdf_scribble')
+	list_display = ('id', 'exam', 'entity', 'pdf_scribble', 'needs_attention')
 	inlines = (ProblemScribbleInline,)
 
 @admin.register(He.models.Verdict)
