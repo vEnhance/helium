@@ -25,7 +25,7 @@ class EvidenceInline(admin.TabularInline):
 	fields = ('verdict', 'user', 'score', 'god_mode')
 class ProblemScribbleInline(admin.TabularInline):
 	model = He.models.ProblemScribble
-	fields = ('verdict', 'prob_image', 'most_recent_grab')
+	fields = ('verdict', 'prob_image', 'last_sent_time')
 
 
 class TeamFilter(admin.SimpleListFilter):
