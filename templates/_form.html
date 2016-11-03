@@ -23,7 +23,6 @@ action: the URL action to go to, defaults to request.path
 
 
 <table class="table">
-
 {% for hidden in form.hidden_fields %}
 	{{ hidden }}
 {% endfor %}
@@ -46,9 +45,11 @@ action: the URL action to go to, defaults to request.path
 		</td>
 	</tr>
 {% endfor %}
-
+	<tr>
+		<td></td>
+		<td><input type="submit" {% if submit_name %}value="{{ submit_name }}"{% endif %}></td>
+	</tr>
 </table>
-<input type="submit" {% if submit_name %}value="{{ submit_name }}"{% endif %}>
 </form>
 
 {% comment %}
