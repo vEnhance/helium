@@ -4,14 +4,15 @@
 {% block pagetitle %}Name Matching System for {{ exam }}{% endblock %}
 
 {% block layout-content %}
-
 {% if form %}
 {% include "_scanstage.html" with examscribble=scribble image_url=scribble.name_image.url %}
 {% include "_form.html" with form=form submit_name="Match Exam" %}
 {% else %}
 All done!
 {% endif %}
-
+<p>You can use "view full scan" above to see the entire scanned page.
+If there any issues with the scanned page
+you can also flag the page for administrative attention.</p>
 {% endblock %}
 
 {% block scripts %}

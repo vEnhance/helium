@@ -26,28 +26,10 @@ Self-explanatory, but some gotchas:
 
 When you upload a scan,
 several problem scribbles, exam scribbles, and verdicts
-are immediately created corresponding to the items in the PDF.
+are immediately created corresponding to the items in the PDF file.
 However since the system does not yet know who is who,
 the verdicts and problem scribbles will not have an entity attached to them.
 The ``match scans'' functionality will then pair them up.
-
-\section{Find papers}
-You can look up a paper by exam and entity.
-This will display all evidences associated with it.
-
-\begin{center}
-	\includegraphics[width=0.6\textwidth]{images/viewpaper2.png}
-\end{center}
-
-If the paper has an exam scribble associated,
-that will also be displayed,
-along with a form to change the name associated to it
-(in case of error).
-
-\begin{center}
-	\includegraphics[width=0.6\textwidth]{images/viewpaper1.png}
-\end{center}
-
 
 \section{Matching scans}
 Matching scans is more error-prone and not double-checked.
@@ -68,6 +50,8 @@ When a match of a paper is successful,
 all the problem scribbles, exam scribbles, and verdicts
 attached to the paper are immediately updated to reflect the new name.
 
+The comments in Section~\ref{sec:view_full} apply equally well here.
+
 \subsection{Error handling}
 This is where it gets tricky.
 Consider the following situation:
@@ -81,9 +65,8 @@ An error will appear linking to the first \emph{verdict}
 it finds for a geometry problem taken by Christine Daae.
 
 \begin{center}
-	\includegraphics[width=0.8\textwidth]{images/matchconflict.png}
+	\includegraphics[width=0.7\textwidth]{images/matchconflict.png}
 \end{center}
-
 
 At this point you need to fix the error.
 There are a couple things you could do.
@@ -110,6 +93,30 @@ There are a couple things you could do.
 	if you really understand Helium well and have a compelling reason to do so.
 \end{itemize}
 
+\section{Find papers}
+You can locate specific papers
+by selecting ``Find Papers'' from the index page.
+Some ways to do so:
+\begin{itemize}
+	\ii You can look up by exam and entity.
+	\ii You can scroll through the pages of the PDF files.
+	\ii A list of papers which need moderator attention
+	will appear here (see Section~\ref{sec:view_full}).
+\end{itemize}
+
+\begin{center}
+	\includegraphics[width=0.6\textwidth]{images/viewpaper2.png}
+\end{center}
+
+If the paper has an exam scribble associated,
+that will also be displayed,
+along with a form to change the name associated to it
+(in case of error).
+
+\begin{center}
+	\includegraphics[width=0.6\textwidth]{images/viewpaper1.png}
+\end{center}
+
 \section{Conflict resolution}
 First, I should describe the logic behind verdicts.
 For each exam there are two parameters:
@@ -119,7 +126,7 @@ For each exam there are two parameters:
 	\ii If valid, a \textbf{minimum number of graders} needed before
 	the verdict considers itself done.
 	(So setting this number to $2$ is double-grading,
-	$3$ is triple-grading, etc. and the default is $3$.)
+	$3$ is triple-grading, etc.\ and the default is $3$.)
 \end{itemize}
 
 Officers get an extra panel called ``View All Conflicts''.
