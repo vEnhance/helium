@@ -89,6 +89,12 @@ class UploadScanForm(forms.Form):
 			help_text = "Note file names must be unique; "\
 			"this is a safety feature to prevent accidental double submission.")
 
+class PDFSelectForm(forms.Form):
+	"""Selects a EntireScanPDF object"""
+	pdf = forms.ModelChoiceField(
+			label = "PDF",
+			queryset = He.models.EntirePDFScribble.objects.all())
+
 # The following forms are ROBUST in the sense that
 # the form.clean() method will actually do the processing work
 # of updating the models

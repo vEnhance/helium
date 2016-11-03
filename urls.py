@@ -33,6 +33,8 @@ urlpatterns = [
 	url(r'^view-paper/([0-9]+)/([0-9]+)/$', views.view_paper),
 	url(r'^estimation-calc/$', views.estimation_calc),
 	url(r'^upload-scans/$', views.upload_scans),
+	url(r'^view-pdf/([0-9]+)/$', views.view_pdf),
+	url(r'^view-pdf/redir/$', views.view_pdf_redir),
 	url(r'^progress-problems/$', views.progress_problems),
 	url(r'^progress-scans/$', views.progress_scans),
 	url(r'^ajax/submit-scan/$', views.ajax_submit_scan), 

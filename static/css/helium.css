@@ -18,6 +18,10 @@ img.scan {
 	margin-bottom: 4px;
 }
 
+img.thumbnail {
+	width: 180px;
+}
+
 span.answer {
 	color: #006600; /* dark-ish green */
 	font-size: 140%;
