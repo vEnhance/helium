@@ -49,7 +49,7 @@ class EntityAdmin(admin.ModelAdmin):
 
 @admin.register(He.models.Exam)
 class ExamAdmin(admin.ModelAdmin):
-	list_display = ('name', 'id',  'color', 'is_alg_scoring', 'is_ready', 'min_grades', 'min_override')
+	list_display = ('name', 'id',  'color', 'is_indiv', 'is_ready', 'is_alg_scoring', 'is_scanned', 'min_grades', 'min_override')
 	inlines = (ProblemInline,)
 
 @admin.register(He.models.Problem)
