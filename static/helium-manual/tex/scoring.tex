@@ -13,7 +13,7 @@ however, the algorithm will not use this assumption.
 \subsection{Output}
 Based on this, the algorithm outputs:
 \begin{itemize}
-	\ii An \textbf{strength} $\alpha_c \in [0,\infty)$ for each competitor $c$, and
+	\ii An \textbf{strength} $\alpha_c \in \RR_{\ge 0}$ for each competitor $c$, and
 	\ii A \textbf{weight} $\beta_p \in [3,8]$ for each problem $p$,
 	which represents its difficulty.
 \end{itemize}
@@ -89,7 +89,7 @@ In light of this, we select the following parameters,
 which describe how the $\alpha_c$ and $\beta_p$ should be interpreted.
 \begin{itemize}
 	\ii The strength $\alpha = \alpha_c$ of each contestant
-	$c$ is \emph{a priori} distributed in $[0,\infty)$
+	$c$ is \emph{a priori} distributed in $\RR_{\ge 0}$
 	according to
 	\begin{equation}
 		\mathbf P(\alpha) = \exp(-\alpha).

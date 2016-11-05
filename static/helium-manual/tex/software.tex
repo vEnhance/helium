@@ -38,26 +38,31 @@ if we will even have \texttt{core/settings.py} in a few years.
 	\ii \texttt{requirements.txt} in the root directory
 	has some Helium specific additions.
 	In particular \texttt{wand} which does image processing in Python.
+	The command
+	\begin{center}
+		\texttt{pip install -r requirements.txt}
+	\end{center}
+	should do the trick.
+
+	\ii Image installation is done through the EB extension \texttt{01yum}.
+	This installs \texttt{imagemagick}, \texttt{freetype}, \texttt{ghostscript},
+	which is used for the image processing.
 
 	\ii Helium needs to host its media on an external S3 server,
 	because scan images need to be distributed.
 	So currently I have an S3 bucket called \texttt{heliummedia}.
 	The connection is in \texttt{core/settings.py},
 	The S3 bucket itself lives inside AWS along with the entire HMMT application.
-
-	\ii Image installation is done through the EB extension \texttt{01yum}.
-	This installs \texttt{imagemagick}, \texttt{freetype}, \texttt{ghostscript},
-	which is used for the image processing.
 	
 	\ii \texttt{core/settings.py} should also have some basic applications
 	installed, such as
 	\begin{itemize}
-		\ii 'django.contrib.admin',
-		\ii 'django.contrib.auth',
-		\ii 'django.contrib.sessions',
-		\ii 'django.contrib.messages',
-		\ii 'django.contrib.staticfiles',
-		\ii 'storages'.
+		\ii `django.contrib.admin',
+		\ii `django.contrib.auth',
+		\ii `django.contrib.sessions',
+		\ii `django.contrib.messages',
+		\ii `django.contrib.staticfiles',
+		\ii `storages'.
 	\end{itemize}
 \end{itemize}
 
