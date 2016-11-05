@@ -106,7 +106,7 @@ class Entity(models.Model):
 # Exam/problem objects
 
 class Exam(models.Model):
-	name = models.CharField(max_length=50, help_text = 'Name of exam')
+	name = models.CharField(max_length=50, help_text = 'Name of exam', unique = True)
 	color = models.CharField(max_length=50, default="#FFFFFF",\
 			help_text="Color which exam is printed on. "
 			"Grading pages will be tinted with this color so that e.g. "
@@ -382,7 +382,7 @@ class ProblemScribble(models.Model):
 	examscribble = models.ForeignKey(ExamScribble)
 	verdict = models.OneToOneField(Verdict, on_delete=models.CASCADE)
 	prob_image = models.ImageField(upload_to='scans/problems/', blank=False, null=True)
-		 # blargh. This should really be null=False, but it makes testing hard.
+		# blargh. This should really be null=False, but it makes testing hard.
 	last_sent_time = models.IntegerField(blank=True, null=True,
 			help_text = "Most recent time the scan was sent out (in seconds since Epoch);"\
 			"reset to None when the problem is graded. "\
