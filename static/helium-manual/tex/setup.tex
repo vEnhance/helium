@@ -2,17 +2,46 @@
 Here are some tasks you need to do to set up Helium
 to work before the tournament.
 
-\section{Create the exams}
-You need to produce the exams.
+\section{Database maintenance}
+\subsection{Clearing the database}
+You should first clear out the old exams, verdicts, etc.\ from the database
+before another run of the tournament.
+If you want to save a copy of all the data,
+you can do so using Django management:
+\begin{center}
+	\texttt{python manage.py dumpdata helium --format yaml}.
+\end{center}
+This will get you a YAML file with all Helium related data.
+If you ever need it back you can then reload it with \texttt{loaddata}.
+
+\subsection{Import exams from Babbage}
+You need to populate the Helium tables with exams.
+
+To do this, you should go to the problem database and for each contest
+that you want to export, push the ``Export to Helium'' link.
+This will copy all the problems and their answers into Helium,
+and then open the admin interface
+so that you can make any manual changes necessary
+(for example partial marks are disabled by default
+but you will need to add them into Guts estimation).
 Remember to input colors corresponding to how the answer sheets will be tinted.
 
-Right now the only way to do this is in the Django admin by hand,
-but eventually we will support importing these from HMMT Problems database.
-Sorry, this is a pain, I know.
+A safety feature is that exam names in Helium must be distinct.
+So if you decide you want to re-import an exam,
+you will have to delete the old one first.
 
-\section{Import entities from registration}
-In Babbage a command called ``import entities from reg'' will do this for you.
+\subsection{Import entities from registration}
+In Babbage a command called ``Import Entities from Reg'' will do this for you.
 It is careful, and will never import the same entity twice.
+
+\section{Guts estimation problems}
+First, ensure that the name of the Guts exam is ``Guts'',
+or otherwise maul \texttt{babbage/views.py} to make this work.
+
+Next, if there are any estimation problems the scoring functions
+for these need to be added.
+You can do this in the admin interface, under ``Guts Score Funcs''.
+This should be entirely self-explanatory.
 
 \section{Printing and checking scans}
 You should make sure that a large number of answer sheets are printed,
@@ -74,5 +103,11 @@ plus one unaffiliated individual named ``Evan Chen''.
 \ii The two sample batches contain all their ``GEO!'' exams.
 The answers to that exam corresponding exactly to the real answers
 to the HMMT February 2016 Geometry test.
+
+\ii Under the registration folder are some fixtures for testing
+import to registration and so on.
+
+\ii Under the problems folder are some fixtures for loading
+some example data into the problem database.
 \end{itemize}
 
