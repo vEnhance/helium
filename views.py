@@ -586,7 +586,8 @@ def _report(num_show = None, num_named = None,
 
 	output = '<!DOCTYPE html>' + "\n"
 	output += '<html><head></head><body>' + "\n"
-	output += '<pre style="font-family:dejavu sans mono;">' + "\n"
+	output += '<pre style="font-family:Consolas,Monaco,Lucida Console,Liberation Mono,'\
+			'DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;">' + "\n"
 	output += INIT_TEXT_BANNER + "\n\n"
 
 	# Do this query once, we'll need it repeatedly
