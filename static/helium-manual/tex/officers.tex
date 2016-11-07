@@ -37,6 +37,15 @@ This way, after the first PDF is uploaded,
 graders can start marking immediately
 while future PDF's are uploaded.
 
+\section{Marking exams as ready}
+Once each exam is ready to grade,
+you need to manually mark each exam as ``ready to grade''
+in the Django admin.
+Conversely, when an exam is done grading you should uncheck
+the ``ready to grade'' box.
+This feature is in place to reduce the risk of confusion among staff members
+leading to them accidentally grading the wrong exam.
+
 \section{Matching scans}
 Matching scans is more error-prone and not double-checked.
 People who should do this should be ones who are a little familiar with
@@ -187,6 +196,13 @@ Well, that's a bummer.  You should
 \begin{itemize}
 	\ii Delete the relevant PDF file from the Django admin interface.
 	This will kill of the exam and problem scribbles too.
-	\ii Delete all the verdicts that no have neither an entity or problem scribble.
+	\ii Delete all the verdicts that now have neither an entity
+	nor problem scribble attached to them.
 \end{itemize}
-That should mostly save things. No priomises though.
+That should mostly save things. No promises though.
+
+\subsection{A page is rotated!}
+If you manage to find a rotated exam,
+you can first mark the exam scribble as ``needing attention''.
+This will block it from being handout out to staff members.
+Then, you should probably manually grade the exam in God mode.
