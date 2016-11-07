@@ -14,8 +14,6 @@ The corresponding template, if applicable, uses the URL name
 
 from django.conf.urls import url
 import helium.views as views
-
-
 urlpatterns = [
 	url(r'^grade-scans/([0-9]+)/$', views.grade_scans),
 	url(r'^grade-scans/redir/$', views.grade_scans_redir),
