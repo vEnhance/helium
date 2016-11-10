@@ -619,10 +619,10 @@
   fields: {problem: 25, entity: 23, score: 0, is_valid: true, is_done: true}
 - model: helium.entirepdfscribble
   pk: 15
-  fields: {name: batchY-samplescans.pdf, is_done: true}
+  fields: {name: batchY-samplescans.pdf, exam: 6, is_done: true}
 - model: helium.entirepdfscribble
   pk: 16
-  fields: {name: batchX-samplescans.pdf, is_done: true}
+  fields: {name: batchX-samplescans.pdf, exam: 6, is_done: true}
 - model: helium.examscribble
   pk: 33
   fields: {pdf_scribble: 15, exam: 6, entity: 24, full_image: scans/full/batchY-samplescans.pdf-sheet0001-full.jpg,
