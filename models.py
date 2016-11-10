@@ -90,9 +90,14 @@ class Entity(models.Model):
 	def __unicode__(self):
 		if self.team is not None:
 			if self.team.shortname:
-				return '%s (%s)' %(self.name, self.team.shortname)
+				return '%s [%s]' %(self.name, self.team.shortname)
 			else:
-				return '%s (%s)' %(self.name, self.team.name)
+				return '%s [%s]' %(self.name, self.team.name)
+		elif self.is_team:
+			if self.shortname:
+				return '%s (%s)' %(self.name, self.shortname)
+			else:
+				return self.name
 		else:
 			return self.name
 
