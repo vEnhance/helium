@@ -17,6 +17,21 @@ from django import forms
 import django.utils.safestring
 import helium as He
 
+
+class EntityModelChoiceField(forms.ModelChoiceField):
+	def label_from_instance(self, entity):
+		if entity.is_team: # team
+			if entity.shortname:
+				return "%s (%s)" %(entity.name, entity.shortname)
+			else:
+				return entity.name
+		else: # individual
+			if entity.team is None:
+				return "%s [No Team]" %entity.name
+			else:
+				return "%s [%s]" %(entity.name, entity.team.name)
+
+## PROBLEM SELECTION FORMS ##
 class ProblemSelectForm(forms.Form):
 	"""Picks a problem marked ready for grading"""
 	problem = forms.ModelChoiceField(
@@ -36,6 +51,7 @@ class ProblemScanSelectForm(forms.Form):
 			queryset = He.models.Problem.objects\
 					.filter(exam__is_ready=True, exam__is_scanned=True))
 
+## EXAM SELECTION FORMS ##
 class ExamSelectForm(forms.Form):
 	"""Picks an exam marked as ready for grading"""
 	exam = forms.ModelChoiceField(
@@ -52,14 +68,15 @@ class ExamScanSelectForm(forms.Form):
 			label = "Read scans for exam",
 			queryset = He.models.Exam.objects.filter(is_ready=True, is_scanned=True))
 
+## ENTITY EXAM SELECTION FORMS ##
 class EntityExamSelectForm(forms.Form):
 	"""Picks any exam (even one not marked ready) and any entity"""
 	exam = forms.ModelChoiceField(label = "Exam",
 			queryset = He.models.Exam.objects.all())
-	team = forms.ModelChoiceField(label = "Team", required = False,
+	team = EntityModelChoiceField(label = "Team", required = False,
 			queryset = He.models.Entity.teams.all(),
 			help_text = "Specify the team to look up. Ignored for individual exams.")
-	mathlete = forms.ModelChoiceField(label = "Mathlete", required = False,
+	mathlete = EntityModelChoiceField(label = "Mathlete", required = False,
 			queryset = He.models.Entity.mathletes.all(),
 			help_text = "Specify the mathlete to look up. Ignored for team exams.")
 	def clean(self):
@@ -125,15 +142,15 @@ class ExamGradingRobustForm(forms.Form):
 		self.show_god = kwargs.pop('show_god', False)
 		super(forms.Form, self).__init__(*args, **kwargs)
 		if self.entity is not None:
-			self.fields['entity'] = forms.ModelChoiceField(\
+			self.fields['entity'] = EntityModelChoiceField(\
 					queryset = He.models.Entity.objects.all(),
 					initial = self.entity)
 			self.fields['entity'].widget = forms.HiddenInput()
 		elif self.exam.is_indiv:
-			self.fields['entity'] = forms.ModelChoiceField(\
+			self.fields['entity'] = EntityModelChoiceField(\
 					queryset = He.models.Entity.mathletes.all())
 		else:
-			self.fields['entity'] = forms.ModelChoiceField(\
+			self.fields['entity'] = EntityModelChoiceField(\
 					queryset = He.models.Entity.teams.all())
 
 		for problem in self.problems:
@@ -203,11 +220,11 @@ class ExamScribbleMatchRobustForm(forms.Form):
 		self.exam = self.examscribble.exam
 
 		if self.exam.is_indiv:
-			self.fields['entity'] = forms.ModelChoiceField(\
+			self.fields['entity'] = EntityModelChoiceField(\
 					queryset = He.models.Entity.mathletes.all(),
 					label = "Mathlete")
 		else:
-			self.fields['entity'] = forms.ModelChoiceField(\
+			self.fields['entity'] = EntityModelChoiceField(\
 					queryset = He.models.Entity.teams.all(),
 					label = "Team")
 
