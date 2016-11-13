@@ -222,11 +222,11 @@ class ExamScribbleMatchRobustForm(forms.Form):
 		if self.exam.is_indiv:
 			self.fields['entity'] = EntityModelChoiceField(\
 					queryset = He.models.Entity.mathletes.all(),
-					label = "Mathlete")
+					label = "Mathlete", required=False)
 		else:
 			self.fields['entity'] = EntityModelChoiceField(\
 					queryset = He.models.Entity.teams.all(),
-					label = "Team")
+					label = "Team", required=False)
 
 		# TODO it would be nice if there was an easy way
 		# to filter for mathletes / teams which aren't already matched
@@ -235,6 +235,11 @@ class ExamScribbleMatchRobustForm(forms.Form):
 		self.fields['examscribble_id'] = forms.IntegerField(\
 				initial = self.examscribble.id,
 				widget = forms.HiddenInput)
+		self.fields['attention'] = forms.BooleanField(\
+				label = 'Needs attention',
+				required = False,
+				help_text = 'Check this box to mark scribble for admin attention\
+					(no name will be matched)')
 
 		if self.user.is_superuser:
 			self.fields['force'] = forms.BooleanField(
@@ -247,7 +252,18 @@ class ExamScribbleMatchRobustForm(forms.Form):
 		data = super(ExamScribbleMatchRobustForm, self).clean()
 		if not self.is_valid():
 			return
-		entity = data['entity']
+
+		if data['attention'] is True:
+			self.examscribble.needs_attention = True
+			self.examscribble.save()
+			return
+		entity = data.get('entity', None)
+		if entity is None:
+				self.add_error('entity', "No entity specified")
+
+		self.examscribble.needs_attention = False
+		self.examscribble.save()
+
 
 		# Now for each attached ProblemScribble...
 		# check if it's okay to update
