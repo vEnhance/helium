@@ -610,6 +610,7 @@ def _report(num_show = None, num_named = None,
 	mathletes = list(He.models.Entity.mathletes.all())
 	teams = list(He.models.Entity.teams.all())
 
+	# GET ALL SCORES NOW
 	# Query through all verdicts, grouping by exam by problem
 	# exam_id -> entity_id -> score list
 	all_verdicts_dict = {}
@@ -620,11 +621,12 @@ def _report(num_show = None, num_named = None,
 			.order_by('problem__problem_number')\
 			.values('problem__exam_id', 'entity_id', 'score'):
 		exam_id, entity_id, score = v_dict['problem__exam_id'], v_dict['entity_id'], v_dict['score']
-		all_verdicts_dict[exam_id][entity_id].append(score)
+		if score is not None:
+			all_verdicts_dict[exam_id][entity_id].append(score)
 
 	## Individual Results
 	if show_indiv_alphas:
-		output += presentation.RP_alphas(mathletes).get_table("Overall Individuals (Alphas)", \
+		output += presentation.RP_alphas().get_table("Overall Individuals (Alphas)", \
 				num_show = num_show, num_named = num_named)
 	output += "\n"
 
@@ -655,6 +657,7 @@ def _report(num_show = None, num_named = None,
 				team_exam_scores[r.row_name].append(this_exam_weight * r.total)
 
 	# Now compute sum of individual scores
+	# TODO optimize this part as well
 	if show_team_sum_alphas:
 		rp = presentation.RP_alpha_sums(mathletes, teams)
 		output += rp.get_table(heading = "Team Individual Aggregate", \

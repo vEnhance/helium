@@ -459,6 +459,7 @@ class EntityAlpha(models.Model):
 # not in use, since it's too slow when called in succession
 # better to group all verdicts together ("bucket sort")
 # rather than repeatedly filter
+
 #def get_exam_scores(exam, entity):
 #	"""Returns all (valid) Verdicts for an entity taking some exam.
 #	For Verdicts with no score yet, a score of zero is reported."""

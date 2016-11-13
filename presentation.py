@@ -16,6 +16,7 @@ from odf.table import Table, TableRow, TableCell
 from odf.text import P
 
 import helium as He
+import itertools
 
 # Why isn't this built-in?
 def valuetype(val):
@@ -107,13 +108,14 @@ class ResultPrinter:
 		return sheet
 
 
-def RP_alphas(mathletes):
+def RP_alphas():
 	"""Creates a ResultPrinter for a set of mathletes,
 	by looking up their alpha values"""
-	results = [NameResultRow(row_name = unicode(mathlete),
-				scores = [He.models.get_alpha(mathlete)])
-				for mathlete in mathletes]
+	results = [NameResultRow(row_name = unicode(ea.entity),
+				scores = [ea.cached_alpha or 0])
+				for ea in He.models.EntityAlpha.objects.all()]
 	return ResultPrinter(results)
+
 def RP_exam(entities, score_dict):
 	"""Input: list of entities, score_dict with entity_id -> score_set
 	Creates a ResultPrinter for a set of exams and entities,
@@ -122,12 +124,15 @@ def RP_exam(entities, score_dict):
 			scores = score_dict[entity.id]) \
 			for entity in entities]
 	return ResultPrinter(results)
+
 def RP_alpha_sums(mathletes, teams):
 	"""Creates a ResultPrinter for a set of mathletes and teams
 	by summing the alpha values of the mathletes"""
+	mathletes.sort(key = lambda m: m.team.id if m.team is not None else 0)
 	results = []
-	for team in teams:
-		scores = [He.models.get_alpha(m) for m in mathletes if m.team == team]
+	for team, group in itertools.groupby(mathletes, lambda m : m.team):
+		if team is None: continue
+		scores = [He.models.get_alpha(m) for m in group]
 		scores.sort(reverse=True)
 		results.append(NameResultRow(row_name = unicode(team), scores = scores))
 	return ResultPrinter(results)
