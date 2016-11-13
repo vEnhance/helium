@@ -653,7 +653,7 @@ def _report(num_show = None, num_named = None,
 		rp = presentation.RP_exam(teams, all_verdicts_dict[exam.id])
 		output += rp.get_table(heading = unicode(exam), \
 				num_show = num_show, num_named = num_named,
-				float_string = "%3.0f", int_string = "%3d")
+				float_string = "%2.0f", int_string = "%2d")
 		# Use for sweeps
 		if show_hmmt_sweepstakes:
 			if len(rp.results) > 0 and any([r.total for r in rp.results]):
