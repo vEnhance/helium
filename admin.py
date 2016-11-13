@@ -41,12 +41,23 @@ class TeamFilter(admin.SimpleListFilter):
 		elif self.value() == "team":
 			return queryset.filter(is_team=True)
 
+class MissingFilter(admin.SimpleListFilter):
+	title = "Missing Entities"
+	parameter_name = 'missing'
+	def lookups(self, request, model_admin):
+		return (("no_verdict", "No Verdicts"),)
+	def queryset(self, request, queryset):
+		if self.value() is None:
+			return queryset
+		elif self.value() == "no_verdict":
+			return queryset.filter(verdict__isnull=True)
+
 @admin.register(He.models.Entity)
 class EntityAdmin(admin.ModelAdmin):
-	list_display = ('name', 'id', 'team', 'number', 'is_team')
+	list_display = ('name', 'id', 'team', 'number', 'is_team', 'size')
 	inlines = (EntityInline,)
 	search_fields = ('name',)
-	list_filter = (TeamFilter,)
+	list_filter = (TeamFilter, MissingFilter,)
 
 @admin.register(He.models.Exam)
 class ExamAdmin(admin.ModelAdmin):

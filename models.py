@@ -105,6 +105,11 @@ class Entity(models.Model):
 	teams = TeamManager()
 	mathletes = MathleteManager()
 
+	def size(self):
+		"""This is the size of a team (or None on individuals)"""
+		if not self.is_team: return None
+		else: return self.entity_set.count()
+
 	class Meta:
 		unique_together = ('is_team', 'number')
 
