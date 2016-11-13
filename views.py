@@ -54,7 +54,6 @@ import django.core.management
 import django.db
 import json
 import logging
-import itertools
 import collections
 import random
 import time
@@ -458,26 +457,33 @@ def ajax_prev_evidence(request):
 @staff_member_required
 def progress_problems(request):
 	"""Generates a table of how progress grading the problem is going."""
-	verdicts = He.models.Verdict.objects.filter(problem__exam__is_ready=True)
-	verdicts = list(verdicts)
-	verdicts.sort(key = lambda v : v.problem.id)
+	main_queryset = He.models.Verdict.objects.order_by()\
+			.values('problem_id', 'is_valid', 'is_done')\
+			.annotate(count = django.db.models.Count('id'))
+
+	results = collections.defaultdict(dict) # problem_id -> category -> count
+	for query_d in main_queryset:
+		problem_id = query_d['problem_id']
+		if query_d['is_valid'] is False:
+			category = "Conflict"
+		elif query_d['is_valid'] is True and query_d['is_done'] is True:
+			category = "Done"
+		elif query_d['is_valid'] is True and query_d['is_done'] is False:
+			category = "Pending"
+		results[problem_id][category] = query_d['count']
 
 	table = []
-	columns = ['Problem', 'Done', 'Pending', 'Unread', 'Conflict', 'Missing']
+	columns = ['Problem', 'Done', 'Pending', 'Conflict']
 
-	num_mathletes = He.models.Entity.mathletes.count()
-	num_teams = He.models.Entity.teams.count()
-	for problem, group in itertools.groupby(verdicts, key = lambda v : v.problem):
-		group = list(group) # dangit, this gotcha
+	for problem in He.models.Problem.objects.all():
+		problem_info = results.get(problem.id, None) # category -> count
+		if problem_info is None: continue
+
 		tr = collections.OrderedDict()
 		tr['Problem']  = str(problem)
-		tr['Done']     = len([v for v in group if v.is_valid and v.is_done])
-		tr['Pending']  = len([v for v in group if v.is_valid \
-				and not v.is_done and v.evidence_count() > 0])
-		tr['Unread']   = len([v for v in group if v.is_valid \
-				and not v.is_done and v.evidence_count() == 0])
-		tr['Conflict'] = len([v for v in group if not v.is_valid])
-		tr['Missing']  = (num_mathletes if v.is_indiv else num_teams) - len(group)
+		tr['Done']     = problem_info.get("Done", 0)
+		tr['Pending']  = problem_info.get("Pending", 0)
+		tr['Conflict'] = problem_info.get("Conflict", 0)
 		table.append(tr)
 
 	context = {'columns' : columns, 'table' : table, 'pagetitle' : 'Grading Progress'}
@@ -485,20 +491,32 @@ def progress_problems(request):
 @staff_member_required
 def progress_scans(request):
 	"""Generates a table showing how quickly the scans are being matched for a problem."""
-	examscribbles = He.models.ExamScribble.objects\
-			.filter(exam__is_ready=True, exam__is_scanned=True)
-	examscribbles = list(examscribbles)
-	examscribbles.sort(key = lambda es : es.exam.id)
+
+	main_queryset = He.models.ExamScribble.objects.order_by()\
+			.filter(exam__is_ready=True, exam__is_scanned=True)\
+			.values('exam_id').annotate(
+					done_count = django.db.models.Count('entity_id'),
+					total_count = django.db.models.Count('id'))
+
+	results = {}
+	for query_d in main_queryset:
+		exam_id = query_d['exam_id']
+		results[exam_id] = {
+				'Done': query_d['done_count'],
+				'Left': query_d['total_count'] - query_d['done_count'],
+				}
 
 	table = []
 	columns = ['Exam', 'Done', 'Left']
 
-	for exam, group in itertools.groupby(examscribbles, key = lambda es : es.exam):
-		group = list(group) # dangit, this gotcha
+	for exam in He.models.Exam.objects.filter(is_ready=True, is_scanned=True):
+		exam_info = results.get(exam.id, None) # category -> count
+		if exam_info is None: continue
+
 		tr = collections.OrderedDict()
 		tr['Exam'] = str(exam)
-		tr['Done'] = len([es for es in group if es.entity is not None])
-		tr['Left'] = len(group) - tr['Done']
+		tr['Done'] = exam_info['Done']
+		tr['Left'] = exam_info['Left']
 		table.append(tr)
 
 	context = {'columns' : columns, 'table' : table, 'pagetitle' : 'Scans Progress'}
