@@ -44,44 +44,58 @@ class TeamFilter(admin.SimpleListFilter):
 @admin.register(He.models.Entity)
 class EntityAdmin(admin.ModelAdmin):
 	list_display = ('name', 'id', 'team', 'number', 'is_team')
-	list_filter = (TeamFilter,)
 	inlines = (EntityInline,)
+	search_fields = ('name',)
+	list_filter = (TeamFilter,)
 
 @admin.register(He.models.Exam)
 class ExamAdmin(admin.ModelAdmin):
 	list_display = ('name', 'id',  'color', 'is_indiv', 'is_ready', 'is_alg_scoring', 'is_scanned', 'min_grades', 'min_override')
 	inlines = (ProblemInline,)
+	search_fields = ('name',)
+	list_filter = ('is_indiv', 'is_ready', 'is_alg_scoring', 'is_scanned',)
 
 @admin.register(He.models.Problem)
 class ProblemAdmin(admin.ModelAdmin):
 	list_display = ('id', 'exam', 'problem_number', 'weight', 'allow_partial')
+	search_fields = ('exam', 'problem_number',)
+	list_filter = ('exam',)
 
 @admin.register(He.models.ExamScribble)
 class ExamScribbleAdmin(admin.ModelAdmin):
 	list_display = ('id', 'exam', 'entity', 'pdf_scribble', 'needs_attention')
 	inlines = (ProblemScribbleInline,)
+	search_fields = ('entity',)
+	list_filter = ('exam',)
 
 @admin.register(He.models.Verdict)
 class VerdictAdmin(admin.ModelAdmin):
 	list_display = ('id', 'problem', 'entity', 'score', 'evidence_count', 'is_valid', 'is_done')
 	inlines = (EvidenceInline, ProblemScribbleInline,)
+	search_fields = ('problem', 'entity',)
 
 @admin.register(He.models.ProblemScribble)
 class ProblemScribbleAdmin(admin.ModelAdmin):
 	list_display = ('id', 'verdict', 'examscribble', 'last_sent_time')
+	search_fields = ('verdict',)
 
 @admin.register(He.models.Evidence)
 class EvidenceAdmin(admin.ModelAdmin):
 	list_display = ('id', 'verdict', 'user', 'score', 'god_mode')
+	search_fields = ('verdict',)
 
 @admin.register(He.models.EntityAlpha)
 class AlphaAdmin(admin.ModelAdmin):
 	list_display = ('entity', 'cached_alpha', 'id')
+	search_fields = ('entity',)
 
 @admin.register(He.models.GutsScoreFunc)
 class GutsScoreFuncAdmin(admin.ModelAdmin):
 	list_display = ('problem_number', 'description', 'answer', 'problem_help_text')
+	search_fields = ('problem_number', 'description',)
 
 @admin.register(He.models.EntirePDFScribble)
 class EntirePDFAdmin(admin.ModelAdmin):
-	list_display = ('name', 'id', 'is_done', 'exam')
+	list_display = ('name', 'id', 'is_done', 'exam',)
+	list_filter = ('is_done', 'exam',)
+	search_fields = ('name',)
