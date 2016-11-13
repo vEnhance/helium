@@ -563,7 +563,7 @@ def upload_scans(request):
 					pdfscribble.is_done = True
 					pdfscribble.save()
 				threader.run_async(target_function, name = "upload_scans")
-				messages.success(request, "PDF successfully uploaded and now processing")
+				messages.success(request, "PDF %s is OK, now processing" %pdf_name)
 	else:
 		form = forms.UploadScanForm()
 	return render(request, "upload-scans.html", {'form' : form})
