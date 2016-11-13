@@ -622,10 +622,14 @@ def _report(num_show = None, num_named = None,
 
 	for v_dict in He.models.Verdict.objects.all()\
 			.order_by('problem__problem_number')\
-			.values('problem__exam_id', 'problem__weight', 'entity_id', 'score'):
+			.values('problem__exam_id', 'problem__weight',\
+			'problem__allow_partial', 'entity_id', 'score'):
 		exam_id, entity_id, score = v_dict['problem__exam_id'], v_dict['entity_id'], v_dict['score']
 		if score is not None:
-			all_verdicts_dict[exam_id][entity_id].append(score * v_dict['problem__weight'])
+			if v_dict['problem__allow_partial']:
+				all_verdicts_dict[exam_id][entity_id].append(score * v_dict['problem__weight'])
+			else:
+				all_verdicts_dict[exam_id][entity_id].append(score)
 
 	## Individual Results
 	if show_indiv_alphas:
