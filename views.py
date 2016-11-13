@@ -206,7 +206,10 @@ def match_papers(request, exam_id):
 				request.POST, examscribble = examscribble, user = request.user)
 		if form.is_valid():
 			prev_entity = form.cleaned_data['entity']
-			messages.success(request, "Matched exam for %s" %prev_entity)
+			if form.cleaned_data['attention']:
+				messages.success("Marked exam scribble for admin action")
+			else:
+				messages.success(request, "Matched exam for %s" %prev_entity)
 		else: # validation errors
 			context = {
 					'form' : form,
