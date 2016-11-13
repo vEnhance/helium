@@ -626,7 +626,7 @@ def _report(num_show = None, num_named = None,
 			'problem__allow_partial', 'entity_id', 'score'):
 		exam_id, entity_id, score = v_dict['problem__exam_id'], v_dict['entity_id'], v_dict['score']
 		if score is not None:
-			if v_dict['problem__allow_partial']:
+			if not v_dict['problem__allow_partial']: # all-or-nothing
 				all_verdicts_dict[exam_id][entity_id].append(score * v_dict['problem__weight'])
 			else:
 				all_verdicts_dict[exam_id][entity_id].append(score)
