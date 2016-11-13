@@ -54,9 +54,9 @@ class MissingFilter(admin.SimpleListFilter):
 
 @admin.register(He.models.Entity)
 class EntityAdmin(admin.ModelAdmin):
-	list_display = ('name', 'id', 'team', 'number', 'is_team', 'size')
+	list_display = ('name', 'shortname', 'id', 'team', 'number', 'is_team', 'size')
 	inlines = (EntityInline,)
-	search_fields = ('name',)
+	search_fields = ('name', 'shortname',)
 	list_filter = (TeamFilter, MissingFilter,)
 
 @admin.register(He.models.Exam)
