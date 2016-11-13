@@ -610,6 +610,18 @@ def _report(num_show = None, num_named = None,
 	mathletes = list(He.models.Entity.mathletes.all())
 	teams = list(He.models.Entity.teams.all())
 
+	# Query through all verdicts, grouping by exam by problem
+	# exam_id -> entity_id -> score list
+	all_verdicts_dict = {}
+	for exam in He.models.Exam.objects.all():
+		all_verdicts_dict[exam.id] = collections.defaultdict(list)
+
+	for v_dict in He.models.Verdict.objects.all()\
+			.order_by('problem__problem_number')\
+			.values('problem__exam_id', 'entity_id', 'score'):
+		exam_id, entity_id, score = v_dict['problem__exam_id'], v_dict['entity_id'], v_dict['score']
+		all_verdicts_dict[exam_id][entity_id].append(score)
+
 	## Individual Results
 	if show_indiv_alphas:
 		output += presentation.RP_alphas(mathletes).get_table("Overall Individuals (Alphas)", \
@@ -618,7 +630,8 @@ def _report(num_show = None, num_named = None,
 
 	indiv_exams = He.models.Exam.objects.filter(is_indiv=True)
 	for exam in indiv_exams:
-		output += presentation.RP_exam(exam, mathletes).get_table(heading = unicode(exam), \
+		rp = presentation.RP_exam(mathletes, all_verdicts_dict[exam.id])
+		output += rp.get_table(heading = unicode(exam), \
 				num_show = num_show, num_named = num_named)
 	output += "\n"
 
@@ -628,7 +641,7 @@ def _report(num_show = None, num_named = None,
 		team_exam_scores = collections.defaultdict(list) # unicode(team) -> list of scores
 
 	for exam in team_exams:
-		rp = presentation.RP_exam(exam, teams)
+		rp = presentation.RP_exam(teams, all_verdicts_dict[exam.id])
 		output += rp.get_table(heading = unicode(exam), \
 				num_show = num_show, num_named = num_named,
 				float_string = "%3.0f", int_string = "%3d")

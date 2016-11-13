@@ -114,12 +114,12 @@ def RP_alphas(mathletes):
 				scores = [He.models.get_alpha(mathlete)])
 				for mathlete in mathletes]
 	return ResultPrinter(results)
-def RP_exam(exam, entities):
-	"""Creates a ResultPrinter for a set of exams and entities,
+def RP_exam(entities, score_dict):
+	"""Input: list of entities, score_dict with entity_id -> score_set
+	Creates a ResultPrinter for a set of exams and entities,
 	by looking up their scores for the exam"""
-	results = [NameResultRow(
-			row_name = unicode(entity),
-			scores = He.models.get_exam_scores(exam, entity)) \
+	results = [NameResultRow(row_name = unicode(entity),
+			scores = score_dict[entity.id]) \
 			for entity in entities]
 	return ResultPrinter(results)
 def RP_alpha_sums(mathletes, teams):

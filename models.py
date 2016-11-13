@@ -456,14 +456,17 @@ class EntityAlpha(models.Model):
 	cached_alpha = models.FloatField(blank=True, null=True)
 
 # Auxiliary functions
-def get_exam_scores(exam, entity):
-	"""Returns all (valid) Verdicts for an entity taking some exam.
-	For Verdicts with no score yet, a score of zero is reported."""
-	queryset = Verdict.objects.filter(entity=entity, problem__exam=exam, is_valid=True)\
-					.order_by('problem__problem_number')
-	return [v.problem.intweight * (v.score or 0)
-		if not v.problem.allow_partial else (v.score or 0)
-		for v in queryset]
+# not in use, since it's too slow when called in succession
+# better to group all verdicts together ("bucket sort")
+# rather than repeatedly filter
+#def get_exam_scores(exam, entity):
+#	"""Returns all (valid) Verdicts for an entity taking some exam.
+#	For Verdicts with no score yet, a score of zero is reported."""
+#	queryset = Verdict.objects.filter(entity=entity, problem__exam=exam, is_valid=True)\
+#					.order_by('problem__problem_number')
+#	return [v.problem.intweight * (v.score or 0)
+#		if not v.problem.allow_partial else (v.score or 0)
+#		for v in queryset]
 
 def get_alpha(entity):
 	"""Wrapper function to look up the alpha value for an entity.
