@@ -22,9 +22,15 @@ $(document).ready(function() {
         if (settings.type == 'POST' && !this.crossDomain) {
             xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
         }}});
-    $("#id_entity[type!=\"hidden\"]").selectToAutocomplete();
-    $("#id_mathlete[type!=\"hidden\"]").selectToAutocomplete();
-    $("#id_team[type!=\"hidden\"]").selectToAutocomplete();
+	var autocomplete_options = {
+		'relevancy-sorting': false,
+		'alternative-spellings' : false,
+		'sort': false,
+		'delay': 250, // seems to not do anything? sad
+	}
+    $("#id_entity[type!=\"hidden\"]").selectToAutocomplete(autocomplete_options);
+    $("#id_mathlete[type!=\"hidden\"]").selectToAutocomplete(autocomplete_options);
+    $("#id_team[type!=\"hidden\"]").selectToAutocomplete(autocomplete_options);
 
     var angle = 0;
     $("#rotate_link").click(function() {
