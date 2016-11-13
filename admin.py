@@ -70,35 +70,35 @@ class ExamAdmin(admin.ModelAdmin):
 class ProblemAdmin(admin.ModelAdmin):
 	list_display = ('id', 'exam', 'problem_number', 'weight', 'allow_partial')
 	search_fields = ('exam', 'problem_number',)
-	list_filter = ('exam',)
+	list_filter = ('exam__name',)
 
 @admin.register(He.models.ExamScribble)
 class ExamScribbleAdmin(admin.ModelAdmin):
 	list_display = ('id', 'exam', 'entity', 'pdf_scribble', 'needs_attention')
 	inlines = (ProblemScribbleInline,)
 	search_fields = ('entity',)
-	list_filter = ('exam',)
+	list_filter = ('exam__name',)
 
 @admin.register(He.models.Verdict)
 class VerdictAdmin(admin.ModelAdmin):
 	list_display = ('id', 'problem', 'entity', 'score', 'evidence_count', 'is_valid', 'is_done')
 	inlines = (EvidenceInline, ProblemScribbleInline,)
-	search_fields = ('problem', 'entity',)
+	search_fields = ('problem__exam__name', 'entity__name',)
 
 @admin.register(He.models.ProblemScribble)
 class ProblemScribbleAdmin(admin.ModelAdmin):
 	list_display = ('id', 'verdict', 'examscribble', 'last_sent_time')
-	search_fields = ('verdict',)
+	search_fields = ('verdict__entity__name',)
 
 @admin.register(He.models.Evidence)
 class EvidenceAdmin(admin.ModelAdmin):
 	list_display = ('id', 'verdict', 'user', 'score', 'god_mode')
-	search_fields = ('verdict',)
+	search_fields = ('verdict__entity__name',)
 
 @admin.register(He.models.EntityAlpha)
 class AlphaAdmin(admin.ModelAdmin):
 	list_display = ('entity', 'cached_alpha', 'id')
-	search_fields = ('entity',)
+	search_fields = ('entity__name',)
 
 @admin.register(He.models.GutsScoreFunc)
 class GutsScoreFuncAdmin(admin.ModelAdmin):
