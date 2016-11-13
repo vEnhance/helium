@@ -433,7 +433,7 @@ class GutsScoreFunc(models.Model):
 	answer = models.CharField(max_length = 80,
 			help_text = "True answer for problem, not actually used by model, shown in grader.")
 	scoring_function = models.TextField(
-			default="function (x) {\n\treturn Math.max(0, 20-Math.abs(49-x));\n}",
+			default="function (x) {\n\treturn Math.round(Math.max(0, WEIGHT-Math.abs(ANS-x)));\n}",
 			help_text =
 			"Javascript syntax for a one-variable function. "
 			"This is the score reported if a staff member enters input x.\n"
