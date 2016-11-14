@@ -3,7 +3,7 @@
   fields: {name: Evan Chen, shortname: '', team: null, is_team: false, number: 2017}
 - model: helium.entity
   pk: 10
-  fields: {name: Opera, shortname: '', team: null, is_team: true, number: 100}
+  fields: {name: Opera, shortname: 'OP', team: null, is_team: true, number: 100}
 - model: helium.entity
   pk: 11
   fields: {name: Madame Giry, shortname: '', team: 10, is_team: false, number: 1909}
@@ -21,7 +21,7 @@
   fields: {name: Erik Fantasia, shortname: '', team: 10, is_team: false, number: 1986}
 - model: helium.entity
   pk: 16
-  fields: {name: Misery, shortname: '', team: null, is_team: true, number: 314}
+  fields: {name: Misery, shortname: 'MO', team: null, is_team: true, number: 314}
 - model: helium.entity
   pk: 17
   fields: {name: Jean Valjean, shortname: '', team: 16, is_team: false, number: 24601}
@@ -39,7 +39,7 @@
   fields: {name: Cosette Tholomyes, shortname: '', team: 16, is_team: false, number: 1815}
 - model: helium.entity
   pk: 22
-  fields: {name: Wicked, shortname: '', team: null, is_team: true, number: 256}
+  fields: {name: Wicked, shortname: 'WI', team: null, is_team: true, number: 256}
 - model: helium.entity
   pk: 23
   fields: {name: Tin Woodman, shortname: '', team: 22, is_team: false, number: 4096}
