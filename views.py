@@ -50,6 +50,7 @@ from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib import messages
+from django.db.models import Count
 import django.core.management
 import django.db
 import json
@@ -465,7 +466,7 @@ def progress_problems(request):
 	"""Generates a table of how progress grading the problem is going."""
 	main_queryset = He.models.Verdict.objects.order_by()\
 			.values('problem_id', 'is_valid', 'is_done')\
-			.annotate(count = django.db.models.Count('id'))
+			.annotate(count = Count('id'))
 
 	results = collections.defaultdict(dict) # problem_id -> category -> count
 	for query_d in main_queryset:
@@ -501,8 +502,8 @@ def progress_scans(request):
 	main_queryset = He.models.ExamScribble.objects.order_by()\
 			.filter(exam__is_ready=True, exam__is_scanned=True)\
 			.values('exam_id').annotate(
-					done_count = django.db.models.Count('entity_id'),
-					total_count = django.db.models.Count('id'))
+					done_count = Count('entity_id'),
+					total_count = Count('id'))
 
 	results = {}
 	for query_d in main_queryset:
