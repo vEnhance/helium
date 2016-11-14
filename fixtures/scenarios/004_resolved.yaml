@@ -30,61 +30,61 @@
     user_permissions: []
 - model: helium.entity
   pk: 9
-  fields: {name: Evan Chen, shortname: '', team: null, is_team: false, number: null}
+  fields: {name: Evan Chen, shortname: '', team: null, is_team: false, number: 2017}
 - model: helium.entity
   pk: 10
-  fields: {name: Opera, shortname: '', team: null, is_team: true, number: null}
+  fields: {name: Opera, shortname: '', team: null, is_team: true, number: 100}
 - model: helium.entity
   pk: 11
-  fields: {name: Madame Giry, shortname: '', team: 10, is_team: false, number: null}
+  fields: {name: Madame Giry, shortname: '', team: 10, is_team: false, number: 1909}
 - model: helium.entity
   pk: 12
-  fields: {name: Carlotta Guidicelli, shortname: '', team: 10, is_team: false, number: null}
+  fields: {name: Carlotta Guidicelli, shortname: '', team: 10, is_team: false, number: 2004}
 - model: helium.entity
   pk: 13
-  fields: {name: Christine Daae, shortname: '', team: 10, is_team: false, number: null}
+  fields: {name: Christine Daae, shortname: '', team: 10, is_team: false, number: 1000}
 - model: helium.entity
   pk: 14
-  fields: {name: Raoul de Chagny, shortname: '', team: 10, is_team: false, number: null}
+  fields: {name: Raoul de Chagny, shortname: '', team: 10, is_team: false, number: 6666}
 - model: helium.entity
   pk: 15
-  fields: {name: Erik Fantasia, shortname: '', team: 10, is_team: false, number: null}
+  fields: {name: Erik Fantasia, shortname: '', team: 10, is_team: false, number: 1986}
 - model: helium.entity
   pk: 16
-  fields: {name: Misery, shortname: '', team: null, is_team: true, number: null}
+  fields: {name: Misery, shortname: '', team: null, is_team: true, number: 314}
 - model: helium.entity
   pk: 17
-  fields: {name: Jean Valjean, shortname: '', team: 16, is_team: false, number: null}
+  fields: {name: Jean Valjean, shortname: '', team: 16, is_team: false, number: 24601}
 - model: helium.entity
   pk: 18
-  fields: {name: Inspector Javert, shortname: '', team: 16, is_team: false, number: null}
+  fields: {name: Inspector Javert, shortname: '', team: 16, is_team: false, number: 4444}
 - model: helium.entity
   pk: 19
-  fields: {name: Gavroche Thenardier, shortname: '', team: 16, is_team: false, number: null}
+  fields: {name: Gavroche Thenardier, shortname: '', team: 16, is_team: false, number: 1337}
 - model: helium.entity
   pk: 20
-  fields: {name: Marius Pontmercy, shortname: '', team: 16, is_team: false, number: null}
+  fields: {name: Marius Pontmercy, shortname: '', team: 16, is_team: false, number: 5555}
 - model: helium.entity
   pk: 21
-  fields: {name: Cosette Tholomyes, shortname: '', team: 16, is_team: false, number: null}
+  fields: {name: Cosette Tholomyes, shortname: '', team: 16, is_team: false, number: 1815}
 - model: helium.entity
   pk: 22
-  fields: {name: Wicked, shortname: '', team: null, is_team: true, number: null}
+  fields: {name: Wicked, shortname: '', team: null, is_team: true, number: 256}
 - model: helium.entity
   pk: 23
-  fields: {name: Tin Woodman, shortname: '', team: 22, is_team: false, number: null}
+  fields: {name: Tin Woodman, shortname: '', team: 22, is_team: false, number: 4096}
 - model: helium.entity
   pk: 24
-  fields: {name: Fiyero Tigelaar, shortname: '', team: 22, is_team: false, number: null}
+  fields: {name: Fiyero Tigelaar, shortname: '', team: 22, is_team: false, number: 1270}
 - model: helium.entity
   pk: 25
-  fields: {name: Elphaba Thropp, shortname: '', team: 22, is_team: false, number: null}
+  fields: {name: Elphaba Thropp, shortname: '', team: 22, is_team: false, number: 1939}
 - model: helium.entity
   pk: 26
-  fields: {name: Glinda Upland, shortname: '', team: 22, is_team: false, number: null}
+  fields: {name: Glinda Upland, shortname: '', team: 22, is_team: false, number: 1940}
 - model: helium.entity
   pk: 27
-  fields: {name: Nessa Thropp, shortname: '', team: 22, is_team: false, number: null}
+  fields: {name: Nessa Thropp, shortname: '', team: 22, is_team: false, number: 5120}
 - model: helium.exam
   pk: 6
   fields: {name: GEO!, color: '#EEFFEE', is_indiv: true, is_ready: true, is_alg_scoring: true,
