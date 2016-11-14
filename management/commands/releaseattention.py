@@ -5,7 +5,7 @@ class Command(BaseCommand):
 	help = "Releases all examscribbles from attention"
 
 	def handle(self, *args, **kwargs):
-		examscribbles = He.models.ExamScribble.objects.filter(needs_attention=True)
+		examscribbles = He.models.ExamScribble.objects.exclude(needs_attention=u'')
 		for es in examscribbles:
-			es.needs_attention = False
+			es.needs_attention = ""
 			es.save()
