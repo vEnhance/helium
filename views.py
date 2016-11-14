@@ -207,7 +207,8 @@ def match_papers(request, exam_id):
 		if form.is_valid():
 			prev_entity = form.cleaned_data['entity']
 			if form.cleaned_data['attention']:
-				messages.success("Marked exam scribble for admin action")
+				messages.success(request, "Marked exam scribble for admin action "
+				"(reason given: %s)" % form.cleaned_data['attention'])
 			else:
 				messages.success(request, "Matched exam for %s" %prev_entity)
 		else: # validation errors
@@ -220,7 +221,7 @@ def match_papers(request, exam_id):
 
 	# Now we're set, so get the next scribble, or alert none left
 	queryset = He.models.ExamScribble.objects.filter\
-			(entity=None, exam=exam, needs_attention=False)
+			(entity=None, exam=exam, needs_attention=u'')
 
 	if len(queryset) == 0:
 		context = {
@@ -312,7 +313,8 @@ def find_paper(request):
 		context['show_attention'] = True
 		context['columns'] = ['PDF File', 'Exam', 'Entity', 'Open']
 		table = []
-		for es in He.models.ExamScribble.objects.filter(needs_attention=True):
+		# List scribbles needing attention
+		for es in He.models.ExamScribble.objects.exclude(needs_attention=u''):
 			tr = collections.OrderedDict()
 			tr['PDF File'] = es.pdf_scribble
 			tr['Exam'] = es.exam
@@ -365,7 +367,8 @@ def view_paper(request, *args):
 		context['matchurl'] = "/helium/match-papers/%d/" %exam.id
 
 		if es.needs_attention:
-			messages.warning(request, "This exam scribble needs administrator attention.")
+			messages.warning(request, "This exam scribble needs administrator attention. "
+			"Reason: " + es.needs_attention)
 
 	context['gradeform'] = forms.ExamGradingRobustForm(
 			user = request.user,

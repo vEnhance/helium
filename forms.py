@@ -235,33 +235,33 @@ class ExamScribbleMatchRobustForm(forms.Form):
 		self.fields['examscribble_id'] = forms.IntegerField(\
 				initial = self.examscribble.id,
 				widget = forms.HiddenInput)
-		self.fields['attention'] = forms.BooleanField(\
-				label = 'Needs attention',
+		self.fields['attention'] = forms.CharField(\
+				label = 'Issues:',
 				required = False,
-				help_text = 'Check this box to mark scribble for admin attention\
-					(no name will be matched)')
+				help_text = "Note here if there are any problems with this scribble, "
+					"like \"no name\" or \"no such student\". "
+					"(If you do, other action is taken.)")
 
 		if self.user.is_superuser:
 			self.fields['force'] = forms.BooleanField(
 					label = 'Override',
 					required = False,
-					help_text = "Super-users can use this to cause havoc. "\
+					help_text = "Super-users can use this to cause havoc. "
 							"Please avoid using unless you know what it does.")
 
 	def clean(self):
 		data = super(ExamScribbleMatchRobustForm, self).clean()
 		if not self.is_valid():
 			return
-
-		if data['attention'] is True:
-			self.examscribble.needs_attention = True
+		if data['attention'] != '':
+			self.examscribble.needs_attention = data['attention']
 			self.examscribble.save()
 			return
 		entity = data.get('entity', None)
 		if entity is None:
 				self.add_error('entity', "No entity specified")
 
-		self.examscribble.needs_attention = False
+		self.examscribble.needs_attention = ""
 		self.examscribble.save()
 
 
