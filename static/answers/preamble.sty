@@ -48,15 +48,33 @@
 \end{center}
 }
 
+\newcommand{\indivtable}{%
+\begin{tabular}{|m{0.6in}|m{3.6in}|m{0.6in}|m{1in}|}
+	\hline
+	\textsc{Name} & \hspace{4in} & \textsc{Team ID Num} & \\[0.3in]
+\end{tabular}
+\begin{tabular}{|m{0.6in}|m{2.3in}|m{0.6in}|m{2.3in}|}
+	\hline
+	\textsc{Team} & & \textsc{Org.} & \\[0.3in] \hline
+\end{tabular}
+}
 
-\newcommand{\sheet}[3]{
+\newcommand{\teamtable}{%
+\begin{tabular}{|m{1.2in}|m{4.95in}|}
+	\hline
+	\textsc{Organization} & \\[0.3in]
+\end{tabular}
+\begin{tabular}{|m{0.6in}|m{3.6in}|m{0.6in}|m{1in}|}
+	\hline
+	\textsc{Team} & \hspace{4in} & \textsc{Team ID Num} & \\[0.3in] \hline
+\end{tabular}
+}
+
+
+\newcommand{\sheet}[2]{
 \begin{center}
 	{ \bfseries\huge \HMMT: #1 } \\[0.5in]
-	\begin{tabular}{|m{1.5in}|m{4.5in}|}
-		\hline
-		\bfseries \large #2 & \\[0.3in] \hline
-		\bfseries \large #3 & \\[0.3in] \hline
-	\end{tabular}
+	#2
 \end{center}
 \vspace{0.2in}
 Your work is graded by computer;
@@ -66,5 +84,5 @@ staying within the borders for each problem.
 \par\vspace{0.2in} 
 \answerboxes\eject}
 
-\newcommand{\indivsheet}[1]{\sheet{#1}{Student Name}{Team Name}}
-\newcommand{\teamsheet}[1]{\sheet{#1}{Team Name}{Organization}}
+\newcommand{\indivsheet}[1]{\sheet{#1}{\indivtable}}
+\newcommand{\teamsheet}[1]{\sheet{#1}{\teamtable}}
