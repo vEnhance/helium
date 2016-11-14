@@ -87,8 +87,7 @@ class ResultPrinter:
 			if num_show is not None and result.rank > num_show:
 				break
 			output += "%4d. " % result.rank
-			output += "%7.2f"  % result.total if type(result.total) == float \
-					else "%7d" % result.total
+			output += "%7.2f"  % result.total
 			if max_length > 1: # sum of more than one thing
 				if zero_pad:
 					scores = result.scores + [0,] * (max_length - len(result.scores))
