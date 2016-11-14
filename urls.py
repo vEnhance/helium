@@ -23,6 +23,8 @@ urlpatterns = [
 	url(r'^old-grader/problem/redir/$', views.old_grader_problem_redir),
 	url(r'^match-papers/([0-9]+)/$', views.match_papers),
 	url(r'^match-papers/redir/$', views.match_papers_redir),
+	url(r'^fast-match/([0-9]+)/$', views.fast_match),
+	url(r'^fast-match/redir/$', views.fast_match_redir),
 	url(r'^view-verdict/([0-9]+)/$', views.view_verdict),
 	url(r'^view-conflicts/all/$', views.view_conflicts_all),
 	url(r'^view-conflicts/own/$', views.view_conflicts_own),

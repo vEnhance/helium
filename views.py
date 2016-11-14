@@ -19,6 +19,7 @@ This file is divided into roughly a few parts:
 * The scan grader (grade_scans), grading problem scans
 
 ## Verdict views
+view_*
 The interfaces view_verdict and find_verdicts, etc.
 These are used so that e.g. you can look at your own grading conflicts.
 Also view_paper for viewing an entire examscribble
@@ -183,7 +184,7 @@ def old_grader_problem(request, problem_id):
 	problems = [problem]
 	return _old_grader(request, exam, problems)
 
-## VIEWS FOR SCAN MATCH
+## VIEWS FOR SLOW SCAN MATCH
 @staff_member_required
 def match_papers_redir(request):
 	return _redir_obj_id(request,
@@ -241,6 +242,21 @@ def match_papers(request, exam_id):
 				}
 	return render(request, "match-papers.html", context)
 
+## VIEWS FOR FAST SCAN MATCH
+@staff_member_required
+def fast_match_redir(request):
+	return _redir_obj_id(request,
+			key = 'exam',
+			form_type = forms.ExamScanSelectForm)
+@staff_member_required
+def fast_match(request, exam_id):
+	try:
+		exam = He.models.Exam.objects.get(id=exam_id)
+	except He.models.Exam.DoesNotExist:
+		return HttpResponseNotFound("Exam does not exist", content_type="text/plain")
+	return render(request, "fast-match.html", context)
+
+## VIEWS FOR SCAN GRADER
 @staff_member_required
 def grade_scans_redir(request):
 	return _redir_obj_id(request,
