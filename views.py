@@ -254,7 +254,7 @@ def fast_match(request, exam_id):
 		exam = He.models.Exam.objects.get(id=exam_id)
 	except He.models.Exam.DoesNotExist:
 		return HttpResponseNotFound("Exam does not exist", content_type="text/plain")
-	context = {}
+	context = {'exam' : exam}
 	return render(request, "fast-match.html", context)
 
 ## VIEWS FOR SCAN GRADER
@@ -412,6 +412,7 @@ def view_conflicts_own(request):
 	return render(request, "table-only.html", context)
 
 ## AJAX HOOKS
+### Ajax for scan grader
 @staff_member_required
 @require_POST
 def ajax_submit_scan(request):
@@ -452,6 +453,7 @@ def ajax_next_scan(request):
 		ret.append([0, DONE_IMAGE_URL, 0, 0])
 	return HttpResponse( json.dumps(ret), content_type = 'application/json' )
 
+### Ajax for filling in classical grader
 @staff_member_required
 @require_POST
 def ajax_prev_evidence(request):
@@ -476,6 +478,40 @@ def ajax_prev_evidence(request):
 		else:
 			output.append( (n, e.score) )
 	return HttpResponse( json.dumps(output), content_type='application/json' )
+
+### Ajax for scan matcher
+@staff_member_required
+@require_POST
+def ajax_submit_match(request):
+	"""POST arguments: examscribble_id, entity_id. 
+	RETURN: nothing useful"""
+	pass
+@staff_member_required
+@require_POST
+def ajax_next_match(request):
+	"""POST arguments: num_to_load, exam_id.
+	RETURN: list of (examscribble id, examscribble url)"""
+
+	exam_id = int(request.POST['exam_id'])
+	if exam_id == 0: return
+	exam = He.models.Exam.objects.get(id=exam_id)
+	n = int(request.POST['num_to_load'])
+
+	scribbles = He.models.ExamScribble.objects.filter(\
+			entity__isnull=True, needs_attention=u'')
+	# TODO implement cooldown for exam scribbles
+	# wait 10 seconds before giving out the same scribble again
+	# scribbles = scribbles.exclude(last_sent_time__gte = time.time() - 10)
+
+	ret = []
+	for es in scribbles[0:n]:
+		# ps.last_sent_time = time.time()
+		# ps.save()
+		ret.append([es.id, es.name_image.url])
+	if len(ret) < n: # didn't finish
+		ret.append([0, DONE_IMAGE_URL])
+	return HttpResponse( json.dumps(ret), content_type = 'application/json' )
+
 
 ## PROGRESS REPORTS
 @staff_member_required

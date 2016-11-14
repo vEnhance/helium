@@ -18,7 +18,7 @@ Type the corresponding one and press enter to match the student.</p>
 </div>
 
 <div id="controls">
-<p>Input Team Number: <input id="entity_select" name="entity_select" /></p>
+<p>Input Team Number: <input id="magic_box" name="magic_box" /></p>
 </div>
 <div><button id="button_decr_index">Go Back</button>
 <button id="button_incr_index">Skip</button></div>
@@ -35,11 +35,11 @@ $(document).ready(function() {
 	// current_index points to the one we are currently reading
 
 	// Stream of data objects. We'll preload images using this.
-	// Items are ordered tuples (scribble id, image url, examscribble id, verdict id)
+	// Items are ordered pairs (examscribble id, examscribble url)
 	// current_index describes which one we currently have
 	var stream = [];
 	var current_index = 0; // the current index inside the stream
-	var sid = 0; // current scribble's ID
+	var esid = 0; // current exam scribble's ID
 
 	var is_waiting = true;
 	// This flag is set to true if the queue is empty
@@ -49,9 +49,9 @@ $(document).ready(function() {
 
 	function preload_next_scan(n) {
 		$.ajax({
-			url  : "/helium/ajax/next-scan/",
+			url  : "/helium/ajax/next-match/",
 			type : "POST",
-			data : { problem_id : {{ problem.id }}, num_to_load : n},
+			data : { exam_id : {{ exam.id }}, num_to_load : n},
 		}).done(function(result) {
 			for (var i=0; i<result.length; i++) {
 				var data = result[i];
@@ -75,47 +75,24 @@ $(document).ready(function() {
 		else {
 			// Push to next guy
 			next_data = stream[current_index];
-			
 			// Meow
-			sid = next_data[0];
+			esid = next_data[0]; // next examscribble
 			var image_url  = next_data[1];
-			var examscribble_id = next_data[2];
-			var vid = next_data[3];
-			$("#scan_img").attr('src', next_data[1]);
-			if (sid != 0) {
-				$("#scan_id").html(sid);
+			$("#scan_img").attr('src', image_url);
+			if (esid != 0) {
+				$("#scan_id").html(esid);
 				$("#zoom_url").attr('href',
-						'/helium/view-paper/scan/' + examscribble_id + '/#scan');
-				$("#full_url").attr('href',
-						'/helium/view-verdict/' + vid + '/');
+						'/helium/view-paper/scan/' + esid + '/#scan');
 			}
 		}
 		console.log(stream);
 		console.log(current_index);
 	}
 
-	$("#score").keyup(function (e) {
-		if (sid == 0) return; // nothing to do
-		var ludicrous_speed = $("#ludicrous_speed").is(":checked");
-		if (e.which == 13 || ludicrous_speed) {
-			score = $("#score").val()
-			{% if not problem.allow_partial %}
-				// For non-partial problem require binary scores
-				if (score != "0" && score != "1") return;
-			{% endif %}
-
-			// Now submit this
-			$.ajax({
-				url  : "/helium/ajax/submit-scan/",
-				type : "POST",
-				data : { scribble_id : sid, score : score },
-			});
-			preload_next_scan(1);
-
-			current_index++; // Move to next one
-			load_scan_at_current_index();
-			$("#score").val(''); // reset
-		}
+	$("#magic_box").keyup(function (e) {
+		// TODO write this whole thing
+		if (esid == 0) return; // nothing to do
+		var value = $("#magic_box").val();
 	});
 
 	$("#button_decr_index").click(function() {
@@ -123,7 +100,7 @@ $(document).ready(function() {
 		load_scan_at_current_index();
 	});
 	$("#button_incr_index").click(function() {
-		if (sid == 0) return;
+		if (esid == 0) return;
 		current_index++;
 		preload_next_scan(1);
 		load_scan_at_current_index();
