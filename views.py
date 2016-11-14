@@ -596,7 +596,7 @@ def view_pdf(request, pdfscribble_id):
 	return render(request, "table-only.html", context)
 
 ## SCORE REPORTS
-def _report(num_show = None, num_named = None,
+def _report(num_show = None, num_named = None, zero_pad = True,
 		show_indiv_alphas = True, show_team_sum_alphas = True, show_hmmt_sweepstakes = True):
 	"""Explanation of potions:
 	num_show: Display only the top N entities
@@ -612,6 +612,7 @@ def _report(num_show = None, num_named = None,
 	# Do this query once, we'll need it repeatedly
 	mathletes = list(He.models.Entity.mathletes.all())
 	teams = list(He.models.Entity.teams.all())
+
 
 	# GET ALL SCORES NOW
 	# Query through all verdicts, grouping by exam by problem
@@ -641,7 +642,7 @@ def _report(num_show = None, num_named = None,
 	for exam in indiv_exams:
 		rp = presentation.RP_exam(mathletes, all_verdicts_dict[exam.id])
 		output += rp.get_table(heading = unicode(exam), \
-				num_show = num_show, num_named = num_named)
+				num_show = num_show, num_named = num_named, zero_pad = zero_pad)
 	output += "\n"
 
 	## Team Results
@@ -652,7 +653,7 @@ def _report(num_show = None, num_named = None,
 	for exam in team_exams:
 		rp = presentation.RP_exam(teams, all_verdicts_dict[exam.id])
 		output += rp.get_table(heading = unicode(exam), \
-				num_show = num_show, num_named = num_named,
+				num_show = num_show, num_named = num_named, zero_pad = zero_pad,
 				float_string = "%2.0f", int_string = "%2d")
 		# Use for sweeps
 		if show_hmmt_sweepstakes:
@@ -668,7 +669,7 @@ def _report(num_show = None, num_named = None,
 	if show_team_sum_alphas:
 		rp = presentation.RP_alpha_sums(mathletes, teams)
 		output += rp.get_table(heading = "Team Individual Aggregate", \
-				num_show = num_show, num_named = num_named)
+				num_show = num_show, num_named = num_named, zero_pad = zero_pad)
 		if show_hmmt_sweepstakes:
 			if len(rp.results) > 0 and any([r.total for r in rp.results]):
 				indiv_weight = 800.0/max([r.total for r in rp.results])
@@ -700,7 +701,7 @@ def reports_extended(request):
 	return _report(num_named = 50)
 @user_passes_test(lambda u: u.is_superuser)
 def reports_full(request):
-	return _report()
+	return _report(zero_pad = False)
 def teaser(request):
 	"""ACCESSIBLE TO NON-STAFF!"""
 	return _report(num_show = 15, num_named = 0,

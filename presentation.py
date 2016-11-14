@@ -78,19 +78,25 @@ class ResultPrinter:
 			elif results[n-1].total != result.total: r = n+1
 			result.rank = r
 		self.results = results
-	def get_table(self, heading = None, num_show = None, num_named = None,
+	def get_table(self, heading = None, num_show = None, num_named = None, zero_pad = True,
 			float_string = "%4.2f", int_string = "%4d"):
 		output = get_heading(heading) if heading is not None else ''
+		if len(self.results) == 0: return output # assume >= 1 entry
+		max_length = max(len(r.scores) for r in self.results) # take longest row for zero padding
 		for result in self.results:
 			if num_show is not None and result.rank > num_show:
 				break
 			output += "%4d. " % result.rank
 			output += "%7.2f"  % result.total if type(result.total) == float \
 					else "%7d" % result.total
-			if len(result.scores) > 1: # sum of more than one thing
+			if max_length > 1: # sum of more than one thing
+				if zero_pad:
+					scores = result.scores + [0,] * (max_length - len(result.scores))
+				else:
+					scores = result.scores
 				output += "  |  "
 				output += " ".join([int_string %x if type(x) == int or x == 0 \
-						else float_string %x  for x in result.scores])
+						else float_string %x  for x in scores])
 			output += "  |  "
 			if num_named is None or result.rank <= num_named:
 				output += result.row_name
