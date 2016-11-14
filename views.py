@@ -254,7 +254,13 @@ def fast_match(request, exam_id):
 		exam = He.models.Exam.objects.get(id=exam_id)
 	except He.models.Exam.DoesNotExist:
 		return HttpResponseNotFound("Exam does not exist", content_type="text/plain")
-	context = {'exam' : exam}
+	if exam.is_indiv: # indiv exam
+		pairs = [(mathlete.number, mathlete.verbose_name)
+				for mathlete in He.models.Entity.mathletes.filter(number__isnull=False)]
+	else: # team exam
+		pairs = [(d['number'], d['name']) \
+				for d in He.models.Entity.teams.values('number', 'name')]
+	context = {'exam' : exam, 'pairs' : pairs}
 	return render(request, "fast-match.html", context)
 
 ## VIEWS FOR SCAN GRADER
@@ -416,7 +422,7 @@ def view_conflicts_own(request):
 @staff_member_required
 @require_POST
 def ajax_submit_scan(request):
-	"""POST arguments: scribble_id, score. RETURN: nothing useful"""
+	"""POST arguments: examscribble_id, score. RETURN: nothing useful"""
 	try:
 		scribble_id = int(request.POST['scribble_id'])
 		score = int(request.POST['score'])
@@ -483,9 +489,13 @@ def ajax_prev_evidence(request):
 @staff_member_required
 @require_POST
 def ajax_submit_match(request):
-	"""POST arguments: examscribble_id, entity_id. 
+	"""POST arguments: examscribble_id, entity_id.
 	RETURN: nothing useful"""
-	pass
+	try:
+		examscribble_id = int(request.POST['scribble_id'])
+		entity_id = int(request.POST['entity_id'])
+	except ValueError: return
+	return HttpResponse("OK", content_type="text/plain")
 @staff_member_required
 @require_POST
 def ajax_next_match(request):
@@ -503,8 +513,8 @@ def ajax_next_match(request):
 
 	ret = []
 	for es in scribbles[0:n]:
-		ps.last_sent_time = time.time()
-		ps.save()
+		es.last_sent_time = time.time()
+		es.save()
 		ret.append([es.id, es.name_image.url])
 	if len(ret) < n: # all done!
 		ret.append([0, DONE_IMAGE_URL])

@@ -1,16 +1,18 @@
 {% extends 'layout-helium.html' %}
 {% load static %}
 
-{% block pagetitle %}Match Scans: {{ exam }}{% endblock %}
+{% block pagetitle %}Fast Match: {{ exam }}{% endblock %}
 
 {% block layout-content %}
 <p><i>Instructions:</i> 
-Students should hopefully have provided their correct team number,
+Students should hopefully have provided their correct student or team number,
 which will make this matching process a whole lot less painful.
-To start, type in the team number the student provided.
-This will bring up a list of the students on that team,
-indexed by Roman letters A, B, etc.
-Type the corresponding one and press enter to match the student.</p>
+Input a number, and the corresponding candidate will appear.
+Press enter to confirm this choice.
+Alternatively, one can search for the name in the autocomplete field.
+</p>
+
+<p>You can use "view full scan" above to see the entire scanned page.</p>
 
 <div class="scanstage">
 	<a class="scanzoom" src="" id="zoom_url" target="_blank"/>(View Full Scan)</a>
@@ -18,17 +20,22 @@ Type the corresponding one and press enter to match the student.</p>
 </div>
 
 <div id="controls">
-<p>Input Team Number: <input id="magic_box" name="magic_box" /></p>
+<p><button id="button_decr_index">Go Back</button>
+<button id="button_incr_index">Skip</button></p>
+<p>Input Number: <input id="magic_box" name="magic_box" /></p>
+<p>Candidate: <b><span id="candidate"></span></b></p>
+<p>... Or find the name of the candidate from below</p>
 </div>
-<div><button id="button_decr_index">Go Back</button>
-<button id="button_incr_index">Skip</button></div>
-
-<p>You can use "view full scan" above to see the entire scanned page.
-If there any issues with the scanned page
-you can also flag the page for administrative attention.</p>
 {% endblock %}
 
 {% block scripts %}
+<script type="text/javascript">
+var numbers_to_names = {
+{% for num, name in pairs %} {{ num }} : "{{ name }}",
+{% endfor %}
+};
+</script>
+
 <script type="text/javascript">
 $(document).ready(function() {
 	// We have a stream of data objects, which are tuples of ID's and whatnot
@@ -68,6 +75,8 @@ $(document).ready(function() {
 	preload_next_scan(3); // preload 3 scans
 
 	function load_scan_at_current_index() {
+		$("#magic_box").val(''); // reset
+		$("#candidate").html(''); // reset
 		if (stream.length <= current_index) {
 			// No next item to grab: defer until after next preload call
 			is_waiting = true;
@@ -93,6 +102,26 @@ $(document).ready(function() {
 		// TODO write this whole thing
 		if (esid == 0) return; // nothing to do
 		var value = $("#magic_box").val();
+
+		// Update fuzzy match
+		if (value in numbers_to_names)
+			$("#candidate").html("<b>"+numbers_to_names[value]+"</b>");
+		else
+			$("#candidate").html("No match found");
+
+		// If return, ajax submit
+		if (value in numbers_to_names && e.which == 13) {
+			// Now submit this
+			$.ajax({
+				url  : "/helium/ajax/submit-match/",
+				type : "POST",
+				data : { examscribble_id : esid, entity_id : value },
+			});
+			preload_next_scan(1);
+
+			current_index++; // Move to next one
+			load_scan_at_current_index();
+		}
 	});
 
 	$("#button_decr_index").click(function() {
