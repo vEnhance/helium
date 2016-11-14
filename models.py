@@ -101,6 +101,22 @@ class Entity(models.Model):
 		else:
 			return self.name
 
+	@property
+	def verbose_name(self):
+		if self.team is not None:
+			if self.team.shortname:
+				return '%s [%s / %s]' %(self.name, self.team.name, self.team.shortname)
+			else:
+				return '%s [%s]' %(self.name, self.team.name)
+		elif self.is_team:
+			if self.shortname:
+				return '%s / %s' %(self.name, self.shortname)
+			else:
+				return self.name
+		else:
+			return '%s [Individual]' % self.name
+
+
 	objects = models.Manager() # why do I have to repeat this?
 	teams = TeamManager()
 	mathletes = MathleteManager()

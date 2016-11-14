@@ -20,16 +20,7 @@ import helium as He
 
 class EntityModelChoiceField(forms.ModelChoiceField):
 	def label_from_instance(self, entity):
-		if entity.is_team: # team
-			if entity.shortname:
-				return "%s / %s" %(entity.name, entity.shortname)
-			else:
-				return entity.name
-		else: # individual
-			if entity.team is None:
-				return "%s [Individual]" %entity.name
-			else:
-				return "%s [%s / %s]" %(entity.name, entity.team.name, entity.team.shortname)
+		return entity.verbose_name
 
 ## PROBLEM SELECTION FORMS ##
 class ProblemSelectForm(forms.Form):
