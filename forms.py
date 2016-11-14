@@ -22,14 +22,14 @@ class EntityModelChoiceField(forms.ModelChoiceField):
 	def label_from_instance(self, entity):
 		if entity.is_team: # team
 			if entity.shortname:
-				return "%s (%s)" %(entity.name, entity.shortname)
+				return "%s / %s" %(entity.name, entity.shortname)
 			else:
 				return entity.name
 		else: # individual
 			if entity.team is None:
-				return "%s [No Team]" %entity.name
+				return "%s [Individual]" %entity.name
 			else:
-				return "%s [%s]" %(entity.name, entity.team.name)
+				return "%s [%s / %s]" %(entity.name, entity.team.name, entity.team.shortname)
 
 ## PROBLEM SELECTION FORMS ##
 class ProblemSelectForm(forms.Form):
