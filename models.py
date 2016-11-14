@@ -306,9 +306,9 @@ class ExamScribble(models.Model):
 	name_image = models.ImageField(upload_to='scans/names/', blank=False, null=True,
 			help_text = "This is the image of the `name` field for the scan.")
 		# blargh. These should really be null=False, but it makes testing hard.
-	needs_attention = models.BooleanField(default=False,
-			help_text = "If this scan needs special attention in some way "
-			"(upside-down, illegible, etc.)")
+	needs_attention = models.CharField(max_length=80, blank=True, default='',
+			help_text = "Text description of an issue with this scan "
+			"(no name, no such student, et cetera).")
 
 	def __unicode__(self):
 		if self.entity is not None:
