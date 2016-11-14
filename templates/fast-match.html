@@ -1,0 +1,136 @@
+{% extends 'layout-helium.html' %}
+{% load static %}
+
+{% block pagetitle %}Match Scans: {{ exam }}{% endblock %}
+
+{% block layout-content %}
+<p><i>Instructions:</i> 
+Students should hopefully have provided their correct team number,
+which will make this matching process a whole lot less painful.
+To start, type in the team number the student provided.
+This will bring up a list of the students on that team,
+indexed by Roman letters A, B, etc.
+Type the corresponding one and press enter to match the student.</p>
+
+<div class="scanstage">
+	<a class="scanzoom" src="" id="zoom_url" target="_blank"/>(View Full Scan)</a>
+	<img class="scan" src="" id="scan_img" />
+</div>
+
+<div id="controls">
+<p>Input Team Number: <input id="entity_select" name="entity_select" /></p>
+</div>
+<div><button id="button_decr_index">Go Back</button>
+<button id="button_incr_index">Skip</button></div>
+
+<p>You can use "view full scan" above to see the entire scanned page.
+If there any issues with the scanned page
+you can also flag the page for administrative attention.</p>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+$(document).ready(function() {
+	// We have a stream of data objects, which are tuples of ID's and whatnot
+	// current_index points to the one we are currently reading
+
+	// Stream of data objects. We'll preload images using this.
+	// Items are ordered tuples (scribble id, image url, examscribble id, verdict id)
+	// current_index describes which one we currently have
+	var stream = [];
+	var current_index = 0; // the current index inside the stream
+	var sid = 0; // current scribble's ID
+
+	var is_waiting = true;
+	// This flag is set to true if the queue is empty
+	// and load_scan_at_current_index cannot find an image.
+	// This causes the preload_next_scan to call
+	// load_next_scan when it finishes.
+
+	function preload_next_scan(n) {
+		$.ajax({
+			url  : "/helium/ajax/next-scan/",
+			type : "POST",
+			data : { problem_id : {{ problem.id }}, num_to_load : n},
+		}).done(function(result) {
+			for (var i=0; i<result.length; i++) {
+				var data = result[i];
+				stream.push(data);
+				var image_url = data[1];
+				$('<img />').attr('src', image_url); // preload the image
+				if (is_waiting) { // If pending, load next scan
+					is_waiting = false;
+					load_scan_at_current_index(); // try again
+				}
+			}
+		});
+	}
+	preload_next_scan(3); // preload 3 scans
+
+	function load_scan_at_current_index() {
+		if (stream.length <= current_index) {
+			// No next item to grab: defer until after next preload call
+			is_waiting = true;
+		}
+		else {
+			// Push to next guy
+			next_data = stream[current_index];
+			
+			// Meow
+			sid = next_data[0];
+			var image_url  = next_data[1];
+			var examscribble_id = next_data[2];
+			var vid = next_data[3];
+			$("#scan_img").attr('src', next_data[1]);
+			if (sid != 0) {
+				$("#scan_id").html(sid);
+				$("#zoom_url").attr('href',
+						'/helium/view-paper/scan/' + examscribble_id + '/#scan');
+				$("#full_url").attr('href',
+						'/helium/view-verdict/' + vid + '/');
+			}
+		}
+		console.log(stream);
+		console.log(current_index);
+	}
+
+	$("#score").keyup(function (e) {
+		if (sid == 0) return; // nothing to do
+		var ludicrous_speed = $("#ludicrous_speed").is(":checked");
+		if (e.which == 13 || ludicrous_speed) {
+			score = $("#score").val()
+			{% if not problem.allow_partial %}
+				// For non-partial problem require binary scores
+				if (score != "0" && score != "1") return;
+			{% endif %}
+
+			// Now submit this
+			$.ajax({
+				url  : "/helium/ajax/submit-scan/",
+				type : "POST",
+				data : { scribble_id : sid, score : score },
+			});
+			preload_next_scan(1);
+
+			current_index++; // Move to next one
+			load_scan_at_current_index();
+			$("#score").val(''); // reset
+		}
+	});
+
+	$("#button_decr_index").click(function() {
+		if (current_index > 0) current_index--;
+		load_scan_at_current_index();
+	});
+	$("#button_incr_index").click(function() {
+		if (sid == 0) return;
+		current_index++;
+		preload_next_scan(1);
+		load_scan_at_current_index();
+	});
+
+	load_scan_at_current_index(); // load first image
+	$("#score").focus();
+});
+</script>
+{% endblock %}

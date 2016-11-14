@@ -254,6 +254,7 @@ def fast_match(request, exam_id):
 		exam = He.models.Exam.objects.get(id=exam_id)
 	except He.models.Exam.DoesNotExist:
 		return HttpResponseNotFound("Exam does not exist", content_type="text/plain")
+	context = {}
 	return render(request, "fast-match.html", context)
 
 ## VIEWS FOR SCAN GRADER
