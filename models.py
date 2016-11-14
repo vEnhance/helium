@@ -11,7 +11,7 @@ General overview of models:
 * These Entity's takes several Exams, with several Problems
 * For every Entity and Problem, we have a Verdict (which gives the score)
   based on Evidence (one for each grader who read the problem)
-* ExamScribble and ProblemScrrible objects keep track of scans
+* ExamScribble and ProblemScribble objects keep track of scans
 * EntirePDFScribble is a container for keeping track of uploaded PDF's
 * EntityAlpha is a way to store alpha values (so we don't have to keep recomputing them)
 * GutsScoreFunc is a stupid applet that lets you compute guts estimation scores
@@ -309,6 +309,9 @@ class ExamScribble(models.Model):
 	needs_attention = models.CharField(max_length=80, blank=True, default='',
 			help_text = "Text description of an issue with this scan "
 			"(no name, no such student, et cetera).")
+	last_sent_time = models.IntegerField(blank=True, null=True,
+			help_text = "Most recent time the scan was sent out (in seconds since Epoch);"\
+			"this prevents the name-match from giving duplicates.")
 
 	def __unicode__(self):
 		if self.entity is not None:

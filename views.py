@@ -449,7 +449,7 @@ def ajax_next_scan(request):
 		ps.last_sent_time = time.time()
 		ps.save()
 		ret.append([ps.id, ps.prob_image.url, ps.examscribble.id, ps.verdict.id])
-	if len(ret) < n: # didn't finish
+	if len(ret) < n: # all done!
 		ret.append([0, DONE_IMAGE_URL, 0, 0])
 	return HttpResponse( json.dumps(ret), content_type = 'application/json' )
 
@@ -499,16 +499,14 @@ def ajax_next_match(request):
 
 	scribbles = He.models.ExamScribble.objects.filter(\
 			entity__isnull=True, needs_attention=u'')
-	# TODO implement cooldown for exam scribbles
-	# wait 10 seconds before giving out the same scribble again
-	# scribbles = scribbles.exclude(last_sent_time__gte = time.time() - 10)
+	scribbles = scribbles.exclude(last_sent_time__gte = time.time() - 10) # cooldown
 
 	ret = []
 	for es in scribbles[0:n]:
-		# ps.last_sent_time = time.time()
-		# ps.save()
+		ps.last_sent_time = time.time()
+		ps.save()
 		ret.append([es.id, es.name_image.url])
-	if len(ret) < n: # didn't finish
+	if len(ret) < n: # all done!
 		ret.append([0, DONE_IMAGE_URL])
 	return HttpResponse( json.dumps(ret), content_type = 'application/json' )
 
