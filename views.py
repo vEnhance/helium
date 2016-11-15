@@ -614,15 +614,17 @@ def _report(num_show = None, num_named = None, zero_pad = True):
 			'DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;">' + "\n"
 	output += INIT_TEXT_BANNER + "\n\n"
 
+	all_rows = He.models.ScoreRow.objects.all()
+
 	## Individual Results
-	rows = He.models.ScoreRow.objects.filter(category="Individual Overall")
+	rows = [row for row in all_rows if row.category == "Individual Overall"]
 	output += RP(rows).get_table("Overall Individuals (Alphas)",
 			num_show = num_show, num_named = num_named)
 	output += "\n"
 
 	indiv_exams = He.models.Exam.objects.filter(is_indiv=True)
 	for exam in indiv_exams:
-		rows = He.models.ScoreRow.objects.filter(category=exam.name)
+		rows = [row for row in all_rows if row.category == exam.name]
 		output += RP(rows).get_table(heading = unicode(exam),
 				num_show = num_show, num_named = num_named, zero_pad = zero_pad)
 	output += "\n"
@@ -630,20 +632,21 @@ def _report(num_show = None, num_named = None, zero_pad = True):
 	## Team Results
 	team_exams = He.models.Exam.objects.filter(is_indiv=False)
 	for exam in team_exams:
-		rows = He.models.ScoreRow.objects.filter(category=exam.name)
+		rows = [row for row in all_rows if row.category == exam.name]
 		output += RP(rows).get_table(heading = unicode(exam),
 				num_show = num_show, num_named = num_named, zero_pad = zero_pad,
 				float_string = "%2.0f", int_string = "%2d")
 		output += "\n"
 
 	# Indiv aggregate
+	rows = [row for row in all_rows if row.category == "Team Aggregate"]
 	rows = He.models.ScoreRow.objects.filter(category="Team Aggregate")
 	output += RP(rows).get_table("Team Aggregate",
 			num_show = num_show, num_named = num_named)
 	output += "\n"
 
 	# Sweepstakes
-	rows = He.models.ScoreRow.objects.filter(category="Sweepstakes")
+	rows = [row for row in all_rows if row.category == "Sweepstakes"]
 	output += RP(rows).get_table("Sweepstakes",
 			num_show = None, num_named = None,
 			float_string = "%7.2f", int_string = "%7d")
@@ -672,24 +675,24 @@ def teaser(request):
 
 @user_passes_test(lambda u: u.is_superuser)
 def spreadsheet(request):
-	# TODO not implemented
 	sheets = {} # sheet name -> rows
+	all_rows = He.models.ScoreRow.objects.all()
 
 	## Individual Results
-	rows = He.models.ScoreRow.objects.filter(category="Individual Overall")
+	rows = [row for row in all_rows if row.category == "Individual Overall"]
 	sheets["Indiv"] = RP(rows).get_sheet()
 
 	indiv_exams = He.models.Exam.objects.filter(is_indiv=True)
 	for exam in He.models.Exam.objects.all():
-		rows = He.models.ScoreRow.objects.filter(category=exam.name)
+		rows = [row for row in all_rows if row.category == exam.name]
 		sheets[unicode(exam)] = RP(rows).get_sheet()
 
 	# Indiv aggregate
-	rows = He.models.ScoreRow.objects.filter(category="Team Aggregate")
+	rows = [row for row in all_rows if row.category == "Team Aggregate"]
 	sheets["Aggr"] = RP(rows).get_sheet()
 
 	# Sweepstakes
-	rows = He.models.ScoreRow.objects.filter(category="Sweepstakes")
+	rows = [row for row in all_rows if row.category == "Sweepstakes"]
 	sheets["Sweeps"] = RP(rows).get_sheet()
 
 	spreadsheet = presentation.get_odf_spreadsheet(sheets)
