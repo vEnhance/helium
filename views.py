@@ -640,7 +640,6 @@ def _report(num_show = None, num_named = None, zero_pad = True):
 
 	# Indiv aggregate
 	rows = [row for row in all_rows if row.category == "Team Aggregate"]
-	rows = He.models.ScoreRow.objects.filter(category="Team Aggregate")
 	output += RP(rows).get_table("Team Aggregate",
 			num_show = num_show, num_named = num_named)
 	output += "\n"
