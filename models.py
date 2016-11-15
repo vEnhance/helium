@@ -459,6 +459,21 @@ class EntityAlpha(models.Model):
 	entity = models.OneToOneField(Entity, on_delete=models.CASCADE)
 	cached_alpha = models.FloatField(blank=True, null=True)
 
+class EntityExamScores(models.Model):
+	"""This is a storage object which keeps the exam scores for an entity."""
+	category = models.CharField(max_length=80, help_text="Category for this score list (for example, name of exam).")
+	entity = models.OneToOneField(Entity, on_delete=models.CASCADE)
+	total_score = models.FloatField(help_text="Total score")
+	cached_score_string = models.CharField(max_length=400, blank=True,
+			help_text = "A comma-separated list of float values which are scores for that exam.")
+	@property
+	def scores(self):
+		return [float(x) for x in self.cached_score_string.split(',')]
+	def set_scores(self, scores):
+		self.cached_score_string = ','.join(["%.2f" %x for x in scores])
+	class Meta:
+		unique_together = ('category', 'entity',)
+
 # Auxiliary functions
 # not in use, since it's too slow when called in succession
 # better to group all verdicts together ("bucket sort")
