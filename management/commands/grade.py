@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 import helium as He
-import itertools
+import collections
 
 class Command(BaseCommand):
 	help = "Computes all scores, and stores them in database of ScoreRows"
@@ -11,12 +11,13 @@ class Command(BaseCommand):
 		d is a (default)dict of form entity -> score list"""
 		all_rows = []
 		for entity in entities:
-			row = He.models.ScoreRow.get_or_create(
+			row, _ = He.models.ScoreRow.objects.get_or_create(
 					category = category,
 					entity = entity)
 			row.set_scores(d[entity])
+			row.save()
 			all_rows.append(row)
-		all_rows.sort(key = lambda row : -row.total_score)
+		all_rows.sort(key = lambda row : -row.total)
 		r = 0
 		for n, row in enumerate(all_rows):
 			if n == 0: r = 1
@@ -26,13 +27,14 @@ class Command(BaseCommand):
 
 	def get_sweeps_scores(self, teams, scores, weight = 400):
 		"""Given teams and scores, yield pairs (team, weighted_score)"""
-		max_score = max(scores.values()) if len(scores) > 0 else 0
+		max_score = max(sum(sc) for sc in scores.values())\
+				if len(scores) > 0 else 0
 		if max_score > 0:
 			mult = weight / max_score
 		else:
 			mult = 0
 		for team in teams:
-			yield (team, scores[team] * mult)
+			yield (team, sum(scores[team]) * mult)
 
 	def handle(self, *args, **kwargs):
 		mathletes = list(He.models.Entity.mathletes.all())
@@ -44,7 +46,7 @@ class Command(BaseCommand):
 
 		# Scoring in usual way . . .
 		for exam in exams:
-			all_verdicts_dict[exam] = collections.defaultdict(list)
+			all_scores[exam] = collections.defaultdict(list)
 
 		for verdict in He.models.Verdict.objects\
 				.filter(score__isnull=False, entity__isnull=False)\
@@ -73,7 +75,7 @@ class Command(BaseCommand):
 		alphas = collections.defaultdict(lambda: (0.0,)) # mathlete -> (alpha,)
 		for ea in He.models.EntityAlpha.objects.all(): # gdi
 			alphas[ea.entity] = (ea.cached_alpha,)
-		self.rank_entities("Overall Individuals", mathletes, alphas)
+		self.rank_entities("Individual Overall", mathletes, alphas)
 
 		# Team Individual Aggregate
 		aggr = collections.defaultdict(tuple)
@@ -85,9 +87,9 @@ class Command(BaseCommand):
 		# Each team event is worth 400 points:
 		for exam in exams:
 			if exam.is_indiv: continue
-			for team, score in self.get_sweeps(teams, all_scores[exam], weight = 400):
+			for team, score in self.get_sweeps_scores(teams, all_scores[exam], weight = 400):
 				sweeps[team].append(score)
 		# Individual aggregate is worth 400 points:
-		for team, score in self.get_sweeps(teams, aggr, weight = 800):
+		for team, score in self.get_sweeps_scores(teams, aggr, weight = 800):
 			sweeps[team].append(score)
 		self.rank_entities("Sweepstakes", teams, sweeps)
