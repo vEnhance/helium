@@ -647,7 +647,7 @@ def _report(num_show = None, num_named = None, zero_pad = True):
 	# Sweepstakes
 	rows = all_rows["Sweepstakes"]
 	output += RP(rows).get_table("Sweepstakes",
-			num_show = None, num_named = None,
+			num_show = num_show, num_named = None,
 			float_string = "%7.2f", int_string = "%7d")
 	output += "\n"
 
