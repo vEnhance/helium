@@ -65,6 +65,7 @@ import helium.forms as forms
 import scanimage
 import threader
 from presentation import ResultPrinter as RP
+import presentation
 
 DONE_IMAGE_URL = static('img/done.jpg')
 
@@ -672,13 +673,31 @@ def teaser(request):
 @user_passes_test(lambda u: u.is_superuser)
 def spreadsheet(request):
 	# TODO not implemented
-	pass
-#	spreadsheet = presentation.get_odf_spreadsheet(sheets)
-#	response = HttpResponse(spreadsheet,\
-#			content_type="application/vnd.oasis.opendocument.spreadsheet")
-#	response['Content-Disposition'] = 'attachment; filename=scores-%s.ods' \
-#			%time.strftime("%Y%m%d-%H%M%S")
-#	return response
+	sheets = {} # sheet name -> rows
+
+	## Individual Results
+	rows = He.models.ScoreRow.objects.filter(category="Individual Overall")
+	sheets["Indiv"] = RP(rows).get_sheet()
+
+	indiv_exams = He.models.Exam.objects.filter(is_indiv=True)
+	for exam in He.models.Exam.objects.all():
+		rows = He.models.ScoreRow.objects.filter(category=exam.name)
+		sheets[unicode(exam)] = RP(rows).get_sheet()
+
+	# Indiv aggregate
+	rows = He.models.ScoreRow.objects.filter(category="Team Aggregate")
+	sheets["Aggr"] = RP(rows).get_sheet()
+
+	# Sweepstakes
+	rows = He.models.ScoreRow.objects.filter(category="Sweepstakes")
+	sheets["Sweeps"] = RP(rows).get_sheet()
+
+	spreadsheet = presentation.get_odf_spreadsheet(sheets)
+	response = HttpResponse(spreadsheet,\
+			content_type="application/vnd.oasis.opendocument.spreadsheet")
+	response['Content-Disposition'] = 'attachment; filename=scores-%s.ods' \
+			%time.strftime("%Y%m%d-%H%M%S")
+	return response
 
 @user_passes_test(lambda u: u.is_superuser)
 def run_management(request, command_name):

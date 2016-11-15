@@ -88,7 +88,7 @@ class ResultPrinter:
 		output += "\n"
 		return output
 
-	def get_sheet(self):
+	def get_sheet(self, precision = 2):
 		sheet = [["Rank", "Name", "Total"]]
 		for row in self.rows:
 			sheetrow = [row.rank, unicode(row.entity), \
