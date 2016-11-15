@@ -19,11 +19,6 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('cached_score_string', models.CharField(blank=True, help_text='A comma-separated list of float values which are scores for that exam.', max_length=400)),
                 ('entity', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='helium.Entity')),
-                ('exam', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='helium.Exam')),
             ],
-        ),
-        migrations.AlterUniqueTogether(
-            name='entityexamscores',
-            unique_together=set([('entity', 'exam')]),
         ),
     ]

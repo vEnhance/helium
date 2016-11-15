@@ -24,10 +24,6 @@ class Migration(migrations.Migration):
             field=models.FloatField(default=0, help_text='Total score'),
             preserve_default=False,
         ),
-        migrations.RemoveField(
-            model_name='entityexamscores',
-            name='exam',
-        ),
         migrations.AlterUniqueTogether(
             name='entityexamscores',
             unique_together=set([('category', 'entity')]),
