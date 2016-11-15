@@ -459,7 +459,7 @@ class EntityAlpha(models.Model):
 	entity = models.OneToOneField(Entity, on_delete=models.CASCADE)
 	cached_alpha = models.FloatField(blank=True, null=True)
 
-class EntityExamScores(models.Model):
+class ScoreRow(models.Model):
 	"""This is a storage object which keeps the exam scores for an entity."""
 	category = models.CharField(max_length=80,\
 			help_text = "Category for this score list (for example, name of exam).")
