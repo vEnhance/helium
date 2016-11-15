@@ -98,7 +98,7 @@ class EvidenceAdmin(admin.ModelAdmin):
 
 @admin.register(He.models.ScoreRow)
 class RowAdmin(admin.ModelAdmin):
-	list_display = ('id', 'category', 'entity', 'rank', 'total', 'scores')
+	list_display = ('entity', 'category',  'rank', 'total', 'scores')
 	search_fields = ('category', 'entity__name',)
 
 @admin.register(He.models.EntityAlpha)
