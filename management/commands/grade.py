@@ -30,7 +30,7 @@ class Command(BaseCommand):
 		max_score = max(sum(sc) for sc in scores.values())\
 				if len(scores) > 0 else 0
 		if max_score > 0:
-			mult = weight / max_score
+			mult = float(weight) / max_score
 		else:
 			mult = 0
 		for team in teams:
@@ -54,24 +54,17 @@ class Command(BaseCommand):
 			exam = verdict.problem.exam
 			entity = verdict.entity
 			weighted_score = verdict.problem.weight * verdict.score \
-					if verdict.problem.allow_partial else verdict.score
+					if not verdict.problem.allow_partial else verdict.score
 			all_scores[exam][entity].append(weighted_score)
 
 		for exam in exams:
 			entities = mathletes if exam.is_indiv else teams
 			self.rank_entities(exam.name, entities, all_scores[exam])
 
-			# HMMT-specific: sweepstake weights
-			if not exam.is_indiv: # team exam
-				set_of_scores = [sum(scores) for scores in all_scores[exam].values()]
-				if len(set_of_scores) > 0 and max(set_of_scores) > 0:
-					this_exam_weight = 400.0 / max(set_of_scores)
-				else:
-					this_exam_weight = 0
-				for team in teams:
-					team_exam_scores[team] = this_exam_weight * sum(all_scores[exam][team])
-
 		# Individual alphas for all mathletes
+		# For now this is duplication, but if we e.g. decide we ever
+		# want to switch to using sums of scores on tests,
+		# this way we can do so
 		alphas = collections.defaultdict(lambda: (0.0,)) # mathlete -> (alpha,)
 		for ea in He.models.EntityAlpha.objects.all(): # gdi
 			alphas[ea.entity] = (ea.cached_alpha,)
@@ -80,7 +73,8 @@ class Command(BaseCommand):
 		# Team Individual Aggregate
 		aggr = collections.defaultdict(tuple)
 		for team in teams:
-			aggr[team] = (alphas[m][0] for m in mathletes if m.team == team)
+			aggr[team] = [alphas[m][0] for m in mathletes if m.team == team]
+			aggr[team].sort(reverse=True)
 		self.rank_entities("Team Aggregate", teams, aggr)
 
 		sweeps = collections.defaultdict(list)
