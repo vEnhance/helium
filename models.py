@@ -471,9 +471,12 @@ class ScoreRow(models.Model):
 			help_text = "A comma-separated list of float values which are scores for that exam.")
 	@property
 	def scores(self):
-		return [float(x) for x in self.cached_score_string.split(',')]
+		if len(self.cached_score_string) > 0:
+			return [float(x) for x in self.cached_score_string.split(',')]
+		else:
+			return []
 	def set_scores(self, scores):
-		self.cached_score_string = ','.join(["%.2f" %x for x in scores])
+		self.cached_score_string = ','.join([str(x) for x in scores])
 		self.total = sum(scores)
 	class Meta:
 		unique_together = ('category', 'entity',)
