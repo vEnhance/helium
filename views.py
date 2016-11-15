@@ -614,17 +614,17 @@ def _report(num_show = None, num_named = None, zero_pad = True):
 			'DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;">' + "\n"
 	output += INIT_TEXT_BANNER + "\n\n"
 
-	all_rows = He.models.ScoreRow.objects.all()
+	all_rows = presentation.get_score_rows()
 
 	## Individual Results
-	rows = [row for row in all_rows if row.category == "Individual Overall"]
+	rows = all_rows['Individual Overall']
 	output += RP(rows).get_table("Overall Individuals (Alphas)",
 			num_show = num_show, num_named = num_named)
 	output += "\n"
 
 	indiv_exams = He.models.Exam.objects.filter(is_indiv=True)
 	for exam in indiv_exams:
-		rows = [row for row in all_rows if row.category == exam.name]
+		rows = all_rows[exam.name]
 		output += RP(rows).get_table(heading = unicode(exam),
 				num_show = num_show, num_named = num_named, zero_pad = zero_pad)
 	output += "\n"
@@ -632,20 +632,20 @@ def _report(num_show = None, num_named = None, zero_pad = True):
 	## Team Results
 	team_exams = He.models.Exam.objects.filter(is_indiv=False)
 	for exam in team_exams:
-		rows = [row for row in all_rows if row.category == exam.name]
+		rows = all_rows[exam.name]
 		output += RP(rows).get_table(heading = unicode(exam),
 				num_show = num_show, num_named = num_named, zero_pad = zero_pad,
 				float_string = "%2.0f", int_string = "%2d")
 		output += "\n"
 
 	# Indiv aggregate
-	rows = [row for row in all_rows if row.category == "Team Aggregate"]
+	rows = all_rows["Team Aggregate"]
 	output += RP(rows).get_table("Team Aggregate",
 			num_show = num_show, num_named = num_named)
 	output += "\n"
 
 	# Sweepstakes
-	rows = [row for row in all_rows if row.category == "Sweepstakes"]
+	rows = all_rows["Sweepstakes"]
 	output += RP(rows).get_table("Sweepstakes",
 			num_show = None, num_named = None,
 			float_string = "%7.2f", int_string = "%7d")
@@ -674,25 +674,15 @@ def teaser(request):
 
 @user_passes_test(lambda u: u.is_superuser)
 def spreadsheet(request):
-	sheets = {} # sheet name -> rows
-	all_rows = He.models.ScoreRow.objects.all()
+	sheets = collections.OrderedDict() # sheet name -> rows
+	all_rows = presentation.get_score_rows()
 
 	## Individual Results
-	rows = [row for row in all_rows if row.category == "Individual Overall"]
-	sheets["Indiv"] = RP(rows).get_sheet()
-
-	indiv_exams = He.models.Exam.objects.filter(is_indiv=True)
 	for exam in He.models.Exam.objects.all():
-		rows = [row for row in all_rows if row.category == exam.name]
-		sheets[unicode(exam)] = RP(rows).get_sheet()
-
-	# Indiv aggregate
-	rows = [row for row in all_rows if row.category == "Team Aggregate"]
-	sheets["Aggr"] = RP(rows).get_sheet()
-
-	# Sweepstakes
-	rows = [row for row in all_rows if row.category == "Sweepstakes"]
-	sheets["Sweeps"] = RP(rows).get_sheet()
+		sheets[unicode(exam)] = RP(all_rows[exam.name]).get_sheet()
+	sheets["Indiv"] = RP(all_rows["Individual Overall"]).get_sheet()
+	sheets["Aggr"] = RP(all_rows["Team Aggregate"]).get_sheet()
+	sheets["Sweeps"] = RP(all_rows["Sweepstakes"]).get_sheet()
 
 	spreadsheet = presentation.get_odf_spreadsheet(sheets)
 	response = HttpResponse(spreadsheet,\

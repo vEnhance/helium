@@ -17,6 +17,7 @@ from odf.text import P
 
 import helium as He
 import itertools
+import collections
 
 # Why isn't this built-in?
 def valuetype(val):
@@ -54,6 +55,31 @@ def get_heading(s):
 	"""Creates a heading from a string s"""
 	return s.upper() + "\n" + "=" * 60 + "\n"
 
+
+def get_score_rows():
+	dicts = He.models.ScoreRow.objects.values(
+			'category', 'entity__name', 'rank', 'total', 'cached_score_string',
+			'entity__is_team', 'entity__shortname', 'entity__team__name')
+	ret = collections.defaultdict(list)
+	for d in dicts:
+		ret[d['category']].append(ResultRow(d))
+	return ret
+
+class ResultRow:
+	"""Container object"""
+	def __init__(self, d):
+		"""Input: a dictionary d from ScoreRow.object.values()"""
+		self.total = d['total']
+		if len(d['cached_score_string']) > 0:
+			self.scores = [float(x) for x in d['cached_score_string'].split(',')] # so much for DRY
+		else:
+			self.scores = []
+		self.rank = d['rank']
+		if d['entity__team__name']:
+			self.name = "%s [%s]" % (d['entity__name'], d['entity__team__name'])
+		else:
+			self.name = d['entity__name']
+
 class ResultPrinter:
 	"""This is a object which takes in several ScoreRow objects,
 	stored as self.results.
@@ -83,7 +109,7 @@ class ResultPrinter:
 						else float_string %x  for x in scores])
 			output += "  |  "
 			if num_named is None or row.rank <= num_named:
-				output += unicode(row.entity)
+				output += row.name
 			output += "\n"
 		output += "\n"
 		return output
@@ -91,7 +117,7 @@ class ResultPrinter:
 	def get_sheet(self, precision = 2):
 		sheet = [["Rank", "Name", "Total"]]
 		for row in self.rows:
-			sheetrow = [row.rank, unicode(row.entity), \
+			sheetrow = [row.rank, row.name, \
 					round(row.total, ndigits = precision)]
 			if len(row.scores) > 1:
 				sheetrow += [round(s, ndigits = precision) if s else 0 for s in row.scores]
