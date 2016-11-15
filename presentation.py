@@ -53,91 +53,47 @@ def get_odf_spreadsheet(sheets):
 def get_heading(s):
 	"""Creates a heading from a string s"""
 	return s.upper() + "\n" + "=" * 60 + "\n"
-class NameResultRow:
-	"""This is a container object which hold the information of a *row*;
-	this includes a name (e.g. mathlete or team name)
-	and one or more scores, which are printed one at a time.
-	The sum of the scores is also computed and stored as row.total"""
-	rank = None # assigned by parent ExamPrinter
-	def __init__(self, row_name, scores):
-		self.row_name = row_name
-		self.scores = scores
-		self.total = sum(scores)
+
 class ResultPrinter:
-	"""This is a object which takes in several result rows,
+	"""This is a object which takes in several ScoreRow objects,
 	stored as self.results.
-	It will assign ranks to these rows (e.g. 1st, 2nd, etc.).
-	Then, the facilities RP.get_table and RP.get_rows
+	The facilities RP.get_table and RP.get_rows
 	will respectively create a text table and a list of Python lists
 	(the latter which should probably be fed into get_odf_spreadsheet"""
-	def __init__(self, results):
-		results.sort(key = lambda r : -r.total)
-		r = 0
-		for n, result in enumerate(results):
-			if n == 0: r = 1
-			elif results[n-1].total != result.total: r = n+1
-			result.rank = r
-		self.results = results
+	def __init__(self, rows):
+		self.rows = list(rows)
+		self.rows.sort(key = lambda r : r.rank)
 	def get_table(self, heading = None, num_show = None, num_named = None, zero_pad = True,
 			float_string = "%4.2f", int_string = "%4d"):
 		output = get_heading(heading) if heading is not None else ''
-		if len(self.results) == 0: return output # assume >= 1 entry
-		max_length = max(len(r.scores) for r in self.results) # take longest row for zero padding
-		for result in self.results:
-			if num_show is not None and result.rank > num_show:
+		if len(self.rows) == 0: return output # assume >= 1 entry
+		max_length = max(len(r.scores) for r in self.rows) # take longest row for zero padding
+		for row in self.rows:
+			if num_show is not None and row.rank > num_show:
 				break
-			output += "%4d. " % result.rank
-			output += "%7.2f"  % result.total
+			output += "%4d. " % row.rank
+			output += "%7.2f"  % row.total
 			if max_length > 1: # sum of more than one thing
 				if zero_pad:
-					scores = result.scores + [0,] * (max_length - len(result.scores))
+					scores = row.scores + [0,] * (max_length - len(row.scores))
 				else:
-					scores = result.scores
+					scores = row.scores
 				output += "  |  "
 				output += " ".join([int_string %x if type(x) == int or x == 0 \
 						else float_string %x  for x in scores])
 			output += "  |  "
-			if num_named is None or result.rank <= num_named:
-				output += result.row_name
+			if num_named is None or row.rank <= num_named:
+				output += unicode(row.entity)
 			output += "\n"
 		output += "\n"
 		return output
-	def get_rows(self, precision = 2):
+
+	def get_sheet(self):
 		sheet = [["Rank", "Name", "Total"]]
-		for result in self.results:
-			sheetrow = [result.rank, result.row_name, \
-					round(result.total, ndigits = precision)]
-			if len(result.scores) > 1:
-				sheetrow += [round(s, ndigits = precision) if s else 0 for s in result.scores]
+		for row in self.rows:
+			sheetrow = [row.rank, unicode(row.entity), \
+					round(row.total, ndigits = precision)]
+			if len(row.scores) > 1:
+				sheetrow += [round(s, ndigits = precision) if s else 0 for s in row.scores]
 			sheet.append(sheetrow)
 		return sheet
-
-
-def RP_alphas():
-	"""Creates a ResultPrinter for a set of mathletes,
-	by looking up their alpha values"""
-	results = [NameResultRow(row_name = unicode(ea.entity),
-				scores = [ea.cached_alpha or 0])
-				for ea in He.models.EntityAlpha.objects.all()]
-	return ResultPrinter(results)
-
-def RP_exam(entities, score_dict):
-	"""Input: list of entities, score_dict with entity_id -> score_set
-	Creates a ResultPrinter for a set of exams and entities,
-	by looking up their scores for the exam"""
-	results = [NameResultRow(row_name = unicode(entity),
-			scores = score_dict[entity.id]) \
-			for entity in entities]
-	return ResultPrinter(results)
-
-def RP_alpha_sums(mathletes, teams):
-	"""Creates a ResultPrinter for a set of mathletes and teams
-	by summing the alpha values of the mathletes"""
-	mathletes.sort(key = lambda m: m.team.id if m.team is not None else 0)
-	results = []
-	for team, group in itertools.groupby(mathletes, lambda m : m.team):
-		if team is None: continue
-		scores = [He.models.get_alpha(m) for m in group]
-		scores.sort(reverse=True)
-		results.append(NameResultRow(row_name = unicode(team), scores = scores))
-	return ResultPrinter(results)

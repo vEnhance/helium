@@ -62,9 +62,9 @@ import time
 # The following imports are Helium specific
 import helium as He
 import helium.forms as forms
-import presentation
 import scanimage
 import threader
+from presentation import ResultPrinter as RP
 
 DONE_IMAGE_URL = static('img/done.jpg')
 
@@ -600,11 +600,11 @@ def view_pdf(request, pdfscribble_id):
 	return render(request, "table-only.html", context)
 
 ## SCORE REPORTS
-def _report(num_show = None, num_named = None, zero_pad = True,
-		show_indiv_alphas = True, show_team_sum_alphas = True, show_hmmt_sweepstakes = True):
+def _report(num_show = None, num_named = None, zero_pad = True):
 	"""Explanation of potions:
 	num_show: Display only the top N entities
 	num_named: Suppress the names of entities after rank N
+	zero_pad: Whether missing scores should be zero-padded
 	The other booleans are self explanatory."""
 
 	output = '<!DOCTYPE html>' + "\n"
@@ -613,84 +613,40 @@ def _report(num_show = None, num_named = None, zero_pad = True,
 			'DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;">' + "\n"
 	output += INIT_TEXT_BANNER + "\n\n"
 
-	# Do this query once, we'll need it repeatedly
-	mathletes = list(He.models.Entity.mathletes.all())
-	teams = list(He.models.Entity.teams.all())
-
-
-	# GET ALL SCORES NOW
-	# Query through all verdicts, grouping by exam by problem
-	# exam_id -> entity_id -> score list
-	all_verdicts_dict = {}
-	for exam in He.models.Exam.objects.all():
-		all_verdicts_dict[exam.id] = collections.defaultdict(list)
-
-	for v_dict in He.models.Verdict.objects.all()\
-			.order_by('problem__problem_number')\
-			.values('problem__exam_id', 'problem__weight',\
-			'problem__allow_partial', 'entity_id', 'score'):
-		exam_id, entity_id, score = v_dict['problem__exam_id'], v_dict['entity_id'], v_dict['score']
-		if score is not None:
-			if not v_dict['problem__allow_partial']: # all-or-nothing
-				all_verdicts_dict[exam_id][entity_id].append(score * v_dict['problem__weight'])
-			else:
-				all_verdicts_dict[exam_id][entity_id].append(score)
-
 	## Individual Results
-	if show_indiv_alphas:
-		output += presentation.RP_alphas().get_table("Overall Individuals (Alphas)", \
-				num_show = num_show, num_named = num_named)
+	rows = He.models.ScoreRow.objects.filter(category="Individual Overall")
+	output += RP(rows).get_table("Overall Individuals (Alphas)",
+			num_show = num_show, num_named = num_named)
 	output += "\n"
 
 	indiv_exams = He.models.Exam.objects.filter(is_indiv=True)
 	for exam in indiv_exams:
-		rp = presentation.RP_exam(mathletes, all_verdicts_dict[exam.id])
-		output += rp.get_table(heading = unicode(exam), \
+		rows = He.models.ScoreRow.objects.filter(category=exam.name)
+		output += RP(rows).get_table(heading = unicode(exam),
 				num_show = num_show, num_named = num_named, zero_pad = zero_pad)
 	output += "\n"
 
 	## Team Results
 	team_exams = He.models.Exam.objects.filter(is_indiv=False)
-	if show_hmmt_sweepstakes:
-		team_exam_scores = collections.defaultdict(list) # unicode(team) -> list of scores
-
 	for exam in team_exams:
-		rp = presentation.RP_exam(teams, all_verdicts_dict[exam.id])
-		output += rp.get_table(heading = unicode(exam), \
+		rows = He.models.ScoreRow.objects.filter(category=exam.name)
+		output += RP(rows).get_table(heading = unicode(exam),
 				num_show = num_show, num_named = num_named, zero_pad = zero_pad,
 				float_string = "%2.0f", int_string = "%2d")
-		# Use for sweeps
-		if show_hmmt_sweepstakes:
-			if len(rp.results) > 0 and any([r.total for r in rp.results]):
-				this_exam_weight = 400.0/max([r.total for r in rp.results])
-			else:
-				this_exam_weight = 0 # nothing yet
-			for r in rp.results:
-				team_exam_scores[r.row_name].append(this_exam_weight * r.total)
-
-	# Now compute sum of individual scores
-	# TODO optimize this part as well
-	if show_team_sum_alphas:
-		rp = presentation.RP_alpha_sums(mathletes, teams)
-		output += rp.get_table(heading = "Team Individual Aggregate", \
-				num_show = num_show, num_named = num_named, zero_pad = zero_pad)
-		if show_hmmt_sweepstakes:
-			if len(rp.results) > 0 and any([r.total for r in rp.results]):
-				indiv_weight = 800.0/max([r.total for r in rp.results])
-			else:
-				indiv_weight = 0 # nothing yet
-			for r in rp.results:
-				team_exam_scores[r.row_name].append(indiv_weight * r.total)
-
-	# Finally, sweepstakes
-	if show_hmmt_sweepstakes:
 		output += "\n"
-		results = [presentation.NameResultRow(row_name = unicode(team),
-			scores = team_exam_scores[unicode(team)])
-			for team in teams]
-		output += presentation.ResultPrinter(results).get_table(heading = "Sweepstakes", \
-				num_show = None, num_named = None,
-				float_string = "%7.2f", int_string = "%7d")
+
+	# Indiv aggregate
+	rows = He.models.ScoreRow.objects.filter(category="Team Aggregate")
+	output += RP(rows).get_table("Team Aggregate",
+			num_show = num_show, num_named = num_named)
+	output += "\n"
+
+	# Sweepstakes
+	rows = He.models.ScoreRow.objects.filter(category="Sweepstakes")
+	output += RP(rows).get_table("Sweepstakes",
+			num_show = None, num_named = None,
+			float_string = "%7.2f", int_string = "%7d")
+	output += "\n"
 
 	output += "This report was generated by Helium at " + time.strftime('%c') + "."
 	output += "\n\n"
@@ -715,30 +671,14 @@ def teaser(request):
 
 @user_passes_test(lambda u: u.is_superuser)
 def spreadsheet(request):
-	"""Get the entire score spreadsheet."""
-
-	mathletes = list(He.models.Entity.mathletes.all())
-	teams = list(He.models.Entity.teams.all())
-
-	sheets = {} # sheet name -> rows
-
-	# Individual alphas, but only if someone has nonzero alpha
-	if He.models.EntityAlpha.objects.filter(cached_alpha__gt=0).exists():
-		sheets['Alpha'] = presentation.RP_alphas(mathletes).get_rows()
-
-	indiv_exams = He.models.Exam.objects.filter(is_indiv=True)
-	for exam in indiv_exams:
-		sheets[unicode(exam)] = presentation.RP_exam(exam, mathletes).get_rows()
-	team_exams = He.models.Exam.objects.filter(is_indiv=False)
-	for exam in team_exams:
-		sheets[unicode(exam)] = presentation.RP_exam(exam, teams).get_rows()
-
-	spreadsheet = presentation.get_odf_spreadsheet(sheets)
-	response = HttpResponse(spreadsheet,\
-			content_type="application/vnd.oasis.opendocument.spreadsheet")
-	response['Content-Disposition'] = 'attachment; filename=scores-%s.ods' \
-			%time.strftime("%Y%m%d-%H%M%S")
-	return response
+	# TODO not implemented
+	pass
+#	spreadsheet = presentation.get_odf_spreadsheet(sheets)
+#	response = HttpResponse(spreadsheet,\
+#			content_type="application/vnd.oasis.opendocument.spreadsheet")
+#	response['Content-Disposition'] = 'attachment; filename=scores-%s.ods' \
+#			%time.strftime("%Y%m%d-%H%M%S")
+#	return response
 
 @user_passes_test(lambda u: u.is_superuser)
 def run_management(request, command_name):
