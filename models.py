@@ -461,11 +461,15 @@ class EntityAlpha(models.Model):
 
 class EntityExamScores(models.Model):
 	"""This is a storage object which keeps the exam scores for an entity."""
-	category = models.CharField(max_length=80, help_text="Category for this score list (for example, name of exam).")
+	category = models.CharField(max_length=80,\
+			help_text = "Category for this score list (for example, name of exam).")
 	entity = models.OneToOneField(Entity, on_delete=models.CASCADE)
-	total_score = models.FloatField(help_text="Total score")
+
+	rank = models.IntegerField(help_text = "Relative rank of this result row")
+	total_score = models.FloatField(help_text = "Total score")
 	cached_score_string = models.CharField(max_length=400, blank=True,
 			help_text = "A comma-separated list of float values which are scores for that exam.")
+
 	@property
 	def scores(self):
 		return [float(x) for x in self.cached_score_string.split(',')]
