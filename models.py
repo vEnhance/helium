@@ -463,7 +463,7 @@ class ScoreRow(models.Model):
 	"""This is a storage object which keeps the exam scores for an entity."""
 	category = models.CharField(max_length=80,\
 			help_text = "Category for this score list (for example, name of exam).")
-	entity = models.OneToOneField(Entity, on_delete=models.CASCADE)
+	entity = models.ForeignKey(Entity, on_delete=models.CASCADE)
 
 	rank = models.IntegerField(help_text = "Relative rank of this result row", null=True)
 	total = models.FloatField(help_text = "Total score", default = 0)
