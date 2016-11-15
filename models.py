@@ -465,9 +465,9 @@ class ScoreRow(models.Model):
 			help_text = "Category for this score list (for example, name of exam).")
 	entity = models.OneToOneField(Entity, on_delete=models.CASCADE)
 
-	rank = models.IntegerField(help_text = "Relative rank of this result row")
+	rank = models.IntegerField(help_text = "Relative rank of this result row", null=True)
 	total = models.FloatField(help_text = "Total score", default = 0)
-	cached_score_string = models.CharField(max_length=400, blank=True,
+	cached_score_string = models.CharField(max_length=400, blank=True, default="",
 			help_text = "A comma-separated list of float values which are scores for that exam.")
 	@property
 	def scores(self):
