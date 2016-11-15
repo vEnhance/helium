@@ -466,15 +466,15 @@ class EntityExamScores(models.Model):
 	entity = models.OneToOneField(Entity, on_delete=models.CASCADE)
 
 	rank = models.IntegerField(help_text = "Relative rank of this result row")
-	total_score = models.FloatField(help_text = "Total score")
+	total = models.FloatField(help_text = "Total score", default = 0)
 	cached_score_string = models.CharField(max_length=400, blank=True,
 			help_text = "A comma-separated list of float values which are scores for that exam.")
-
 	@property
 	def scores(self):
 		return [float(x) for x in self.cached_score_string.split(',')]
 	def set_scores(self, scores):
 		self.cached_score_string = ','.join(["%.2f" %x for x in scores])
+		self.total = sum(scores)
 	class Meta:
 		unique_together = ('category', 'entity',)
 
