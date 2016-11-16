@@ -56,8 +56,10 @@ def get_heading(s):
 	return s.upper() + "\n" + "=" * 60 + "\n"
 
 
-def get_score_rows():
-	dicts = He.models.ScoreRow.objects.values(
+def get_score_rows(queryset = None):
+	if queryset is None:
+		queryset = He.models.ScoreRow.objects.all()
+	dicts = queryset.values(
 			'category', 'entity__name', 'rank', 'total', 'cached_score_string',
 			'entity__is_team', 'entity__shortname', 'entity__team__name')
 	ret = collections.defaultdict(list)
