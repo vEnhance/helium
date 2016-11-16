@@ -100,7 +100,7 @@ class UploadScanForm(forms.Form):
 	"""Takes an exam and a PDF scan of several pages"""
 	exam = forms.ModelChoiceField(
 			label = "Exam",
-			queryset = He.models.Exam.objects.filter(is_ready=True, is_scanned=True),
+			queryset = He.models.Exam.objects.filter(can_upload_scan=True),
 			help_text = "Please, please, PLEASE check this is right!")
 	pdf = forms.FileField(label = "Upload PDF",
 			help_text = "Note file names must be unique; "\
