@@ -286,7 +286,7 @@ def find_paper(request):
 		# List scribbles needing attention
 		for es in He.models.ExamScribble.objects.exclude(needs_attention=u''):
 			tr = collections.OrderedDict()
-			tr['Reason'] = es.needs_attention # reason in queue
+			tr['Reason'] = '<i>' + unicode(es.needs_attention) + '</i>' # reason in queue
 			tr['Exam'] = es.exam
 			tr['Entity'] = es.entity
 			tr['Open'] = '<a href="/helium/view-paper/scan/%d">Open</a>' %es.id
