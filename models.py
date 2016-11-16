@@ -131,6 +131,10 @@ class Exam(models.Model):
 			"so as not to distract users. "
 			"Note that this does not affect validation, it only affects the UI: "
 			"in other words users can still navigate directly to a URL to grade this exam.")
+	can_upload_scan = models.BooleanField(default=False,
+			help_text = "Mark true if you want users to be able to upload scans this exam. "
+			"You should set it to False after all exams are scanned, "
+			"to decrease the chance that someone uploads a scan to the wrong place.")
 	is_alg_scoring = models.BooleanField(default=True)
 	is_scanned = models.BooleanField(default=False,
 			help_text = "Whether the scan grader will show this problem or not. "
@@ -138,7 +142,7 @@ class Exam(models.Model):
 
 	min_grades = models.IntegerField(default=3,
 			help_text="This is the minimum number of graders required before "
-			" a problem is marked as `done grading` by the system.") 
+			" a problem is marked as `done grading` by the system.")
 	min_override = models.IntegerField(default=3,
 			help_text="Number of graders required to override a grading conflict. "
 			"For example, the default setting is that a 3:1 majority is sufficient "
