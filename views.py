@@ -153,64 +153,6 @@ def old_grader_problem(request, problem_id):
 	problems = [problem]
 	return _old_grader(request, exam, problems)
 
-## VIEWS FOR SLOW SCAN MATCH
-@staff_member_required
-def match_papers_redir(request):
-	return _redir_obj_id(request,
-			key = 'exam',
-			form_type = forms.ExamScanSelectForm)
-@staff_member_required
-def match_papers(request, exam_id):
-	try:
-		exam = He.models.Exam.objects.get(id=exam_id)
-	except He.models.Exam.DoesNotExist:
-		return HttpResponseNotFound("Exam does not exist", content_type="text/plain")
-
-	if request.method == 'POST':
-		try:
-			examscribble_id = int(request.POST['examscribble_id'])
-			examscribble = He.models.ExamScribble.objects.get(id=examscribble_id)
-		except (ValueError, He.models.ExamScribble.DoesNotExist):
-			return HttpResponse("What did you DO?", content_type="text/plain")
-
-		form = forms.ExamScribbleMatchRobustForm(
-				request.POST, examscribble = examscribble, user = request.user)
-		if form.is_valid():
-			prev_entity = form.cleaned_data['entity']
-			if form.cleaned_data['attention']:
-				messages.success(request, "Marked exam scribble for admin action "
-				"(reason given: %s)" % form.cleaned_data['attention'])
-			else:
-				messages.success(request, "Matched exam for %s" %prev_entity)
-		else: # validation errors
-			context = {
-					'form' : form,
-					'scribble' : examscribble,
-					'exam' : exam,
-					}
-			return render(request, "match-papers.html", context)
-
-	# Now we're set, so get the next scribble, or alert none left
-	queryset = He.models.ExamScribble.objects.filter\
-			(entity=None, exam=exam, needs_attention=u'')
-
-	if len(queryset) == 0:
-		context = {
-				'form' : None,
-				'scribble' : None,
-				'exam' : exam,
-				}
-	else:
-		examscribble = queryset[random.randrange(queryset.count())]
-		form = forms.ExamScribbleMatchRobustForm(
-				examscribble = examscribble, user = request.user)
-		context = {
-				'form' : form,
-				'scribble' : examscribble,
-				'exam' : exam,
-				}
-	return render(request, "match-papers.html", context)
-
 ## VIEWS FOR FAST SCAN MATCH
 @staff_member_required
 def fast_match_redir(request):

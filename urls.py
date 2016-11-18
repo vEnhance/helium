@@ -21,8 +21,6 @@ urlpatterns = [
 	url(r'^old-grader/exam/redir/$', views.old_grader_exam_redir),
 	url(r'^old-grader/problem/([0-9]+)/$', views.old_grader_problem),
 	url(r'^old-grader/problem/redir/$', views.old_grader_problem_redir),
-	url(r'^match-papers/([0-9]+)/$', views.match_papers),
-	url(r'^match-papers/redir/$', views.match_papers_redir),
 	url(r'^fast-match/([0-9]+)/$', views.fast_match),
 	url(r'^fast-match/redir/$', views.fast_match_redir),
 	url(r'^view-verdict/([0-9]+)/$', views.view_verdict),
