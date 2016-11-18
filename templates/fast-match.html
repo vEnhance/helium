@@ -26,6 +26,14 @@ Alternatively, one can search for the name in the autocomplete field.
 <p>Candidate: <b><span id="candidate"></span></b></p>
 <p>... Or find the name of the candidate from below</p>
 </div>
+
+{% if debug %}
+<ul>{% for num, name in pairs %}
+<li><b>{{ num }}</b>: {{ name }}</li>
+{% endfor %}
+</ul>
+{% endif %}
+
 {% endblock %}
 
 {% block scripts %}
@@ -115,7 +123,7 @@ $(document).ready(function() {
 			$.ajax({
 				url  : "/helium/ajax/submit-match/",
 				type : "POST",
-				data : { examscribble_id : esid, entity_id : value },
+				data : { examscribble_id : esid, entity_number : value },
 			});
 			preload_next_scan(1);
 

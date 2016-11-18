@@ -461,10 +461,27 @@ def ajax_submit_match(request):
 	"""POST arguments: examscribble_id, entity_id.
 	RETURN: nothing useful"""
 	try:
-		examscribble_id = int(request.POST['scribble_id'])
-		entity_id = int(request.POST['entity_id'])
+		examscribble_id = int(request.POST['examscribble_id'])
+		entity_number = int(request.POST['entity_number'])
 	except ValueError: return
-	return HttpResponse("OK", content_type="text/plain")
+	es = He.models.ExamScribble.objects.get(id = examscribble_id)
+	if es.exam.is_indiv:
+		entity = He.models.Entity.mathletes.get(number = entity_number)
+	else:
+		entity = He.models.Entity.teams.get(number = entity_number)
+	bad_v = es.checkConflictVerdict(entity)
+	es.last_sent_time = None # reset timer, not that it matters
+	if bad_v is not None:
+		es.needs_attention = "%s matched to %s,\
+				<a href=\"/helium/view-verdict/%d\">conflict</a>"\
+				%(request.user, entity, bad_v.id)
+		es.unassign() # which should save too
+		# es.save() # done by es.assign
+		return HttpResponse("Conflict, marked for attention", content_type="text/plain")
+	else:
+		es.assign(entity)
+		return HttpResponse("OK", content_type="text/plain")
+
 @staff_member_required
 @require_POST
 def ajax_next_match(request):
