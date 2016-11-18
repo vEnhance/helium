@@ -424,6 +424,9 @@ def ajax_submit_match(request):
 		es.needs_attention = escape(request.POST['attention'].strip())
 		es.unassign()
 		return HttpResponse("Silly children", content_type="text/plain")
+	else:
+		es.needs_attention = ''
+		es.save()
 
 	entity_id = int(request.POST['entity_id'])
 	entity = es.exam.takers.get(id = entity_id)
