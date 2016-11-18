@@ -22,18 +22,19 @@ Alternatively, one can search for the name in the autocomplete field.
 <div id="controls">
 <p><button id="button_decr_index">Go Back</button>
 <button id="button_incr_index">Skip</button></p>
-<p>Input Number: <input id="magic_box" name="magic_box" /></p>
-<p>Candidate: <b><span id="candidate"></span></b></p>
-<p>... Or find the name of the candidate from below</p>
-{{ widgetHTML }}
+<form id="entity_selector" action="#">
+	<p><label>Input Number:</label> <input id="magic_box" name="magic_box" /> then press Enter</p>
+	<p>Or find the name of the entity from below:</p>
+	<p>{{ widgetHTML }}</p>
+	<p><input type="submit" /></p>
+</form>
 </div>
 {% endblock %}
 
 {% block scripts %}
 <script type="text/javascript">
-var numbers_to_names = {
-{% for entity in entities %} {{ entity.number }} : "{{ entity.name }}",
-{% endfor %}
+var regnum_to_id = {
+	{% for entity in entities %} {{ entity.number }} : {{ entity.id }}, {% endfor %} 
 };
 </script>
 
@@ -99,30 +100,33 @@ $(document).ready(function() {
 		console.log(current_index);
 	}
 
+	function updateUI(id) {
+		$("#id_entity").val(id);
+		if (id != "")
+			$(".ui-autocomplete-input").val($("#id_entity option:selected").text());
+		else
+			$(".ui-autocomplete-input").val("");
+	}
+	// Change magic box value
 	$("#magic_box").keyup(function (e) {
-		// TODO write this whole thing
 		if (esid == 0) return; // nothing to do
 		var value = $("#magic_box").val();
-
-		// Update fuzzy match
-		if (value in numbers_to_names)
-			$("#candidate").html("<b>"+numbers_to_names[value]+"</b>");
-		else
-			$("#candidate").html("No match found");
-
-		// If return, ajax submit
-		if (value in numbers_to_names && e.which == 13) {
-			// Now submit this
-			$.ajax({
-				url  : "/helium/ajax/submit-match/",
-				type : "POST",
-				data : { examscribble_id : esid, entity_number : value },
-			});
-			preload_next_scan(1);
-
-			current_index++; // Move to next one
-			load_scan_at_current_index();
-		}
+		console.log(value);
+		if (value in regnum_to_id) updateUI(regnum_to_id[value]);
+		else updateUI("");
+	});
+	$("#entity_selector").submit(function() {
+		if ($("#id_entity").val() == "") return;
+		$.ajax({
+			url  : "/helium/ajax/submit-match/",
+			type : "POST",
+			data : { examscribble_id : esid, entity_id : $("#id_entity").val() },
+		});
+		updateUI("");
+		preload_next_scan(1);
+		current_index++; // Move to next one
+		load_scan_at_current_index();
+		return false; // prevent page from submitting
 	});
 
 	$("#button_decr_index").click(function() {
@@ -137,7 +141,9 @@ $(document).ready(function() {
 	});
 
 	load_scan_at_current_index(); // load first image
-	$("#score").focus();
+	$("#magic_box").focus();
+	$("#id_entity").val("");
+	$(".ui-autocomplete-input").val("");
 });
 </script>
 {% endblock %}
