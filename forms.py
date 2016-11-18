@@ -227,9 +227,9 @@ class ExamScribbleMatchRobustForm(forms.Form):
 		self.fields['attention'] = forms.CharField(\
 				label = 'Issues:',
 				required = False,
+				widget = forms.Textarea(attrs = {'width' : '100%', 'rows' : '3'}),
 				help_text = "Note here if there are any problems with this scribble, "
-					"like \"no name\" or \"no such student\". "
-					"(If you do, other action is taken.)")
+					"like \"no name\" or \"no such student\"; this un-assigns the student.")
 
 		if self.user.is_superuser:
 			self.fields['force'] = forms.BooleanField(
@@ -244,7 +244,7 @@ class ExamScribbleMatchRobustForm(forms.Form):
 			return
 		if data['attention'] != '':
 			self.examscribble.needs_attention = data['attention']
-			self.examscribble.save()
+			self.examscribble.unassign() # un-assign since needs attention
 			return
 		entity = data.get('entity', None)
 		if entity is None:
