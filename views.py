@@ -360,7 +360,7 @@ def view_paper(request, *args):
 		context['matchurl'] = "/helium/match-papers/%d/" %exam.id
 
 		if es.needs_attention:
-			messages.warning(request, "This exam scribble needs administrator attention. "
+			messages.warning(request, "This exam scribble needs administrator attention.<br>"
 			"Reason: " + es.needs_attention)
 
 	context['gradeform'] = forms.ExamGradingRobustForm(
