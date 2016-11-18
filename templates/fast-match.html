@@ -25,21 +25,14 @@ Alternatively, one can search for the name in the autocomplete field.
 <p>Input Number: <input id="magic_box" name="magic_box" /></p>
 <p>Candidate: <b><span id="candidate"></span></b></p>
 <p>... Or find the name of the candidate from below</p>
+{{ widgetHTML }}
 </div>
-
-{% if debug %}
-<ul>{% for num, name in pairs %}
-<li><b>{{ num }}</b>: {{ name }}</li>
-{% endfor %}
-</ul>
-{% endif %}
-
 {% endblock %}
 
 {% block scripts %}
 <script type="text/javascript">
 var numbers_to_names = {
-{% for num, name in pairs %} {{ num }} : "{{ name }}",
+{% for entity in entities %} {{ entity.number }} : "{{ entity.name }}",
 {% endfor %}
 };
 </script>

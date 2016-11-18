@@ -223,8 +223,10 @@ def fast_match(request, exam_id):
 		exam = He.models.Exam.objects.get(id=exam_id)
 	except He.models.Exam.DoesNotExist:
 		return HttpResponseNotFound("Exam does not exist", content_type="text/plain")
-	pairs = [(entity.number, entity.verbose_name) for entity in exam.takers.all()]
-	context = {'exam' : exam, 'pairs' : pairs}
+	takers = exam.takers.all()
+	field = forms.EntityModelChoiceField(queryset = takers)
+	widgetHTML = field.widget.render(name = "entity", value = "", attrs = {'id' : 'id_entity'})
+	context = {'exam' : exam, 'entities' : takers, 'widgetHTML' : widgetHTML }
 	return render(request, "fast-match.html", context)
 
 ## VIEWS FOR SCAN GRADER
