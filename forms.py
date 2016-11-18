@@ -227,7 +227,7 @@ class ExamScribbleMatchRobustForm(forms.Form):
 		self.fields['attention'] = forms.CharField(\
 				label = 'Issues:',
 				required = False,
-				widget = forms.Textarea(attrs = {'width' : '100%', 'rows' : '3'}),
+				widget = forms.Textarea(attrs = {'cols' : '40%', 'rows' : '3'}),
 				help_text = "Note here if there are any problems with this scribble, "
 					"like \"no name\" or \"no such student\"; this un-assigns the student.")
 

@@ -14,7 +14,7 @@ This file is divided into roughly a few parts:
 
 ## Grading views: for example
 * The classical grader (old_grader_*), grade by name and test/problem
-* The interface matching papers to students (match_papers)
+* The interface matching papers to students (fast_match)
 * Interfaces view_* for viewing previous evidences and maybe fixing them
 * The scan grader (grade_scans), grading problem scans
 
@@ -52,6 +52,7 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib import messages
 from django.db.models import Count
+from django.utils.html import escape
 import django.core.management
 import django.db
 import json
@@ -161,10 +162,7 @@ def fast_match_redir(request):
 			form_type = forms.ExamScanSelectForm)
 @staff_member_required
 def fast_match(request, exam_id):
-	try:
-		exam = He.models.Exam.objects.get(id=exam_id)
-	except He.models.Exam.DoesNotExist:
-		return HttpResponseNotFound("Exam does not exist", content_type="text/plain")
+	exam = He.models.Exam.objects.get(id=exam_id)
 	takers = exam.takers.all()
 	field = forms.EntityModelChoiceField(queryset = takers)
 	widgetHTML = field.widget.render(name = "entity", value = "", attrs = {'id' : 'id_entity'})
@@ -407,12 +405,19 @@ def ajax_prev_evidence(request):
 @staff_member_required
 @require_POST
 def ajax_submit_match(request):
-	"""POST arguments: examscribble_id, entity_id.
+	"""POST arguments: examscribble_id, entity_id, attention
 	RETURN: nothing useful"""
 	try:
 		examscribble_id = int(request.POST['examscribble_id'])
-		entity_id = int(request.POST['entity_id'])
-	except ValueError: return
+	except ValueError:
+		return HttpResponse("No such exam scribble", content_type="text/plain")
+
+	if request.POST['attention']:
+		es.needs_attention = escape(request.POST['attention'].strip())
+		es.unassign()
+		return HttpResponse("Silly children", content_type="text/plain")
+
+	entity_id = int(request.POST['entity_id'])
 	es = He.models.ExamScribble.objects.get(id = examscribble_id)
 	entity = es.exam.takers.get(id = entity_id)
 	bad_v = es.checkConflictVerdict(entity)

@@ -24,8 +24,11 @@ Alternatively, one can search for the name in the autocomplete field.
 <button id="button_incr_index">Skip</button></p>
 <form id="entity_selector" action="#">
 	<p><label>Input Number:</label> <input id="magic_box" name="magic_box" /> then press Enter</p>
-	<p>Or find the name of the entity from below:</p>
+	<p>Or, find the name of the entity from below:</p>
 	<p>{{ widgetHTML }}</p>
+	<p>Or, if there is some issue, explain below (and press submit).
+	Entering text below will clear any selections above.</p>
+	<textarea rows="3" cols="50" id="attention"></textarea>
 	<p><input type="submit" /></p>
 </form>
 </div>
@@ -107,22 +110,42 @@ $(document).ready(function() {
 		else
 			$(".ui-autocomplete-input").val("");
 	}
-	// Change magic box value
+
+	// On keypress in magic box
 	$("#magic_box").keyup(function (e) {
 		if (esid == 0) return; // nothing to do
 		var value = $("#magic_box").val();
+		$("#attention").val('');
 		console.log(value);
 		if (value in regnum_to_id) updateUI(regnum_to_id[value]);
 		else updateUI("");
 	});
+	$(".ui-autocomplete-input").change(
+			function (e) { $("#attention").val(''); }
+	);
+
+	$("#attention").keyup(function() {
+		if ($.trim($("#attention").val()) != "") {
+			$("#magic_box").val('');
+			updateUI('');
+		}
+	});
+
 	$("#entity_selector").submit(function() {
-		if ($("#id_entity").val() == "") return;
+		var attention = $.trim($("#attention").val());
+		console.log(attention);
+		if (($("#id_entity").val() == "") && (attention == ""))
+			return false;
 		$.ajax({
 			url  : "/helium/ajax/submit-match/",
 			type : "POST",
-			data : { examscribble_id : esid, entity_id : $("#id_entity").val() },
+			data : { examscribble_id : esid,
+				entity_id : $("#id_entity").val(),
+				attention: attention},
 		});
 		updateUI("");
+		$("#attention").val(""); // empty attention box
+
 		preload_next_scan(1);
 		current_index++; // Move to next one
 		load_scan_at_current_index();
