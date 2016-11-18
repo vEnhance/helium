@@ -306,7 +306,7 @@ def find_paper(request):
 		# List scribbles needing attention
 		for es in He.models.ExamScribble.objects.exclude(needs_attention=u''):
 			tr = collections.OrderedDict()
-			tr['Reason'] = '<i>' + unicode(es.needs_attention) + '</i>' # reason in queue
+			tr['Reason'] = unicode(es.needs_attention) # reason in queue
 			tr['Exam'] = es.exam
 			tr['Entity'] = es.entity
 			tr['Open'] = '<a href="/helium/view-paper/scan/%d">Open</a>' %es.id
@@ -330,6 +330,33 @@ def view_paper(request, *args):
 		except He.models.ExamScribble.DoesNotExist:
 			es = None
 	context = {}
+	if request.method == 'POST': # submitted an update here
+		try:
+			examscribble_id = int(request.POST['examscribble_id'])
+			examscribble = He.models.ExamScribble.objects.get(id=examscribble_id)
+		except (ValueError, He.models.ExamScribble.DoesNotExist):
+			return HttpResponse("What did you DO?", content_type="text/plain")
+
+		form = forms.ExamScribbleMatchRobustForm(
+				request.POST, examscribble = examscribble, user = request.user)
+		if form.is_valid():
+			prev_entity = form.cleaned_data['entity']
+			if form.cleaned_data['attention']:
+				messages.success(request, "Marked exam scribble for admin action "
+				"(reason given: %s)" % form.cleaned_data['attention'])
+			else:
+				messages.success(request, "Matched exam for %s" %prev_entity)
+		context['matchform'] = form
+		es.refresh_from_db()
+	elif es is not None:
+		context['matchform'] = forms.ExamScribbleMatchRobustForm(\
+					user = request.user, examscribble = es)
+		context['matchurl'] = "/helium/match-papers/%d/" %exam.id
+
+	if es and es.needs_attention:
+		messages.warning(request,
+				"This exam scribble needs administrator attention.<br> "
+				"Reason: " + es.needs_attention)
 	if es:
 		context['title'] = unicode(es)
 		context['examscribble'] = es
@@ -342,23 +369,6 @@ def view_paper(request, *args):
 	context['columns'], context['table'] =  _get_vtable(request, verdicts)
 	context['exam'] = exam
 	context['entity'] = entity
-
-	if es is not None:
-		if request.method == "POST":
-			form = forms.NeedsAttentionForm(request.POST, instance=es)
-			if form.is_valid():
-				messages.success(request, "Changed the status of this PDF")
-				form.save()
-		else:
-			form = forms.NeedsAttentionForm(request.POST, instance=es)
-		context['attentionform'] = form
-		context['matchform'] = forms.ExamScribbleMatchRobustForm(\
-					user = request.user, examscribble = es)
-		context['matchurl'] = "/helium/match-papers/%d/" %exam.id
-
-		if es.needs_attention:
-			messages.warning(request, "This exam scribble needs administrator attention.<br>"
-			"Reason: " + es.needs_attention)
 
 	context['gradeform'] = forms.ExamGradingRobustForm(
 			user = request.user,

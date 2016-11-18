@@ -246,13 +246,13 @@ class ExamScribbleMatchRobustForm(forms.Form):
 			self.examscribble.needs_attention = data['attention']
 			self.examscribble.unassign() # un-assign since needs attention
 			return
+		else:
+			self.examscribble.needs_attention = ""
+			self.examscribble.save()
+
 		entity = data.get('entity', None)
 		if entity is None:
 				self.add_error('entity', "No entity specified")
-
-		self.examscribble.needs_attention = ""
-		self.examscribble.save()
-
 
 		# Now for each attached ProblemScribble...
 		# check if it's okay to update
