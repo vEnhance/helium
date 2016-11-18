@@ -223,12 +223,7 @@ def fast_match(request, exam_id):
 		exam = He.models.Exam.objects.get(id=exam_id)
 	except He.models.Exam.DoesNotExist:
 		return HttpResponseNotFound("Exam does not exist", content_type="text/plain")
-	if exam.is_indiv: # indiv exam
-		pairs = [(mathlete.number, mathlete.verbose_name)
-				for mathlete in He.models.Entity.mathletes.filter(number__isnull=False)]
-	else: # team exam
-		pairs = [(d['number'], d['name']) \
-				for d in He.models.Entity.teams.values('number', 'name')]
+	pairs = [(entity.number, entity.verbose_name) for entity in exam.takers.all()]
 	context = {'exam' : exam, 'pairs' : pairs}
 	return render(request, "fast-match.html", context)
 
@@ -465,10 +460,7 @@ def ajax_submit_match(request):
 		entity_number = int(request.POST['entity_number'])
 	except ValueError: return
 	es = He.models.ExamScribble.objects.get(id = examscribble_id)
-	if es.exam.is_indiv:
-		entity = He.models.Entity.mathletes.get(number = entity_number)
-	else:
-		entity = He.models.Entity.teams.get(number = entity_number)
+	entity = es.exam.takers.get(number = entity_number)
 	bad_v = es.checkConflictVerdict(entity)
 	es.last_sent_time = None # reset timer, not that it matters
 	if bad_v is not None:
@@ -647,7 +639,6 @@ def view_pdf(request, pdfscribble_id):
 	return render(request, "table-only.html", context)
 
 ## SCORE REPORTS
-
 @staff_member_required
 def reports_short(request):
 	return HttpResponse(presentation.HMMT_text_report(num_show=10), content_type="text/html")

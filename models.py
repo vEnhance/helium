@@ -165,6 +165,12 @@ class Exam(models.Model):
 			"to override a conflicting grade.")
 
 	def __unicode__(self): return self.name
+
+	@property
+	def takers(self):
+		'''The students taking this exam'''
+		return Entity.mathletes if self.is_indiv else Entity.teams
+
 	@property
 	def problems(self):
 		return self.problem_set.order_by('problem_number')

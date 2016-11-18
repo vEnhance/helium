@@ -137,12 +137,9 @@ class ExamGradingRobustForm(forms.Form):
 					queryset = He.models.Entity.objects.all(),
 					initial = self.entity)
 			self.fields['entity'].widget = forms.HiddenInput()
-		elif self.exam.is_indiv:
-			self.fields['entity'] = EntityModelChoiceField(\
-					queryset = He.models.Entity.mathletes.all())
 		else:
 			self.fields['entity'] = EntityModelChoiceField(\
-					queryset = He.models.Entity.teams.all())
+					queryset = self.exam.takers)
 
 		for problem in self.problems:
 			n = problem.problem_number
