@@ -459,10 +459,10 @@ def ajax_submit_match(request):
 	RETURN: nothing useful"""
 	try:
 		examscribble_id = int(request.POST['examscribble_id'])
-		entity_number = int(request.POST['entity_number'])
+		entity_id = int(request.POST['entity_id'])
 	except ValueError: return
 	es = He.models.ExamScribble.objects.get(id = examscribble_id)
-	entity = es.exam.takers.get(number = entity_number)
+	entity = es.exam.takers.get(id = entity_id)
 	bad_v = es.checkConflictVerdict(entity)
 	es.last_sent_time = None # reset timer, not that it matters
 	if bad_v is not None:
