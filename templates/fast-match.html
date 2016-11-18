@@ -17,6 +17,9 @@ Alternatively, one can search for the name in the autocomplete field.
 {% if show_attention %}
 <p>Currently, the system is set to <b>only display scribbles</b>
 which need special attention.</p>
+{% elif request.user.is_superuser %}
+<p>Currently the system is not displaying scribbles in need of attention.
+To see these scribbles, <a href="attention">click here</a>.</p>
 {% endif %}
 
 <div class="scanstage">
