@@ -418,6 +418,7 @@ def ajax_submit_match(request):
 		examscribble_id = int(request.POST['examscribble_id'])
 	except ValueError:
 		return HttpResponse("No such exam scribble", content_type="text/plain")
+	es = He.models.ExamScribble.objects.get(id = examscribble_id)
 
 	if request.POST['attention']:
 		es.needs_attention = escape(request.POST['attention'].strip())
@@ -425,7 +426,6 @@ def ajax_submit_match(request):
 		return HttpResponse("Silly children", content_type="text/plain")
 
 	entity_id = int(request.POST['entity_id'])
-	es = He.models.ExamScribble.objects.get(id = examscribble_id)
 	entity = es.exam.takers.get(id = entity_id)
 	bad_v = es.checkConflictVerdict(entity)
 	es.last_sent_time = None # reset timer, not that it matters
@@ -443,7 +443,7 @@ def ajax_submit_match(request):
 @require_POST
 def ajax_next_match(request):
 	"""POST arguments: num_to_load, exam_id, show_attention.
-	RETURN: list of (examscribble id, examscribble url)"""
+	RETURN: list of (examscribble id, examscribble url, attention reason)"""
 
 	exam_id = int(request.POST['exam_id'])
 	if exam_id == 0: return
@@ -461,7 +461,7 @@ def ajax_next_match(request):
 	for es in scribbles[0:n]:
 		es.last_sent_time = time.time()
 		es.save()
-		ret.append([es.id, es.name_image.url])
+		ret.append([es.id, es.name_image.url, es.needs_attention or ''])
 	if len(ret) < n: # all done!
 		ret.append([0, DONE_IMAGE_URL])
 	return HttpResponse( json.dumps(ret), content_type = 'application/json' )
