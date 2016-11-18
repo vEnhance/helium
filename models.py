@@ -356,12 +356,21 @@ class ExamScribble(models.Model):
 
 	def assign(self, entity):
 		"""Identifies the scan as being owned by an entity.
-		This will update all the attached problem scribbles accordingly."""
+		This will update all the attached problem scribbles accordingly.
+		Can assign entity to None"""
 		assert entity.is_team != self.exam.is_indiv
 		self.entity = entity
 		if not self.checkConflictVerdict():
 			self.updateScribbles()
 		self.save()
+
+	def unassign(self):
+		"""Removes assignment of an entity to all problem scribbles."""
+		self.entity = None
+		if not self.checkConflictVerdict():
+			self.updateScribbles()
+		self.save()
+
 
 	def updateScribbles(self, queryset = None):
 		"""Update all child scribbles once mathlete/team identified.
@@ -380,6 +389,7 @@ class ExamScribble(models.Model):
 		Returns None if no issues arise,
 		otherwise returns an example of a Verdict which is bad.
 		Note that purge is DANGEROUS and should use with judgment."""
+
 		if entity is None:
 			entity = self.entity
 		for ps in self.problemscribble_set.all():
@@ -387,7 +397,7 @@ class ExamScribble(models.Model):
 			problem = verdict.problem
 			try: # search for conflicts
 				bad_v = Verdict.objects.get(entity=entity, problem=problem)
-			except Verdict.DoesNotExist: 
+			except Verdict.DoesNotExist:
 				pass
 			else:
 				if bad_v == verdict:
