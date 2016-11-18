@@ -367,10 +367,8 @@ class ExamScribble(models.Model):
 	def unassign(self):
 		"""Removes assignment of an entity to all problem scribbles."""
 		self.entity = None
-		if not self.checkConflictVerdict():
-			self.updateScribbles()
+		self.updateScribbles()
 		self.save()
-
 
 	def updateScribbles(self, queryset = None):
 		"""Update all child scribbles once mathlete/team identified.
