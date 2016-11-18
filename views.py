@@ -156,17 +156,24 @@ def old_grader_problem(request, problem_id):
 
 ## VIEWS FOR FAST SCAN MATCH
 @staff_member_required
-def fast_match_redir(request):
+def fast_match_redir(request, attention=False):
 	return _redir_obj_id(request,
 			key = 'exam',
 			form_type = forms.ExamScanSelectForm)
 @staff_member_required
-def fast_match(request, exam_id):
+def fast_match(request, exam_id, attention=False):
+	"""The fast match system.  Most of the work is in the template.
+
+	Normally the boolean attention is False,
+	meaning that scribbles marked as "needing attention" will not be shown.
+	However, if True then instead *only* scribbles needing attention will be displayed.
+	"""
+	show_attention = int(bool(attention)) # 0 or 1
 	exam = He.models.Exam.objects.get(id=exam_id)
 	takers = exam.takers.all()
 	field = forms.EntityModelChoiceField(queryset = takers)
 	widgetHTML = field.widget.render(name = "entity", value = "", attrs = {'id' : 'id_entity'})
-	context = {'exam' : exam, 'entities' : takers, 'widgetHTML' : widgetHTML }
+	context = {'exam' : exam, 'entities' : takers, 'widgetHTML' : widgetHTML, 'show_attention' : show_attention}
 	return render(request, "fast-match.html", context)
 
 ## VIEWS FOR SCAN GRADER
@@ -432,11 +439,10 @@ def ajax_submit_match(request):
 	else:
 		es.assign(entity)
 		return HttpResponse("OK", content_type="text/plain")
-
 @staff_member_required
 @require_POST
 def ajax_next_match(request):
-	"""POST arguments: num_to_load, exam_id.
+	"""POST arguments: num_to_load, exam_id, show_attention.
 	RETURN: list of (examscribble id, examscribble url)"""
 
 	exam_id = int(request.POST['exam_id'])
@@ -444,9 +450,12 @@ def ajax_next_match(request):
 	exam = He.models.Exam.objects.get(id=exam_id)
 	n = int(request.POST['num_to_load'])
 
-	scribbles = He.models.ExamScribble.objects.filter(\
-			entity__isnull=True, needs_attention=u'')
-	scribbles = scribbles.exclude(last_sent_time__gte = time.time() - 10) # cooldown
+	if int(request.POST['show_attention']) == 1:
+		scribbles = He.models.ExamScribble.objects.exclude(needs_attention=u'')
+	else:
+		scribbles = He.models.ExamScribble.objects\
+				.filter(entity__isnull=True, needs_attention=u'')\
+				.exclude(last_sent_time__gte = time.time() - 10) # cooldown
 
 	ret = []
 	for es in scribbles[0:n]:

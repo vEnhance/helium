@@ -14,6 +14,11 @@ Alternatively, one can search for the name in the autocomplete field.
 
 <p>You can use "view full scan" above to see the entire scanned page.</p>
 
+{% if show_attention %}
+<p>Currently, the system is set to <b>only display scribbles</b>
+which need special attention.</p>
+{% endif %}
+
 <div class="scanstage">
 	<a class="scanzoom" src="" id="zoom_url" target="_blank"/>(View Full Scan)</a>
 	<img class="scan" src="" id="scan_img" />
@@ -63,7 +68,11 @@ $(document).ready(function() {
 		$.ajax({
 			url  : "/helium/ajax/next-match/",
 			type : "POST",
-			data : { exam_id : {{ exam.id }}, num_to_load : n},
+			data : {
+				exam_id : {{ exam.id }},
+				num_to_load : n,
+				show_attention : {{ show_attention }},
+			},
 		}).done(function(result) {
 			for (var i=0; i<result.length; i++) {
 				var data = result[i];
