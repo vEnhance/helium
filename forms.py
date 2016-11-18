@@ -19,6 +19,7 @@ import helium as He
 
 
 class EntityModelChoiceField(forms.ModelChoiceField):
+	"""This is a model choice field which returns verbose names for entities"""
 	def label_from_instance(self, entity):
 		return entity.verbose_name
 

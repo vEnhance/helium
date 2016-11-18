@@ -105,16 +105,19 @@ class Entity(models.Model):
 	def verbose_name(self):
 		if self.team is not None:
 			if self.team.shortname:
-				return '%s [%s / %s]' %(self.name, self.team.name, self.team.shortname)
+				name = '%s [%s / %s]' %(self.name, self.team.name, self.team.shortname)
 			else:
-				return '%s [%s]' %(self.name, self.team.name)
+				name = '%s [%s]' %(self.name, self.team.name)
 		elif self.is_team:
 			if self.shortname:
-				return '%s / %s' %(self.name, self.shortname)
+				name = '%s / %s' %(self.name, self.shortname)
 			else:
-				return self.name
+				name = self.name
 		else:
-			return '%s [Individual]' % self.name
+			name = '%s [Individual]' % self.name
+		if self.number is not None:
+			name = '#' + str(self.number) + " " + name
+		return name
 
 
 	objects = models.Manager() # why do I have to repeat this?
