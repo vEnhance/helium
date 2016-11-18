@@ -89,7 +89,7 @@
 		<li><a href="/helium/view-conflicts/own/">View Your Conflicts</a></li>
 		{% if request.user.is_superuser %}
 			<li><a href="/helium/view-conflicts/all/">View All Conflicts</a> (admin)</li>
-			<li><a href="/admin/helium/">Admin Interface</a> (admin)</li>
+			<li><a href="/admin/helium/">Django Admin</a> (admin)</li>
 		{% endif %}
 		</ul>
 
@@ -113,6 +113,7 @@
 <h4>Management Commands</h4>
 <ul>
 	<li><a href="/helium/management/algscore/">Run Algorithmic Scoring</a></li>
+	<li><a href="/helium/management/grade/">Run Grading</a></li>
 	<li><a href="/helium/management/computeverdicts/">Compute Verdicts</a></li>
 	<li><a href="/helium/management/updatescribbles/">Update Scribbles</a></li>
 	<li><a href="/helium/management/releaseattention/">Release Scribbles from Attention Queue</a></li>

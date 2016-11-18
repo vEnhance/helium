@@ -147,6 +147,10 @@ class Exam(models.Model):
 			"so as not to distract users. "
 			"Note that this does not affect validation, it only affects the UI: "
 			"in other words users can still navigate directly to a URL to grade this exam.")
+	can_upload_scan = models.BooleanField(default=False,
+			help_text = "Mark true if you want users to be able to upload scans this exam. "
+			"You should set it to False after all exams are scanned, "
+			"to decrease the chance that someone uploads a scan to the wrong place.")
 	is_alg_scoring = models.BooleanField(default=True)
 	is_scanned = models.BooleanField(default=False,
 			help_text = "Whether the scan grader will show this problem or not. "
@@ -154,7 +158,7 @@ class Exam(models.Model):
 
 	min_grades = models.IntegerField(default=3,
 			help_text="This is the minimum number of graders required before "
-			" a problem is marked as `done grading` by the system.") 
+			" a problem is marked as `done grading` by the system.")
 	min_override = models.IntegerField(default=3,
 			help_text="Number of graders required to override a grading conflict. "
 			"For example, the default setting is that a 3:1 majority is sufficient "
@@ -295,7 +299,7 @@ class Verdict(models.Model):
 class EntirePDFScribble(models.Model):
 	"""This holds the name of a PDF (self.name) and the associated exam (self.exam),
 	as well as is_done boolean."""
-	name = models.CharField(max_length = 80, unique = True,
+	name = models.CharField(max_length=80, unique = True,
 			help_text = "The name of the PDF file, which must be unique "\
 			"(this is a safety feature to prevent accidental double uploads). ")
 	exam = models.ForeignKey(Exam, help_text = "The exam associated to this PDF.")
@@ -452,9 +456,9 @@ class GutsScoreFunc(models.Model):
 
 	problem_number = models.IntegerField(unique=True,
 			help_text = "This is the problem number on Guts Round.")
-	description = models.CharField(max_length = 80, blank=True,
+	description = models.CharField(max_length=80, blank=True,
 			help_text = "A brief description of the problem, shown only in admin interface.")
-	answer = models.CharField(max_length = 80,
+	answer = models.CharField(max_length=80,
 			help_text = "True answer for problem, not actually used by model, shown in grader.")
 	scoring_function = models.TextField(
 			default="function (x) {\n\treturn Math.round(Math.max(0, WEIGHT-Math.abs(ANS-x)));\n}",
@@ -462,7 +466,7 @@ class GutsScoreFunc(models.Model):
 			"Javascript syntax for a one-variable function. "
 			"This is the score reported if a staff member enters input x.\n"
 			"Can span multiple lines.")
-	problem_help_text = models.CharField(max_length = 120, blank=True,
+	problem_help_text = models.CharField(max_length=120, blank=True,
 			default="Input an integer.",
 			help_text = "An optional text that will display to help the staff member. "
 			"For example, `input a string of seven letters`.")
@@ -472,12 +476,33 @@ class GutsScoreFunc(models.Model):
 	
 
 # HMMT object to store pairs of alpha and entity
-
 class EntityAlpha(models.Model):
 	"""This is a storage object which keeps the alpha value for an entity.
 	(Algorithmic scoring for HMMT.)"""
 	entity = models.OneToOneField(Entity, on_delete=models.CASCADE)
 	cached_alpha = models.FloatField(blank=True, null=True)
+
+class ScoreRow(models.Model):
+	"""This is a storage object which keeps the exam scores for an entity."""
+	category = models.CharField(max_length=80,\
+			help_text = "Category for this score list (for example, name of exam).")
+	entity = models.ForeignKey(Entity, on_delete=models.CASCADE)
+
+	rank = models.IntegerField(help_text = "Relative rank of this result row", null=True)
+	total = models.FloatField(help_text = "Total score", default = 0)
+	cached_score_string = models.CharField(max_length=400, blank=True, default="",
+			help_text = "A comma-separated list of float values which are scores for that exam.")
+	@property
+	def scores(self):
+		if len(self.cached_score_string) > 0:
+			return [float(x) for x in self.cached_score_string.split(',')]
+		else:
+			return []
+	def set_scores(self, scores):
+		self.cached_score_string = ','.join([str(x) for x in scores])
+		self.total = sum(scores)
+	class Meta:
+		unique_together = ('category', 'entity',)
 
 # Auxiliary functions
 # not in use, since it's too slow when called in succession

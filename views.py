@@ -63,43 +63,12 @@ import time
 # The following imports are Helium specific
 import helium as He
 import helium.forms as forms
-import presentation
 import scanimage
 import threader
+from presentation import ResultPrinter as RP
+import presentation
 
 DONE_IMAGE_URL = static('img/done.jpg')
-
-INIT_TEXT_BANNER = """
- .----------------.  .----------------.  .----------------.  .----------------. 
-| .--------------. || .--------------. || .--------------. || .--------------. |
-| |  ____  ____  | || | ____    ____ | || | ____    ____ | || |  _________   | |
-| | |_   ||   _| | || ||_   \  /   _|| || ||_   \  /   _|| || | |  _   _  |  | |
-| |   | |__| |   | || |  |   \/   |  | || |  |   \/   |  | || | |_/ | | \_|  | |
-| |   |  __  |   | || |  | |\  /| |  | || |  | |\  /| |  | || |     | |      | |
-| |  _| |  | |_  | || | _| |_\/_| |_ | || | _| |_\/_| |_ | || |    _| |_     | |
-| | |____||____| | || ||_____||_____|| || ||_____||_____|| || |   |_____|    | |
-| |              | || |              | || |              | || |              | |
-| '--------------' || '--------------' || '--------------' || '--------------' |
- '----------------'  '----------------'  '----------------'  '----------------' 
-
-See <a href="https://www.hmmt.co/static/scoring-algorithm.pdf">https://www.hmmt.co/static/scoring-algorithm.pdf</a> for a description
-of the scoring algorithm used on the individual tests.
- """.strip()
-
-FINAL_TEXT_BANNER = """
- ('-. .-.   ('-.                               _   .-')    
-( OO )  / _(  OO)                             ( '.( OO )_  
-,--. ,--.(,------.,--.      ,-.-') ,--. ,--.   ,--.   ,--.)
-|  | |  | |  .---'|  |.-')  |  |OO)|  | |  |   |   `.'   | 
-|   .|  | |  |    |  | OO ) |  |  \|  | | .-') |         | 
-|       |(|  '--. |  |`-' | |  |(_/|  |_|( OO )|  |'.'|  | 
-|  .-.  | |  .--'(|  '---.',|  |_.'|  | | `-' /|  |   |  | 
-|  | |  | |  `---.|      |(_|  |  ('  '-'(_.-' |  |   |  | 
-`--' `--' `------'`------'  `--'    `-----'    `--'   `--' 
-
-HELIUM (c) 2016 Evan Chen
-""".strip()
-
 
 def _redir_obj_id(request, key, form_type):
 	"""To be used with a select form. Redirects to page with correct ID.
@@ -340,7 +309,7 @@ def find_paper(request):
 		# List scribbles needing attention
 		for es in He.models.ExamScribble.objects.exclude(needs_attention=u''):
 			tr = collections.OrderedDict()
-			tr['Reason'] = es.needs_attention # reason in queue
+			tr['Reason'] = '<i>' + unicode(es.needs_attention) + '</i>' # reason in queue
 			tr['Exam'] = es.exam
 			tr['Entity'] = es.entity
 			tr['Open'] = '<a href="/helium/view-paper/scan/%d">Open</a>' %es.id
@@ -661,138 +630,31 @@ def view_pdf(request, pdfscribble_id):
 	return render(request, "table-only.html", context)
 
 ## SCORE REPORTS
-def _report(num_show = None, num_named = None, zero_pad = True,
-		show_indiv_alphas = True, show_team_sum_alphas = True, show_hmmt_sweepstakes = True):
-	"""Explanation of potions:
-	num_show: Display only the top N entities
-	num_named: Suppress the names of entities after rank N
-	The other booleans are self explanatory."""
 
-	output = '<!DOCTYPE html>' + "\n"
-	output += '<html><head></head><body>' + "\n"
-	output += '<pre style="font-family:Consolas,Monaco,Lucida Console,Liberation Mono,'\
-			'DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;">' + "\n"
-	output += INIT_TEXT_BANNER + "\n\n"
-
-	# Do this query once, we'll need it repeatedly
-	mathletes = list(He.models.Entity.mathletes.all())
-	teams = list(He.models.Entity.teams.all())
-
-
-	# GET ALL SCORES NOW
-	# Query through all verdicts, grouping by exam by problem
-	# exam_id -> entity_id -> score list
-	all_verdicts_dict = {}
-	for exam in He.models.Exam.objects.all():
-		all_verdicts_dict[exam.id] = collections.defaultdict(list)
-
-	for v_dict in He.models.Verdict.objects.all()\
-			.order_by('problem__problem_number')\
-			.values('problem__exam_id', 'problem__weight',\
-			'problem__allow_partial', 'entity_id', 'score'):
-		exam_id, entity_id, score = v_dict['problem__exam_id'], v_dict['entity_id'], v_dict['score']
-		if score is not None:
-			if not v_dict['problem__allow_partial']: # all-or-nothing
-				all_verdicts_dict[exam_id][entity_id].append(score * v_dict['problem__weight'])
-			else:
-				all_verdicts_dict[exam_id][entity_id].append(score)
-
-	## Individual Results
-	if show_indiv_alphas:
-		output += presentation.RP_alphas().get_table("Overall Individuals (Alphas)", \
-				num_show = num_show, num_named = num_named)
-	output += "\n"
-
-	indiv_exams = He.models.Exam.objects.filter(is_indiv=True)
-	for exam in indiv_exams:
-		rp = presentation.RP_exam(mathletes, all_verdicts_dict[exam.id])
-		output += rp.get_table(heading = unicode(exam), \
-				num_show = num_show, num_named = num_named, zero_pad = zero_pad)
-	output += "\n"
-
-	## Team Results
-	team_exams = He.models.Exam.objects.filter(is_indiv=False)
-	if show_hmmt_sweepstakes:
-		team_exam_scores = collections.defaultdict(list) # unicode(team) -> list of scores
-
-	for exam in team_exams:
-		rp = presentation.RP_exam(teams, all_verdicts_dict[exam.id])
-		output += rp.get_table(heading = unicode(exam), \
-				num_show = num_show, num_named = num_named, zero_pad = zero_pad,
-				float_string = "%2.0f", int_string = "%2d")
-		# Use for sweeps
-		if show_hmmt_sweepstakes:
-			if len(rp.results) > 0 and any([r.total for r in rp.results]):
-				this_exam_weight = 400.0/max([r.total for r in rp.results])
-			else:
-				this_exam_weight = 0 # nothing yet
-			for r in rp.results:
-				team_exam_scores[r.row_name].append(this_exam_weight * r.total)
-
-	# Now compute sum of individual scores
-	# TODO optimize this part as well
-	if show_team_sum_alphas:
-		rp = presentation.RP_alpha_sums(mathletes, teams)
-		output += rp.get_table(heading = "Team Individual Aggregate", \
-				num_show = num_show, num_named = num_named, zero_pad = zero_pad)
-		if show_hmmt_sweepstakes:
-			if len(rp.results) > 0 and any([r.total for r in rp.results]):
-				indiv_weight = 800.0/max([r.total for r in rp.results])
-			else:
-				indiv_weight = 0 # nothing yet
-			for r in rp.results:
-				team_exam_scores[r.row_name].append(indiv_weight * r.total)
-
-	# Finally, sweepstakes
-	if show_hmmt_sweepstakes:
-		output += "\n"
-		results = [presentation.NameResultRow(row_name = unicode(team),
-			scores = team_exam_scores[unicode(team)])
-			for team in teams]
-		output += presentation.ResultPrinter(results).get_table(heading = "Sweepstakes", \
-				num_show = None, num_named = None,
-				float_string = "%7.2f", int_string = "%7d")
-
-	output += "This report was generated by Helium at " + time.strftime('%c') + "."
-	output += "\n\n"
-	output += FINAL_TEXT_BANNER + "\n"
-	output += "</pre></body></html>"
-	return HttpResponse(output, content_type="text/html")
 @staff_member_required
 def reports_short(request):
-	return _report(num_show = 10)
+	return HttpResponse(presentation.HMMT_text_report(num_show=10), content_type="text/html")
 @staff_member_required
 def reports_extended(request):
-	return _report(num_named = 50)
+	return HttpResponse(presentation.HMMT_text_report(num_named=50), content_type="text/html")
 @user_passes_test(lambda u: u.is_superuser)
 def reports_full(request):
-	return _report(zero_pad = False)
+	return HttpResponse(presentation.HMMT_text_report(zero_pad=False), content_type="text/html")
 def teaser(request):
 	"""ACCESSIBLE TO NON-STAFF!"""
-	return _report(num_show = 15, num_named = 0,
-			show_indiv_alphas = False,
-			show_team_sum_alphas = False,
-			show_hmmt_sweepstakes = False)
+	return HttpResponse(presentation.HMMT_text_report(num_show=15, num_named=0), content_type="text/html")
 
 @user_passes_test(lambda u: u.is_superuser)
 def spreadsheet(request):
-	"""Get the entire score spreadsheet."""
+	sheets = collections.OrderedDict() # sheet name -> rows
+	all_rows = presentation.get_score_rows()
 
-	mathletes = list(He.models.Entity.mathletes.all())
-	teams = list(He.models.Entity.teams.all())
-
-	sheets = {} # sheet name -> rows
-
-	# Individual alphas, but only if someone has nonzero alpha
-	if He.models.EntityAlpha.objects.filter(cached_alpha__gt=0).exists():
-		sheets['Alpha'] = presentation.RP_alphas(mathletes).get_rows()
-
-	indiv_exams = He.models.Exam.objects.filter(is_indiv=True)
-	for exam in indiv_exams:
-		sheets[unicode(exam)] = presentation.RP_exam(exam, mathletes).get_rows()
-	team_exams = He.models.Exam.objects.filter(is_indiv=False)
-	for exam in team_exams:
-		sheets[unicode(exam)] = presentation.RP_exam(exam, teams).get_rows()
+	## Individual Results
+	for exam in He.models.Exam.objects.all():
+		sheets[unicode(exam)] = RP(all_rows[exam.name]).get_sheet()
+	sheets["Indiv"] = RP(all_rows["Individual Overall"]).get_sheet()
+	sheets["Aggr"] = RP(all_rows["Team Aggregate"]).get_sheet()
+	sheets["Sweeps"] = RP(all_rows["Sweepstakes"]).get_sheet()
 
 	spreadsheet = presentation.get_odf_spreadsheet(sheets)
 	response = HttpResponse(spreadsheet,\

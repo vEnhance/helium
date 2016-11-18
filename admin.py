@@ -61,7 +61,7 @@ class EntityAdmin(admin.ModelAdmin):
 
 @admin.register(He.models.Exam)
 class ExamAdmin(admin.ModelAdmin):
-	list_display = ('name', 'id',  'color', 'is_indiv', 'is_ready', 'is_alg_scoring', 'is_scanned', 'min_grades', 'min_override')
+	list_display = ('name', 'id',  'color', 'is_indiv', 'is_ready', 'is_alg_scoring', 'is_scanned', 'can_upload_scan', 'min_grades', 'min_override')
 	inlines = (ProblemInline,)
 	search_fields = ('name',)
 	list_filter = ('is_indiv', 'is_ready', 'is_alg_scoring', 'is_scanned',)
@@ -95,6 +95,12 @@ class EvidenceAdmin(admin.ModelAdmin):
 	list_display = ('id', 'verdict', 'user', 'score', 'god_mode')
 	search_fields = ('verdict__entity__name',)
 
+
+@admin.register(He.models.ScoreRow)
+class RowAdmin(admin.ModelAdmin):
+	list_display = ('entity', 'category',  'rank', 'total', 'scores')
+	search_fields = ('category', 'entity__name',)
+
 @admin.register(He.models.EntityAlpha)
 class AlphaAdmin(admin.ModelAdmin):
 	list_display = ('entity', 'cached_alpha', 'id')
@@ -110,3 +116,4 @@ class EntirePDFAdmin(admin.ModelAdmin):
 	list_display = ('name', 'id', 'is_done', 'exam',)
 	list_filter = ('is_done', 'exam',)
 	search_fields = ('name',)
+
