@@ -191,15 +191,14 @@ def grade_scans(request, problem_id):
 ## VIEWS FOR VERDICTS AND SCANS
 def _get_vtable(request, verdicts):
 	table = []
-	columns = ['Entity', 'Problem', 'Score', 'Num Grades', 'View']
+	columns = ['Entity', 'Problem', 'Score', 'Size']
 	for verdict in verdicts:
 		tr = collections.OrderedDict()
 		tr['Entity'] = verdict.entity
 		tr['Problem'] = verdict.problem
 		tr['Score'] = verdict.score if verdict.score is not None else "?"
-		tr['Num Grades'] = verdict.evidence_set.count()
-		tr['View'] = "<a href=\"/helium/view-verdict/%d/\">Open</a>" \
-				% verdict.id
+		tr['Size'] = "<a href=\"/helium/view-verdict/%d/\">%d</a>" \
+				% (verdict.id, verdict.evidence_set.count())
 		table.append(tr)
 	return columns, table
 @staff_member_required
@@ -248,15 +247,15 @@ def find_paper(request):
 	context = { 'eesform' : form, 'pdfform' : forms.PDFSelectForm() }
 	if request.user.is_superuser:
 		context['show_attention'] = True
-		context['columns'] = ['Reason', 'Exam', 'Entity', 'Open']
+		context['columns'] = ['Reason', 'Exam', 'Entity']
 		table = []
 		# List scribbles needing attention
 		for es in He.models.ExamScribble.objects.exclude(needs_attention=u''):
 			tr = collections.OrderedDict()
-			tr['Reason'] = unicode(es.needs_attention) # reason in queue
+			tr['Reason'] = '<a href="/helium/view-paper/scan/%d">%s</a>' \
+					%(es.id, es.needs_attention)
 			tr['Exam'] = es.exam
 			tr['Entity'] = es.entity
-			tr['Open'] = '<a href="/helium/view-paper/scan/%d">Open</a>' %es.id
 			table.append(tr)
 		context['table'] = table
 	else:
@@ -593,17 +592,16 @@ def view_pdf(request, pdfscribble_id):
 	"""This shows all pages in a PDF file"""
 	pdfscribble = He.models.EntirePDFScribble.objects.get(id = int(pdfscribble_id))
 	table = []
-	columns = ['Page', 'Thumbnail', 'Entity', 'Open']
+	columns = ['Page', 'Thumbnail', 'Entity']
 	n = 0
 	for examscribble in He.models.ExamScribble.objects\
 			.filter(pdf_scribble = pdfscribble):
 		n += 1
 		tr = collections.OrderedDict()
-		tr['Page'] = n
+		tr['Page'] = '<a href="/helium/view-paper/scan/%d">#%d</a>' % (examscribble.id, n)
 		tr['Thumbnail'] = '<img class="thumbnail" src="%s" />' \
 				% examscribble.name_image.url
 		tr['Entity'] = examscribble.entity or "(Not Matched)"
-		tr['Open'] = '<a href="/helium/view-paper/scan/%d">Open</a>' % examscribble.id
 		table.append(tr)
 	context = {'columns' : columns, 'table' : table,
 			'pagetitle' : '%s (%s)' %(pdfscribble, pdfscribble.exam)}
