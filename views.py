@@ -369,8 +369,8 @@ def ajax_next_scan(request):
 	scribbles = He.models.ProblemScribble.objects.filter(
 			verdict__problem=problem, verdict__is_done=False)
 	scribbles = scribbles.exclude(verdict__evidence__user = request.user)
-	# wait 10 seconds before giving out the same scribble again
-	scribbles = scribbles.exclude(last_sent_time__gte = time.time() - 10)
+	# wait 15 seconds before giving out the same scribble again
+	scribbles = scribbles.exclude(last_sent_time__gte = time.time() - 15)
 
 	ret = []
 	for ps in scribbles[0:n]:
