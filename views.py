@@ -365,12 +365,13 @@ def ajax_next_scan(request):
 	if problem_id == 0: return
 	problem = He.models.Problem.objects.get(id=problem_id)
 	n = int(request.POST['num_to_load'])
+	pos = int(request.POST['pos'])
 
 	scribbles = He.models.ProblemScribble.objects.filter(
 			verdict__problem=problem, verdict__is_done=False)
-	scribbles = scribbles.exclude(verdict__evidence__user = request.user)
-	# wait 15 seconds before giving out the same scribble again
-	scribbles = scribbles.exclude(last_sent_time__gte = time.time() - 15)
+	scribbles = scribbles.exclude(verdict__evidence__user = request.user)\
+			.filter(id__gt = pos).exclude(last_sent_time__gte = time.time() - 10)
+			# cooldown, pos
 
 	ret = []
 	for ps in scribbles[0:n]:
@@ -444,20 +445,22 @@ def ajax_submit_match(request):
 @staff_member_required
 @require_POST
 def ajax_next_match(request):
-	"""POST arguments: num_to_load, exam_id, show_attention.
+	"""POST arguments: num_to_load, exam_id, show_attention, pos (an ID)
 	RETURN: list of (examscribble id, examscribble url, attention reason)"""
 
 	exam_id = int(request.POST['exam_id'])
 	if exam_id == 0: return
 	exam = He.models.Exam.objects.get(id=exam_id)
 	n = int(request.POST['num_to_load'])
+	pos = int(request.POST['pos'])
 
 	if int(request.POST['show_attention']) == 1:
 		scribbles = He.models.ExamScribble.objects.exclude(needs_attention=u'')
 	else:
 		scribbles = He.models.ExamScribble.objects\
 				.filter(entity__isnull=True, needs_attention=u'')\
-				.exclude(last_sent_time__gte = time.time() - 10) # cooldown
+				.exclude(last_sent_time__gte = time.time() - 20) # cooldown
+	scribbles = scribbles.filter(id__gt = pos)
 
 	ret = []
 	for es in scribbles[0:n]:

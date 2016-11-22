@@ -43,6 +43,7 @@ $(document).ready(function() {
 	var stream = [];
 	var current_index = 0; // the current index inside the stream
 	var sid = 0; // current scribble's ID
+	var pos = 0; // maximum scribble ID given out
 
 	var is_waiting = true;
 	// This flag is set to true if the queue is empty
@@ -54,13 +55,17 @@ $(document).ready(function() {
 		$.ajax({
 			url  : "/helium/ajax/next-scan/",
 			type : "POST",
-			data : { problem_id : {{ problem.id }}, num_to_load : n},
+			data : {
+				problem_id : {{ problem.id }},
+				num_to_load : n,
+				pos : pos,
+			},
 		}).done(function(result) {
 			for (var i=0; i<result.length; i++) {
 				var data = result[i];
 				stream.push(data);
-				var image_url = data[1];
-				$('<img />').attr('src', image_url); // preload the image
+				pos = data[0];
+				$('<img />').attr('src', data[1]); // preload the image
 				if (is_waiting) { // If pending, load next scan
 					is_waiting = false;
 					load_scan_at_current_index(); // try again

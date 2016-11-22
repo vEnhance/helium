@@ -60,6 +60,7 @@ $(document).ready(function() {
 	var stream = [];
 	var current_index = 0; // the current index inside the stream
 	var esid = 0; // current exam scribble's ID
+	var pos = 0; // scribble ID at end of stream
 
 	var is_waiting = true;
 	// This flag is set to true if the queue is empty
@@ -75,13 +76,14 @@ $(document).ready(function() {
 				exam_id : {{ exam.id }},
 				num_to_load : n,
 				show_attention : {{ show_attention }},
+				pos : pos,
 			},
 		}).done(function(result) {
 			for (var i=0; i<result.length; i++) {
 				var data = result[i];
 				stream.push(data);
-				var image_url = data[1];
-				$('<img />').attr('src', image_url); // preload the image
+				pos = data[0];
+				$('<img />').attr('src', data[1]); // preload the image
 				if (is_waiting) { // If pending, load next scan
 					is_waiting = false;
 					load_scan_at_current_index(); // try again
@@ -89,7 +91,7 @@ $(document).ready(function() {
 			}
 		});
 	}
-	preload_next_scan(1); // preload just one scan
+	preload_next_scan(3); // preload three scans
 
 	function load_scan_at_current_index() {
 		$("#magic_box").val(''); // reset
