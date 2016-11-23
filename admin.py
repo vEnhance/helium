@@ -41,8 +41,8 @@ class TeamFilter(admin.SimpleListFilter):
 		elif self.value() == "team":
 			return queryset.filter(is_team=True)
 
-class MissingEntityFilter(admin.SimpleListFilter):
-	title = "Missing Entities"
+class BadEntityFilter(admin.SimpleListFilter):
+	title = "Entities Causing Havoc"
 	parameter_name = 'missing'
 	def lookups(self, request, model_admin):
 		return (("no_verdict", "No Verdicts"),)
@@ -57,7 +57,7 @@ class EntityAdmin(admin.ModelAdmin):
 	list_display = ('name', 'shortname', 'id', 'team', 'number', 'is_team', 'size')
 	inlines = (EntityInline,)
 	search_fields = ('name', 'shortname',)
-	list_filter = (TeamFilter, MissingEntityFilter,)
+	list_filter = (TeamFilter, BadEntityFilter,)
 
 @admin.register(He.models.Exam)
 class ExamAdmin(admin.ModelAdmin):
@@ -72,11 +72,26 @@ class ProblemAdmin(admin.ModelAdmin):
 	search_fields = ('exam', 'problem_number',)
 	list_filter = ('exam__name',)
 
+
+class VerdictNoEntityFilter(admin.SimpleListFilter):
+	title = "No Name Verdicts"
+	parameter_name = 'missing'
+	def lookups(self, request, model_admin):
+		return (("no_name", "Unmatched Papers"), ("inaccessible", "No Scan OR Name"))
+	def queryset(self, request, queryset):
+		if self.value() is None:
+			return queryset
+		elif self.value() == "no_name":
+			return queryset.filter(entity__isnull=True, problemscribble__isnull=False)
+		elif self.value() == "inaccessible":
+			return queryset.filter(entity__isnull=True, problemscribble__isnull=True)
+
 @admin.register(He.models.Verdict)
 class VerdictAdmin(admin.ModelAdmin):
 	list_display = ('id', 'problem', 'entity', 'score', 'evidence_count', 'is_valid', 'is_done')
 	inlines = (EvidenceInline, ProblemScribbleInline,)
 	search_fields = ('problem__exam__name', 'entity__name',)
+	list_filter = (VerdictNoEntityFilter,)
 
 @admin.register(He.models.EntirePDFScribble)
 class EntirePDFAdmin(admin.ModelAdmin):
