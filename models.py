@@ -533,6 +533,7 @@ class ThreadTaskRecord(models.Model):
 			help_text = "True for success and False for failed task")
 	time_created = models.DateTimeField(auto_now_add=True)
 	last_updated = models.DateTimeField(auto_now=True)
+	output = models.TextField(help_text = "Output from the task")
 
 # Auxiliary functions
 # not in use, since it's too slow when called in succession

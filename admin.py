@@ -118,6 +118,6 @@ class RowAdmin(admin.ModelAdmin):
 
 @admin.register(He.models.ThreadTaskRecord)
 class ThreadTaskAdmin(admin.ModelAdmin):
-	list_display = ('id', 'name', 'user', 'status', 'time_created', 'last_updated',)
-	search_fields = ('name',)
+	list_display = ('id', 'name', 'user', 'status', 'time_created', 'last_updated', 'output',)
+	search_fields = ('name', 'output',)
 
