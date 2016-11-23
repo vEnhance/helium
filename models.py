@@ -15,6 +15,8 @@ General overview of models:
 * EntirePDFScribble is a container for keeping track of uploaded PDF's
 * EntityAlpha is a way to store alpha values (so we don't have to keep recomputing them)
 * GutsScoreFunc is a stupid applet that lets you compute guts estimation scores
+* ScoreRow is used for the caching of score results
+* ThreadTask is used for the management of async tasks (see threader.py)
 
 
 Notes on data creation:
@@ -520,6 +522,17 @@ class ScoreRow(models.Model):
 		self.total = sum(scores)
 	class Meta:
 		unique_together = ('category', 'entity',)
+
+class ThreadTask(models.Model):
+	"""This is used in Helium to manage large async tasks such as `grade`"""
+	name = models.CharField(max_length=80, blank=True,
+			help_text = "Name of the task being fired")
+	user = models.ForeignKey(auth.User,
+			help_text = "This is the user requesting the task")
+	status = models.NullBooleanField(
+			help_text = "True for success and False for failed task")
+	time_created = models.DateTimeField(auto_now_add=True)
+	last_updated = models.DateTimeField(auto_now=True)
 
 # Auxiliary functions
 # not in use, since it's too slow when called in succession
