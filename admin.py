@@ -72,18 +72,24 @@ class ProblemAdmin(admin.ModelAdmin):
 	search_fields = ('exam', 'problem_number',)
 	list_filter = ('exam__name',)
 
+@admin.register(He.models.Verdict)
+class VerdictAdmin(admin.ModelAdmin):
+	list_display = ('id', 'problem', 'entity', 'score', 'evidence_count', 'is_valid', 'is_done')
+	inlines = (EvidenceInline, ProblemScribbleInline,)
+	search_fields = ('problem__exam__name', 'entity__name',)
+
+@admin.register(He.models.EntirePDFScribble)
+class EntirePDFAdmin(admin.ModelAdmin):
+	list_display = ('name', 'id', 'is_done', 'exam',)
+	list_filter = ('is_done', 'exam',)
+	search_fields = ('name',)
+
 @admin.register(He.models.ExamScribble)
 class ExamScribbleAdmin(admin.ModelAdmin):
 	list_display = ('id', 'exam', 'entity', 'pdf_scribble', 'needs_attention')
 	inlines = (ProblemScribbleInline,)
 	search_fields = ('entity',)
 	list_filter = ('exam__name',)
-
-@admin.register(He.models.Verdict)
-class VerdictAdmin(admin.ModelAdmin):
-	list_display = ('id', 'problem', 'entity', 'score', 'evidence_count', 'is_valid', 'is_done')
-	inlines = (EvidenceInline, ProblemScribbleInline,)
-	search_fields = ('problem__exam__name', 'entity__name',)
 
 @admin.register(He.models.ProblemScribble)
 class ProblemScribbleAdmin(admin.ModelAdmin):
@@ -95,25 +101,23 @@ class EvidenceAdmin(admin.ModelAdmin):
 	list_display = ('id', 'verdict', 'user', 'score', 'god_mode')
 	search_fields = ('verdict__entity__name',)
 
-
-@admin.register(He.models.ScoreRow)
-class RowAdmin(admin.ModelAdmin):
-	list_display = ('entity', 'category',  'rank', 'total', 'scores')
-	search_fields = ('category', 'entity__name',)
+@admin.register(He.models.GutsScoreFunc)
+class GutsScoreFuncAdmin(admin.ModelAdmin):
+	list_display = ('problem_number', 'description', 'answer', 'problem_help_text')
+	search_fields = ('problem_number', 'description',)
 
 @admin.register(He.models.EntityAlpha)
 class AlphaAdmin(admin.ModelAdmin):
 	list_display = ('entity', 'cached_alpha', 'id')
 	search_fields = ('entity__name',)
 
-@admin.register(He.models.GutsScoreFunc)
-class GutsScoreFuncAdmin(admin.ModelAdmin):
-	list_display = ('problem_number', 'description', 'answer', 'problem_help_text')
-	search_fields = ('problem_number', 'description',)
+@admin.register(He.models.ScoreRow)
+class RowAdmin(admin.ModelAdmin):
+	list_display = ('entity', 'category',  'rank', 'total', 'scores')
+	search_fields = ('category', 'entity__name',)
 
-@admin.register(He.models.EntirePDFScribble)
-class EntirePDFAdmin(admin.ModelAdmin):
-	list_display = ('name', 'id', 'is_done', 'exam',)
-	list_filter = ('is_done', 'exam',)
+@admin.register(He.models.ThreadTask)
+class ThreadTaskAdmin(admin.ModelAdmin):
+	list_display = ('id', 'name', 'user', 'status', 'time_created', 'last_updated',)
 	search_fields = ('name',)
 
