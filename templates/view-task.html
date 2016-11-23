@@ -5,13 +5,15 @@
 
 {% block layout-content %}
 <h3>Status: <span id="status"></span></h3>
-<div id="time"></div>
 
 <ul>
 	<li>Task name: {{ task.name }}</li>
 	<li>User: {{ task.user }}</li>
 	<li>Start: {{ task.time_created }}</li>
 </ul>
+
+
+<div id="time"></div>
 {% endblock %}
 
 
@@ -43,6 +45,10 @@ function task_query(t) {
 			$("#status").html("Processing");
 			$("#time").html("The task still in progress. We'll ask again in " + t + " milliseconds.");
 		}
+	}).error(function(xhr, ajaxOptions, thrownError) {
+		$("#time").html("The server threw an error!? Refresh the page.");
+		$("#status").html("???");
+		$("#status").css("color", "orange");
 	});
 }
 
