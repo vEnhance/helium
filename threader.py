@@ -21,7 +21,8 @@ def run_async(func, user, name = None):
 		name = func.__name__
 	logger.info("Starting `%s`..." %name)
 
-	record = He.models.ThreadTask.objects.create(name = name, user = user)
+	record = He.models.ThreadTaskRecord.objects\
+			.create(name = name, user = user)
 
 	def target_func():
 		try:
@@ -29,12 +30,14 @@ def run_async(func, user, name = None):
 		except Exception as e:
 			s = "Process `%s` FAILED\n%s" %(name, traceback.format_exc())
 			record.output = s
+			record.status = False
 			record.save()
 			logger.error(s)
 			raise
 		else:
-			s = "Process `%s` OK\n%s" %(name, out)
+			s = "Process `%s` OK\n%s" %(name, out or "")
 			record.output = s
+			record.status = True
 			record.save()
 			logger.info(s)
 	t = threading.Thread(target = target_func)
