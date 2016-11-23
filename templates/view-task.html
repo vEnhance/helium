@@ -1,0 +1,55 @@
+{% extends 'layout-helium.html' %}
+{% load static %}
+
+{% block pagetitle %}View Task {{ task.id }}{% endblock %}
+
+{% block layout-content %}
+Helium is currently processing your task request.
+
+<h3>Status: <span id="status"></span></h3>
+<div id="time"></div>
+
+<ul>
+	<li>Task name: {{ task.name }}</li>
+	<li>User: {{ task.user }}</li>
+	<li>Start: {{ task.time_created }}</li>
+</ul>
+{% endblock %}
+
+
+{% block scripts %}
+<script type="text/javascript">
+$(document).ready(function() {
+
+function task_query(t) {
+	$.ajax({
+		url  : "/helium/ajax/task-query/",
+		type : "POST",
+		data : {
+			task_id : {{ task.id }},
+		},
+	}).done(function(result) {
+		if (result == 'FAIL') {
+			$("#status").html("FAILED");
+			$("#status").css('color', 'red');
+			$("#time").html();
+		}
+		else if (result == 'OK') {
+			$("#status").html("OK");
+			$("#status").css('color', 'green');
+			$("#time").html();
+		}
+		else {
+			t += 1000;
+			window.setTimeout(function() { task_query(t) }, t);
+			$("#status").html("Processing");
+			$("#time").html("The task still in progress. We'll ask again in " + t + " milliseconds.");
+		}
+	});
+}
+
+task_query(0);
+
+});
+</script>
+{% endblock %}

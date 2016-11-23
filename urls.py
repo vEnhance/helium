@@ -35,6 +35,7 @@ urlpatterns = [
 	url(r'^upload-scans/$', views.upload_scans),
 	url(r'^view-pdf/([0-9]+)/$', views.view_pdf),
 	url(r'^view-pdf/redir/$', views.view_pdf_redir),
+	url(r'^view-task/([0-9]+)/$', views.view_task),
 	url(r'^progress-problems/$', views.progress_problems),
 	url(r'^progress-scans/$', views.progress_scans),
 	url(r'^ajax/submit-scan/$', views.ajax_submit_scan),
@@ -42,6 +43,7 @@ urlpatterns = [
 	url(r'^ajax/prev-evidence/$', views.ajax_prev_evidence),
 	url(r'^ajax/submit-match/$', views.ajax_submit_match),
 	url(r'^ajax/next-match/$', views.ajax_next_match),
+	url(r'^ajax/task-query/$', views.ajax_task_query),
 	url(r'^reports/short/$', views.reports_short),
 	url(r'^reports/extended/$', views.reports_extended),
 	url(r'^reports/full/$', views.reports_full), # super-user only

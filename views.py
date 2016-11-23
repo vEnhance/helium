@@ -37,6 +37,9 @@ progress_*, shows how much progress we've made grading.
 reports_*, this shows the results of the tournament.
 This includes also teaser and spreadsheet.
 
+## Task views
+view_task, which lets you view the status of an async task
+
 ## Misc
 estimation_calc, a widget to compute partial marks for Guts round
 run_management, for management commands
@@ -471,6 +474,27 @@ def ajax_next_match(request):
 		ret.append([0, DONE_IMAGE_URL])
 	return HttpResponse( json.dumps(ret), content_type = 'application/json' )
 
+### Ajax for task checkup
+@staff_member_required
+@require_POST
+def ajax_task_query(request):
+	"""POST arguments: task_id
+	RETURN: OK if done, FAIL if failed, None otherwise"""
+	task_id = int(request.POST['task_id'])
+	task_record = He.models.ThreadTaskRecord.objects.get(id=task_id)
+	if task_record.status is True:
+		output = "OK"
+	elif task_record.status is False:
+		output = "False"
+	elif task_record.status is None:
+		output = None
+	return HttpResponse( json.dumps(output), content_type='application/json' )
+
+@staff_member_required
+def view_task(request, task_id):
+	task_record = He.models.ThreadTaskRecord.objects.get(id=task_id)
+	context = {"task" : task_record}
+	return render(request, "view-task.html", context)
 
 ## PROGRESS REPORTS
 @staff_member_required
