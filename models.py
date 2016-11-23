@@ -31,6 +31,7 @@ Notes on data creation:
 from __future__ import unicode_literals
 
 from django.db import models
+from django.dispatch import receiver
 from django.contrib.auth import models as auth
 from django.core.exceptions import ValidationError
 import logging
@@ -445,6 +446,12 @@ class ProblemScribble(models.Model):
 	def submitEvidence(self, *args, **kwargs):
 		self.verdict.submitEvidence(*args, **kwargs)
 
+# When a problem scribble is deleted, delete the underlying verdict too
+@receiver(models.signals.post_delete, sender=ProblemScribble)
+def post_delete_problem_scribble(sender, instance, *args, **kwargs):
+	if instance.verdict:
+		instance.verdict.delete()
+
 
 class Evidence(models.Model):
 	"""This represents a single input by a given user for a verdict:
@@ -454,7 +461,7 @@ class Evidence(models.Model):
 	verdict = models.ForeignKey(Verdict)
 	user = models.ForeignKey(auth.User)
 	score = models.IntegerField(help_text = "The score assigned by the user")
-	god_mode = models.BooleanField(default=False, help_text = 
+	god_mode = models.BooleanField(default=False, help_text =
 			"If enabled, this piece of evidence is in GOD MODE. "
 			"That means that all other evidences are ignored for that verdict."
 			"If more than one evidence is in God mode, the verdict will be marked invalid. ")
