@@ -41,7 +41,7 @@ class TeamFilter(admin.SimpleListFilter):
 		elif self.value() == "team":
 			return queryset.filter(is_team=True)
 
-class MissingFilter(admin.SimpleListFilter):
+class MissingEntityFilter(admin.SimpleListFilter):
 	title = "Missing Entities"
 	parameter_name = 'missing'
 	def lookups(self, request, model_admin):
@@ -57,7 +57,7 @@ class EntityAdmin(admin.ModelAdmin):
 	list_display = ('name', 'shortname', 'id', 'team', 'number', 'is_team', 'size')
 	inlines = (EntityInline,)
 	search_fields = ('name', 'shortname',)
-	list_filter = (TeamFilter, MissingFilter,)
+	list_filter = (TeamFilter, MissingEntityFilter,)
 
 @admin.register(He.models.Exam)
 class ExamAdmin(admin.ModelAdmin):
@@ -88,7 +88,7 @@ class EntirePDFAdmin(admin.ModelAdmin):
 class ExamScribbleAdmin(admin.ModelAdmin):
 	list_display = ('id', 'exam', 'entity', 'pdf_scribble', 'needs_attention')
 	inlines = (ProblemScribbleInline,)
-	search_fields = ('entity',)
+	search_fields = ('entity__name',)
 	list_filter = ('exam__name',)
 
 @admin.register(He.models.ProblemScribble)
