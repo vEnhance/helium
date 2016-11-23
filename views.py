@@ -672,7 +672,7 @@ def run_management(request, command_name):
 	"""Starts a thread which runs a specified management command"""
 	def target_function():
 		django.core.management.call_command(command_name)
-	threader.run_async(target_function, user = request.user, name = command_name)
-	return HttpResponse("Command %s started" % command_name, content_type="text/plain")
+	task_id = threader.run_async(target_function, user = request.user, name = command_name)
+	return HttpResponseRedirect("/helium/view-task/%d" %task_id)
 
 # vim: fdm=indent foldnestmax=1

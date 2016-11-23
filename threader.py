@@ -17,6 +17,13 @@ import traceback
 logger = logging.getLogger("django")
 
 def run_async(func, user, name = None):
+	"""Arguments
+	func: The function to be executed
+	user: The user who executed this command
+	name: The name of the function being executed
+	Returns a ThreadTaskRecord ID.
+	"""
+
 	if name is None:
 		name = func.__name__
 	logger.info("Starting `%s`..." %name)
@@ -43,3 +50,4 @@ def run_async(func, user, name = None):
 	t = threading.Thread(target = target_func)
 	t.daemon = True
 	t.start()
+	return record.id

@@ -1,11 +1,9 @@
 {% extends 'layout-helium.html' %}
 {% load static %}
 
-{% block pagetitle %}View Task {{ task.id }}{% endblock %}
+{% block pagetitle %}Management Task #{{ task.id }}{% endblock %}
 
 {% block layout-content %}
-Helium is currently processing your task request.
-
 <h3>Status: <span id="status"></span></h3>
 <div id="time"></div>
 
