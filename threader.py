@@ -14,11 +14,11 @@ import traceback
 
 logger = logging.getLogger("django")
 
-def run_async(func, name = None):
-	logger.info("Starting `%s`..." %name)
-
+def run_async(func, user, name = None):
 	if name is None:
 		name = func.__name__
+	logger.info("Starting `%s`..." %name)
+
 	def target_func():
 		try:
 			func()

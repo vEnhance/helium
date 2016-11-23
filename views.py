@@ -581,7 +581,7 @@ def upload_scans(request):
 							es.createProblemScribble(n, prob_img)
 					pdfscribble.is_done = True
 					pdfscribble.save()
-				threader.run_async(target_function, name = "upload_scans")
+				threader.run_async(target_function, user = request.user, name = "upload_scans")
 				messages.success(request, "PDF %s is OK, now processing" %pdf_name)
 	else:
 		form = forms.UploadScanForm()
@@ -648,7 +648,7 @@ def run_management(request, command_name):
 	"""Starts a thread which runs a specified management command"""
 	def target_function():
 		django.core.management.call_command(command_name)
-	threader.run_async(target_function, name = command_name)
+	threader.run_async(target_function, user = request.user, name = command_name)
 	return HttpResponse("Command %s started" % command_name, content_type="text/plain")
 
 # vim: fdm=indent foldnestmax=1
