@@ -523,7 +523,7 @@ class ScoreRow(models.Model):
 	class Meta:
 		unique_together = ('category', 'entity',)
 
-class ThreadTask(models.Model):
+class ThreadTaskRecord(models.Model):
 	"""This is used in Helium to manage large async tasks such as `grade`"""
 	name = models.CharField(max_length=80, blank=True,
 			help_text = "Name of the task being fired")

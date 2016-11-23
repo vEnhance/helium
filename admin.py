@@ -116,7 +116,7 @@ class RowAdmin(admin.ModelAdmin):
 	list_display = ('entity', 'category',  'rank', 'total', 'scores')
 	search_fields = ('category', 'entity__name',)
 
-@admin.register(He.models.ThreadTask)
+@admin.register(He.models.ThreadTaskRecord)
 class ThreadTaskAdmin(admin.ModelAdmin):
 	list_display = ('id', 'name', 'user', 'status', 'time_created', 'last_updated',)
 	search_fields = ('name',)
