@@ -9,11 +9,11 @@
 <ul>
 	<li>Task name: {{ task.name }}</li>
 	<li>User: {{ task.user }}</li>
-	<li>Start: {{ task.time_created }}</li>
+	<li>Start: {{ task.output_created }}</li>
 </ul>
 
 
-<div id="time"></div>
+<div id="output"></div>
 {% endblock %}
 
 
@@ -29,24 +29,25 @@ function task_query(t) {
 			task_id : {{ task.id }},
 		},
 	}).done(function(result) {
-		if (result == 'FAIL') {
+		var stat = result[0];
+		if (stat == 'FAIL') {
 			$("#status").html("FAILED");
 			$("#status").css('color', 'red');
-			$("#time").html();
+			$("#output").html(result[1]);
 		}
-		else if (result == 'OK') {
+		else if (stat == 'OK') {
 			$("#status").html("OK");
 			$("#status").css('color', 'green');
-			$("#time").html();
+			$("#output").html(result[1]);
 		}
 		else {
 			t += 1000;
 			window.setTimeout(function() { task_query(t) }, t);
 			$("#status").html("Processing");
-			$("#time").html("The task still in progress. We'll ask again in " + t + " milliseconds.");
+			$("#output").html("The task still in progress. We'll ask again in " + t + " milliseconds.");
 		}
 	}).error(function(xhr, ajaxOptions, thrownError) {
-		$("#time").html("The server threw an error!? Refresh the page.");
+		$("#output").html("The server threw an error!? Refresh the page.");
 		$("#status").html("???");
 		$("#status").css("color", "orange");
 	});

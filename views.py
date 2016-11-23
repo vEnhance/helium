@@ -479,16 +479,18 @@ def ajax_next_match(request):
 @require_POST
 def ajax_task_query(request):
 	"""POST arguments: task_id
-	RETURN: OK if done, FAIL if failed, None otherwise"""
+	RETURN: (status, text)
+		status: OK if done, FAIL if failed, None otherwise"""
 	task_id = int(request.POST['task_id'])
 	task_record = He.models.ThreadTaskRecord.objects.get(id=task_id)
 	if task_record.status is True:
-		output = "OK"
+		status = "OK"
 	elif task_record.status is False:
-		output = "FAIL"
+		status = "FAIL"
 	elif task_record.status is None:
-		output = None
-	return HttpResponse( json.dumps(output), content_type='application/json' )
+		status = None
+	output = task_record.output or ""
+	return HttpResponse( json.dumps([status, output]), content_type='application/json' )
 
 @staff_member_required
 def view_task(request, task_id):
