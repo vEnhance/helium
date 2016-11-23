@@ -485,7 +485,7 @@ def ajax_task_query(request):
 	if task_record.status is True:
 		output = "OK"
 	elif task_record.status is False:
-		output = "False"
+		output = "FAIL"
 	elif task_record.status is None:
 		output = None
 	return HttpResponse( json.dumps(output), content_type='application/json' )
