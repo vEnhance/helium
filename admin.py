@@ -77,7 +77,7 @@ class VerdictNoEntityFilter(admin.SimpleListFilter):
 	title = "No Name Verdicts"
 	parameter_name = 'missing'
 	def lookups(self, request, model_admin):
-		return (("no_name", "Unmatched Papers"), ("inaccessible", "No Scan OR Name"))
+		return (("no_name", "Unmatched Verdicts"), ("inaccessible", "Inaccessible"))
 	def queryset(self, request, queryset):
 		if self.value() is None:
 			return queryset
