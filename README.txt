@@ -13,7 +13,7 @@ Copyright (c) 2016 Evan Chen
 
 ==========================================================
 
-A manual for users is available in /helium/static/manual/.
+A manual for users is available in /helium/static/helium-manual/.
 Also most of the code is more or less commented thoroughly.
 Have fun!
 
@@ -22,6 +22,10 @@ Note in particular that
 
 > The above copyright notice and this permission notice shall be included in all
 > copies or substantial portions of the Software.
+
+
+SETUP
+==========================================================
 
 If you are using Helium outside of an HMMT context,
 you should do the following to get it set up with Django.
