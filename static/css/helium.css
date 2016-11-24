@@ -70,3 +70,19 @@ ul.messages > li.success { color: green; }
 ul.messages > li.error { color: red; }
 ul.messages > li.warning { color: orange; }
 ul.messages > li.info { color: blue; }
+
+/* Copied from HMMT layout.css */
+#content-container { 
+	max-width: 600px;
+	margin-left: auto;
+	margin-right: auto;
+}
+#banner img {
+	width: 100%;
+}
+#page-wrapper {
+	width: 80vw;
+	max-width: 1024px;
+	margin-left: auto;
+	margin-right: auto;
+}
