@@ -73,7 +73,7 @@ ul.messages > li.info { color: blue; }
 
 /* Copied from HMMT layout.css */
 #content-container { 
-	max-width: 600px;
+	max-width: 700px;
 	margin-left: auto;
 	margin-right: auto;
 }
@@ -82,7 +82,7 @@ ul.messages > li.info { color: blue; }
 }
 #page-wrapper {
 	width: 80vw;
-	max-width: 800px;
+	max-width: 900px;
 	margin-left: auto;
 	margin-right: auto;
 }
