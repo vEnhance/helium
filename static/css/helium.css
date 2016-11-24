@@ -82,7 +82,7 @@ ul.messages > li.info { color: blue; }
 }
 #page-wrapper {
 	width: 80vw;
-	max-width: 1024px;
+	max-width: 800px;
 	margin-left: auto;
 	margin-right: auto;
 }
