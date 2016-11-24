@@ -131,7 +131,6 @@ $(document).ready(function() {
 		if (esid == 0) return; // nothing to do
 		var value = $("#magic_box").val();
 		$("#attention").val('');
-		$("#attention_reason").html('');
 		console.log(value);
 		if (value in regnum_to_id) updateUI(regnum_to_id[value]);
 		else updateUI("");
