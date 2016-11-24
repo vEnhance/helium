@@ -13,12 +13,19 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('registration', '0005_auto_20160928_0008'),
-    ]
+    dependencies = []
 
     operations = [
+        migrations.CreateModel(
+            name='Exam',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('name', models.CharField(help_text='Name of exam', max_length=50)),
+                ('color', models.CharField(default='000000', help_text='Hex code for color exam printed on', max_length=50)),
+                ('is_indiv', models.BooleanField()),
+                ('alg_scoring', models.BooleanField()),
+            ],
+        ),
         migrations.CreateModel(
             name='Evidence',
             fields=[
@@ -26,6 +33,15 @@ class Migration(migrations.Migration):
                 ('score', models.IntegerField()),
                 ('god_mode', models.BooleanField(default=False)),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Entity',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('name', models.CharField(max_length=80)),
+                ('is_team', models.BooleanField(default=False)),
+                ('team', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='helium.Entity')),
             ],
         ),
         migrations.CreateModel(
@@ -39,11 +55,20 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
+            name='ExamScribble',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('scan_image', models.ImageField(null=True, upload_to='scans/names/')),
+                ('exam', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='helium.Exam')),
+                ('entity', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='helium.Entity')),
+            ],
+        ),
+        migrations.CreateModel(
             name='ProblemScribble',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('problem_number', models.IntegerField()),
-                ('testscan', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='helium.TestScribble')),
+                ('testscan', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='helium.ExamScribble')),
             ],
         ),
         migrations.CreateModel(
@@ -51,9 +76,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('score', models.IntegerField(blank=True, null=True)),
-                ('mathlete', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='registration.AbstractMathlete')),
                 ('problem', models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, to='helium.Problem')),
-                ('team', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='registration.AbstractTeam')),
                 ('is_done', models.BooleanField(default=False, help_text='Whether this verdict should be read by more normal users')),
                 ('is_valid', models.BooleanField(default=True, help_text='Whether there is an answer consensus')),
             ],
@@ -97,25 +120,6 @@ class Migration(migrations.Migration):
             model_name='problem',
             name='answer',
             field=models.CharField(blank=True, default='', help_text='The answer for a problem, which is shown in help texts.', max_length=70),
-        ),
-        migrations.CreateModel(
-            name='Exam',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(help_text='Name of exam', max_length=50)),
-                ('color', models.CharField(default='000000', help_text='Hex code for color exam printed on', max_length=50)),
-                ('is_indiv', models.BooleanField()),
-                ('alg_scoring', models.BooleanField()),
-            ],
-        ),
-        migrations.CreateModel(
-            name='ExamScribble',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('scan_image', models.ImageField(null=True, upload_to='scans/names/')),
-                ('exam', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='helium.Exam')),
-                ('entity', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='helium.Entity')),
-            ],
         ),
         migrations.RemoveField(
             model_name='problemscribble',
@@ -164,14 +168,6 @@ class Migration(migrations.Migration):
             name='entity',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='helium.Entity'),
         ),
-        migrations.RemoveField(
-            model_name='verdict',
-            name='mathlete',
-        ),
-        migrations.RemoveField(
-            model_name='verdict',
-            name='team',
-        ),
         migrations.AlterUniqueTogether(
             name='verdict',
             unique_together=set([('problem', 'entity')]),
@@ -210,15 +206,6 @@ class Migration(migrations.Migration):
             model_name='exam',
             name='min_override',
             field=models.IntegerField(default=3, help_text='Number of graders required to override a grading conflict. For example, the default setting is that a 3:1 majority is sufficient to override a conflicting grade.'),
-        ),
-        migrations.CreateModel(
-            name='Entity',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=80)),
-                ('is_team', models.BooleanField(default=False)),
-                ('team', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='helium.Entity')),
-            ],
         ),
         migrations.CreateModel(
             name='EntityAlpha',
