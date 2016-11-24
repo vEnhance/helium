@@ -1,6 +1,6 @@
 \chapter{Instructions for Helium administrator}
 Here are some tasks you need to do to set up Helium
-to work before the tournament.
+to work before the tournament, and after grading.
 
 \section{Database maintenance}
 \subsection{Clearing the database}
@@ -33,6 +33,11 @@ you will have to delete the old one first.
 \subsection{Import entities from registration}
 In Babbage a command called ``Import Entities from Reg'' will do this for you.
 It is careful, and will never import the same entity twice.
+This is also the ``heliumimport'' command.
+
+It is very important to \textbf{run heliumimport as late as possible},
+preferably just after the first individual exam begins.
+Registration always changes last-minute.
 
 \section{Guts estimation problems}
 First, ensure that the name of the Guts exam is ``Guts'',
@@ -60,54 +65,65 @@ If you run
 then it will generate (in the current directory)
 the images corresponding to the cut-outs.
 Thus you can test this locally and make adjustments to the regions if needed.
+\section{Name stickers}
+Make sure tournament directors are printing out name stickers for the students;
+this will make grading life a lot easier.
+Also, on personalized schedules for teams, print out ID numbers.
+Doing so will expedite the process of grading significantly.
 
-\section{Test data}
-\subsection{Location}
-Some test data has been provided for you.
-You can look for it in the following places:
+This task takes place outside of Helium, and varies between tournaments.
+The bottom line is that \textbf{ensure students and teams know their ID's}.
+\section{Sanity checking results}
+Once grading is done, you should do the following clean-up tasks.
 \begin{itemize}
-	\ii \verb+:/helium/static/batchX-samplescans.pdf+
-	\ii \verb+:/helium/static/batchY-samplescans.pdf+
-	\ii \verb+:/helium/fixtures/*+
-\end{itemize}
-The easiest thing to do is to load the two fixtures in the ``setup'' directory,
-which will populate the exams and entities tables.
-The sample scans correspond exactly to the entities in these fixtures.
+	\ii First, open the Verdict table in Django admin and look for verdicts which
+	are ``inaccessible''.
+	In theory there should be none.
+	If such a verdict exists, do a sanity check to make sure it's an anomaly,
+	then delete these verdicts.
 
-You can also load fixtures in the \verb+:/helium/fixtures/scenarios+ directly
-which are snapshots of the entire database at various points in time
-in the test run
-(after matching exams, after grading, after algorithmic scoring, etc.).
-But note that the \verb+/media/+ folder is NOT included.
+	\ii If there are verdicts with no names, verify this is correct:
+	these should only come about from no-name papers,
+	or papers yet to be matched.
 
-\emph{Warning}: the scenarios folder contains a superuser
-with name and password ``evan''
-as well as a staff user with name and password ``staff1''.
-Consequently, be careful to NOT run these on production,
-as we will then have some very insecure user accounts!
+	In November 2016 for unknown reasons, some exam scribbles got matched
+	but the underlying verdicts for them were left as None.
+	You can auto-magically fix these by running the
+	management command ``update scribbles''
+	which will fix any issues.
 
-\subsection{Synopsis of test data}
-Synopsis of test data:
+	\ii Look in the Entity table for any entities which have
+	no verdicts attached to them.
+	First delete all individuals with no verdicts:
+	this probably means that they did not show up.
 
-\begin{itemize}
-\ii There is a single scan-based exam, called ``GEO!'',
-and there is a single non-scanned exam, called ``Mock IMO''.
-The former is $10$ problems scored algorithmically.
-The latter is $3$ problems worth $7$ points each.
-
-\ii There are $16$ mathletes split into three teams of five,
-corresponding to characters from \emph{L\'es Miserables},
-\emph{Wicked}, and the \emph{Phantom of the Opera},
-plus one unaffiliated individual named ``Evan Chen''.
-
-\ii The two sample batches contain all their ``GEO!'' exams.
-The answers to that exam corresponding exactly to the real answers
-to the HMMT February 2016 Geometry test.
-
-\ii Under the registration folder are some fixtures for testing
-import to registration and so on.
-
-\ii Under the problems folder are some fixtures for loading
-some example data into the problem database.
+	Teams can also not show up,
+	but they can also leave early and not take Team or Guts round.
+	That's why it's necessary to delete no-show individuals first.
+	Only after this, if a team has no verdicts \emph{and} no individuals,
+	then one can delete it.
 \end{itemize}
 
+\section{Last grading commands}
+There are two different management commands at play.
+You need to run both, in this order.
+
+\begin{itemize} 
+	\ii ``algscore'': this command is slow, taking about two minutes per run.
+	It computes the $\alpha$ and $\beta$ values for each student
+	based on the set of observations.
+
+	\ii ``grade'': This command is fairly fast, it should take no more than
+	a few seconds per run-through.
+	It collates together all the results into a table which
+	are then displayed in results reports.
+	This is necessary because otherwise the process of aggregating the scores
+	is too slow.
+\end{itemize}
+
+Run both commands, then look through the reports to make sure everything is okay.
+
+It may be wise to run ``grade'' throughout the day,
+just to make sure that things are looking okay.
+The $\alpha$ and $\beta$ values won't be correct, but that's okay;
+we don't need those values when we're just sanity checking results.

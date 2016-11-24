@@ -74,6 +74,39 @@ If configured, the background of the page may be tinted
 with the color of the test, so that you don't accidentally grade
 the wrong test.
 
+\section{Matching names}
+The other option you can do, if you want something a little
+less thoughtless than pressing the zero or one key,
+is to help with matching students to names.
+This feels quite similar to the scan grader,
+but the difference is there are three options you can choose
+for each scan.
+
+\begin{center}
+	\includegraphics[width=0.7\textwidth]{images/fastmatch2.png}
+\end{center}
+
+There are three things you can do for each student name:
+\begin{enumerate}
+	\ii Most easily, input the student's ID number.
+	Type in the student's number into the text box;
+	the autocomplete field will then match with the name of the student.
+	Press enter to submit.
+
+	\ii Alternatively you can try searching by name.
+	Type in the name in the autocomplete field;
+	upon getting a match, select it and press enter.
+	This works equally well.
+	I think it's faster to use ID numbers when possible, but to each their own.
+
+	\ii If their some other issue with the scan
+	(e.g.\ there is no name or number at all,
+	or the student doesn't appear to exist),
+	you should flag it for administrative attention.
+	To do this, simply fill in the text box, and press submit.
+	An administrator will then be able to deal with it.
+\end{enumerate}
+
 \section{Viewing Full Scans}
 \label{sec:view_full}
 When doing scan grading, you can press ``view full page''
@@ -83,8 +116,6 @@ Just click the ``(View Full Scan)'' button near the corner of the image.
 On this page there is also a switch where you can flag the page
 for administrative attention, if there is something wrong with it
 (for example, it is blank, or rotated, or illegible, etc.).
-This will make the scan appear in a queue for administrators
-and will prevent the scan from being given to regular users.
 
 \section{Guts round}
 \begin{itemize}
@@ -124,6 +155,7 @@ or something like that.)
 	\includegraphics[width=0.8\textwidth]{images/progress.png}
 \end{center}
 
+
 \section{Sneak peek at results}
 Some of you may be curious at how teams or students are doing.
 While I can't endorse this, the interface lets you do so:
@@ -134,8 +166,8 @@ If you do look through this, note that:
 	\ii Nothing you see is final, and
 	\ii All results are confidential.
 \end{itemize}
+Note that results are not computed in realtime.
+The algorithmic scoring always takes a few minutes.
 
-\section{Do not use ``Match Scans'' or ``Upload Scans''}
+\section{Do not use ``Upload Scans''}
 Unless instructed to do so.
-Instructions for this are provided in the next chapter,
-because ideally they should mostly be done by superusers.

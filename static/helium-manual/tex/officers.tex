@@ -5,14 +5,32 @@ So it contains some higher-level administration tasks.
 \section{Uploading scans}
 Self-explanatory, but some gotchas:
 \begin{itemize}
+	\ii Pre-process the paper:
+	\begin{itemize}
+		\ii Remove staples from scans, if any.
+		You may need to have a squad of people do this \emph{en masse}.
+		\ii At the moment we don't have image processing,
+		so please make sure all scans are correctly rotated.
+	\end{itemize}
+
+	\ii \textbf{Upload the scans in grayscale}, NOT black/white or color.
+	Using color slows down processing, and using black/white makes the scan
+	illegible since we generally print exams on colored paper.
+
+	\ii I strongly recommend using the \textbf{following organizational procedure}:
+	\begin{itemize}
+		\ii Upload the scans in batches of 25 pages each.
+		(Batches longer than this may cause issues on most scanners).
+		\ii Number the batches $1$, $2$, \dots, $n$.
+		Write the number of the batch in sharpie on the first page,
+		and upload it with the number in its filename.
+		\ii After scanning a batch, staple it and put it aside.
+	\end{itemize}
+
 	\ii For safety, uploaded filenames \emph{must} be distinct.
 	(This is to prevent someone from accidentally submitting the form twice,
 	or submitting the same PDF twice.)
-	If your scanner has silly filenames, fix those.
-	Also, filenames should end with either ``pdf'' or ``PDF''.
-
-	\ii At the moment we don't have image processing,
-	so please make sure all scans are correctly rotated.
+	Filenames must end with either ``pdf'' or ``PDF''.
 
 	\ii \emph{Please}, make sure you are uploading the scans
 	to the correct contest!
@@ -38,37 +56,33 @@ graders can start marking immediately
 while future PDF's are uploaded.
 
 \section{Marking exams as ready}
-Once each exam is ready to grade,
-you need to manually mark each exam as ``ready to grade''
-in the Django admin.
-Conversely, when an exam is done grading you should uncheck
-the ``ready to grade'' box.
-This feature is in place to reduce the risk of confusion among staff members
-leading to them accidentally grading the wrong exam.
-
-\section{Matching scans}
-Matching scans is more error-prone and not double-checked.
-People who should do this should be ones who are a little familiar with
-all the teams attending and so on (e.g.\ TD's and registration director at HMMT).
-
-\begin{center}
-	\includegraphics[width=0.8\textwidth]{images/papermatch.png}
-\end{center}
-
-Interface usage: a name will be shown.
+In the Django administration interface,
+there are two switches you need to flip for every exam:
 \begin{itemize}
-	\ii Find the corresponding entity, and submit.
-	\ii If all goes well, next entity will be shown.
+	\ii You can mark an exam as ``ready to grade'',
+	meaning that its names can be matched and its answers graded.
+	\ii Separately, you can enable the uploading of scans
+	(``can upload scans'').
 \end{itemize}
-Easy.
-When a match of a paper is successful,
-all the problem scribbles, exam scribbles, and verdicts
-attached to the paper are immediately updated to reflect the new name.
+These are safety features designed to minimize the risk
+of someone accidentally uploading scans to the wrong test, for example.
 
-The comments in Section~\ref{sec:view_full} apply equally well here.
+\section{Dealing with troublesome name matches}
+There are two ways to get to here:
+\begin{itemize}
+	\ii If you open ``find paper'', you will get a list of all name matches
+	for which some difficulty appeared.
+	\ii If you open the interface for matching exams for $X$,
+	at the very bottom of the page there is a link
+	to view only the scans which need administrative attention.
+\end{itemize}
 
-\subsection{Error handling}
-This is where it gets tricky.
+Some of these reasons are entered to humans:
+for example, ``no name''.
+Do with these as you see fit.
+
+The tricky situation is auto-attention generated papers
+which occur when a student is repeated.
 Consider the following situation:
 \begin{quote}
 	You match a geometry exam to a student ``Christine Daae''.  
@@ -80,7 +94,8 @@ An error will appear linking to the first \emph{verdict}
 it finds for a geometry problem taken by Christine Daae.
 
 \begin{center}
-	\includegraphics[width=0.7\textwidth]{images/matchconflict.png}
+	\includegraphics[width=0.7\textwidth]{images/conflict3.png}
+	\includegraphics[width=0.7\textwidth]{images/conflict2.png}
 \end{center}
 
 At this point you need to fix the error.
@@ -100,7 +115,7 @@ There are a couple things you could do.
 	name to the correct one.
 
 	\ii As a last resort,
-	the ``Override'' switch (visible only to super-users)
+	the ``Override'' switch in the ``full scan'' page (visible only to super-users)
 	will forcibly assign the paper,
 	and retroactively delete all verdicts and
 	problems scribbles to the contrary.
@@ -156,49 +171,31 @@ at which point you can submit your own evidence.
 If you like being final authority,
 there should also be an option to submit this evidence in ``God mode''
 which will settle the verdict once and for all.
-\section{Finishing results}
-Once grading is all said and done,
-you can download the results at the bottom of the page.
-Administrators can also download full results
-and a full score spreadsheet.
+\section{Management}
+Several commands are available in the \texttt{manage.py}.
+Many of them are revealed through the Helium interface too:
+on the dashboard, several links to Helium tasks are available.
 
-Note that algorithmic scoring is not done automatically,
-since it is a long and intensive operation.
-To run it, you should use the management command
-``Run Algorithmic Scoring'',
-after all verdicts are settled.
-Alternatively (and maybe better), you can use
-\verb+python manage.py algscore+ from SSH.
+When you push one of these such links, you'll be directed to page
+which will auto-refresh once the task is done.
+This is necessary since the task can potentially take very long
+(algorithmic scoring).
+\begin{center}
+	\includegraphics[width=0.7\textwidth]{images/viewtask.png}
+\end{center}
+
+We'll talk more about these commands in the next chapter.
 
 \section{Other Administration}
 The Django admin interface can be used if there
 is some operation you need to do not supported by the existing views.
-
-\subsection{Management}
-In addition, to operations that might be useful
-but in theory should not be necessary:
-\begin{itemize}
-	\ii ``Compute Verdicts'' will ask every verdict (and there will be many!)
-	to re-compute its judgment.
-	Normally, verdicts only re-compute their judgment when they get new evidence.
-	This is needed if e.g.\ you change the thresholds for grading.
-
-	\ii ``Update scribbles'' is similar,
-	it updates all problem scribbles and verdicts
-	with matched names.
-	This should basically never be necessary unless you done goof.
-\end{itemize}
-Both of these commands actually just run \verb+manage.py+ commands,
-so they can also be done from SSH.
-
 \subsection{Someone uploaded PDF to wrong exam!}
-Well, that's a bummer.  You should
-\begin{itemize}
-	\ii Delete the relevant PDF file from the Django admin interface.
-	This will kill of the exam and problem scribbles too.
-	\ii Delete all the verdicts that now have neither an entity
-	nor problem scribble attached to them.
-\end{itemize}
+Well, that's a bummer. 
+Delete the relevant PDF file from the Django admin interface.
+This will kill of the exam and problem scribbles too.
+
+As of December 2016, deleted problem scribbles will also kill
+off the verdict to which they were attached.
 That should mostly save things. No promises though.
 
 \subsection{A page is rotated!}
@@ -206,3 +203,4 @@ If you manage to find a rotated exam,
 you can first mark the exam scribble as ``needing attention''.
 This will block it from being handout out to staff members.
 Then, you should probably manually grade the exam in God mode.
+

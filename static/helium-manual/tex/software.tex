@@ -15,13 +15,74 @@ You are free of course to add your own name
 should you make substantial contributions.
 
 The reason I ask this is because this system represents
-well over $100$ volunteered hours of my free time
-pooled into over $300$ commits.
+well over $200$ volunteered hours of my free time
+pooled into over $500$ commits.
 I built the entire system from scratch with no assistance from anyone else.
 Since I didn't collect any payment for this work,
 the least I ask is that I am recognized for it.
 
 Thanks!
+
+\section{A Warning}
+I found out the hard way that a typical tournament has maybe $N = 30000$ verdicts in it.
+This means you should make sure your code does not do either of the following per call:
+\begin{itemize}
+	\ii Do not use algorithms that run in $O(N^2)$ time.
+	\ii Do not make $O(N)$ queries to the database.
+\end{itemize}
+For queries grabbing the entire verdicts table (or large portions of it),
+it is almost always better to use the \texttt{queryset.values} method.
+For these large values of $N$, creating $N$ instances from the table is just too slow.
+
+\section{Test data}
+\subsection{Location}
+Some test data has been provided for you.
+You can look for it in the following places:
+\begin{itemize}
+	\ii \verb+:/helium/static/batchX-samplescans.pdf+
+	\ii \verb+:/helium/static/batchY-samplescans.pdf+
+	\ii \verb+:/helium/fixtures/*+
+\end{itemize}
+The easiest thing to do is to load the two fixtures in the ``setup'' directory,
+which will populate the exams and entities tables.
+The sample scans correspond exactly to the entities in these fixtures.
+
+You can also load fixtures in the \verb+:/helium/fixtures/scenarios+ directly
+which are snapshots of the entire database at various points in time
+in the test run
+(after matching exams, after grading, after algorithmic scoring, etc.).
+But note that the \verb+/media/+ folder is NOT included.
+
+\emph{Warning}: the scenarios folder contains a superuser
+with name and password ``evan''
+as well as a staff user with name and password ``staff1''.
+Consequently, be careful to NOT run these on production,
+as we will then have some very insecure user accounts!
+
+\subsection{Synopsis of test data}
+Synopsis of test data:
+
+\begin{itemize}
+\ii There is a single scan-based exam, called ``GEO!'',
+and there is a single non-scanned exam, called ``Mock IMO''.
+The former is $10$ problems scored algorithmically.
+The latter is $3$ problems worth $7$ points each.
+
+\ii There are $16$ mathletes split into three teams of five,
+corresponding to characters from \emph{L\'es Miserables},
+\emph{Wicked}, and the \emph{Phantom of the Opera},
+plus one unaffiliated individual named ``Evan Chen''.
+
+\ii The two sample batches contain all their ``GEO!'' exams.
+The answers to that exam corresponding exactly to the real answers
+to the HMMT February 2016 Geometry test.
+
+\ii Under the registration folder are some fixtures for testing
+import to registration and so on.
+
+\ii Under the problems folder are some fixtures for loading
+some example data into the problem database.
+\end{itemize}
 
 \section{Moving parts}
 When possible I tried to keep everything in Helium 
@@ -85,10 +146,24 @@ Some not terribly Helium-specific things, but you should still know:
 	is responsible for running \texttt{collectstatic} and \texttt{migrate}.
 \end{itemize}
 
+\section{Git subtree}
+There is an upstream URL which publishes Helium-specific code.
+This way other math tournaments can use the same code themselves.
+
+This upstream URL is maintained by a subtree via the command
+\begin{center}
+	\texttt{git subtree split --prefix=helium -b helium}
+\end{center}
+to create a branch \texttt{helium} containing only code from this folder.
+Thereafter, we push this branch into the Git helium repository
+(to the master branch on Git: note that the branch names differ).
+
+The \texttt{README.txt} files provides a brief documentation
+on how to get set up with Helium in a different Django project.
+
 \section{A wishlist}
-Some possible to-do things to do:
+Some possible to-do things:
 \begin{itemize}
 	\ii Image processing: auto align scan regions and cut-outs.
-	\ii Auto import exams from HMMT Problems Database.
 	\ii Proof grading (long shot).
 \end{itemize}
