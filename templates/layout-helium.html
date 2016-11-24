@@ -4,33 +4,31 @@
 
 {% block content %}
 <div id="page-wrapper">
-  <section id="banner"><img src="{% static 'img/balloons.png' %}"/></section>
+  <section id="banner"><a href="/helium"><img src="{% static 'img/balloons.png' %}"/></a></section>
   <section id="body-form">
     <div id="content-container">
-  <nav id="helium-nav">
-    <ul class="nav navbar-right" id="navbar-right">
-        {% if user.is_authenticated %}
-        <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding-top: 0px">{{ user }}<span class="caret"></span></a>
-		  <ul class="dropdown-menu" role="menu">
-            <li><a href="/">Site Home</a></li>
-            <li><a href="/helium">Helium Dashboard</a></li>
-            {% if user.is_superuser %}
-            <li><a href="/admin">Django Admin</a></li>
-            {% endif %}
-            <li><a href="/admin/logout">Log Out</a></li>
-          </ul>
-        </li>
-        {% else %}
-        <li class="dropdown">
-          <span><a href="/admin/login">Log In</a></span>
-        </li>
-        {% endif %}
-      </li>
-    </ul>
-  </nav>
-
-
+	  <nav id="helium-nav">
+		<ul class="nav navbar-right" id="navbar-right">
+			{% if user.is_authenticated %}
+			<li class="dropdown">
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding-top: 0px">{{ user }}<span class="caret"></span></a>
+			  <ul class="dropdown-menu" role="menu">
+				<li><a href="/">Site Home</a></li>
+				<li><a href="/helium">Helium Dashboard</a></li>
+				{% if user.is_superuser %}
+				<li><a href="/admin">Django Admin</a></li>
+				{% endif %}
+				<li><a href="/admin/logout">Log Out</a></li>
+			  </ul>
+			</li>
+			{% else %}
+			<li class="dropdown">
+			  <span><a href="/admin/login">Log In</a></span>
+			</li>
+			{% endif %}
+		  </li>
+		</ul>
+	  </nav>
 
     {% if messages %}
     <ul class="messages">
