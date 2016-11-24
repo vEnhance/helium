@@ -13,23 +13,14 @@ Alternatively, one can search for the name in the autocomplete field.
 </p>
 
 <p>You can use "view full scan" above to see the entire scanned page.</p>
-
-{% if show_attention %}
-<p>Currently, the system is set to <b>only display scribbles</b>
-which need special attention.</p>
-{% elif request.user.is_superuser %}
-<p>Currently the system is not displaying scribbles in need of attention.
-To see these scribbles, <a href="attention">click here</a>.</p>
-{% endif %}
-
 <div class="scanstage">
 	<a class="scanzoom" src="" id="zoom_url" target="_blank"/>(View Full Scan)</a>
 	<img class="scan" src="" id="scan_img" />
 </div>
-
 <div id="controls">
 <p><button id="button_decr_index">Go Back</button>
 <button id="button_incr_index">Skip</button></p>
+<div id="attention_reason" class="text-warning"></div>
 <form id="entity_selector" action="#">
 	<p><label>Input Number:</label> <input id="magic_box" name="magic_box" /> then press Enter</p>
 	<p>Or, find the name of the entity from below:</p>
@@ -40,6 +31,14 @@ To see these scribbles, <a href="attention">click here</a>.</p>
 	<p><input type="submit" /></p>
 </form>
 </div>
+{% if show_attention %}
+<p>Currently, the system is set to <b>only display scribbles</b>
+which need special attention.</p>
+{% elif request.user.is_superuser %}
+<p>To see scribbles which <b>need attention</b>, <a href="attention">click here</a>.</p>
+{% endif %}
+
+
 {% endblock %}
 
 {% block scripts %}
@@ -112,6 +111,7 @@ $(document).ready(function() {
 				$("#zoom_url").attr('href',
 						'/helium/view-paper/scan/' + esid + '/#scan');
 				$("#attention").val(next_data[2]);
+				$("#attention_reason").html(next_data[2]);
 			}
 		}
 		console.log(stream);
@@ -131,6 +131,7 @@ $(document).ready(function() {
 		if (esid == 0) return; // nothing to do
 		var value = $("#magic_box").val();
 		$("#attention").val('');
+		$("#attention_reason").html('');
 		console.log(value);
 		if (value in regnum_to_id) updateUI(regnum_to_id[value]);
 		else updateUI("");
