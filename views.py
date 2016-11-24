@@ -250,14 +250,13 @@ def find_paper(request):
 	context = { 'eesform' : form, 'pdfform' : forms.PDFSelectForm() }
 	if request.user.is_superuser:
 		context['show_attention'] = True
-		context['columns'] = ['Reason', 'Exam', 'Entity']
+		context['columns'] = ['Exam', 'Reason', 'Entity']
 		table = []
 		# List scribbles needing attention
 		for es in He.models.ExamScribble.objects.exclude(needs_attention=u''):
 			tr = collections.OrderedDict()
-			tr['Reason'] = '<a href="/helium/view-paper/scan/%d">%s</a>' \
-					%(es.id, es.needs_attention)
-			tr['Exam'] = es.exam
+			tr['Exam'] = '<a href="/helium/view-paper/scan/%d">%s</a>' %(es.id, es.exam)
+			tr['Reason'] = es.needs_attention
 			tr['Entity'] = es.entity
 			table.append(tr)
 		context['table'] = table
