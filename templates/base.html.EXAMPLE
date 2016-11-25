@@ -28,8 +28,36 @@
     </div>
     {% endif %}
 
+    <div id="page-wrapper">
+    {% block navbar %}
+    <div id="helium-nav">
+      <a href="/helium">&lt; Back to Helium home</a>
+      <ul class="nav navbar-right">
+        {% if user.is_authenticated %}
+        <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding-top: 0px">{{ user }}<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+          <li><a href="/">Site Home</a></li>
+          <li><a href="/helium">Helium Dashboard</a></li>
+          {% if user.is_superuser %}
+          <li><a href="/admin">Django Admin</a></li>
+          {% endif %}
+          <li><a href="/admin/logout">Log Out</a></li>
+          </ul>
+        </li>
+        {% else %}
+        <li class="dropdown">
+          <span><a href="/admin/login">Log In</a></span>
+        </li>
+        {% endif %}
+        </li>
+      </ul>
+      <div style="clear: both;"></div>
+    </div>
+    {% endblock %}
     {% block content %}
     {% endblock %}
+    </div>
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script> 

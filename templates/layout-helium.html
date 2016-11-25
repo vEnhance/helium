@@ -1,56 +1,68 @@
 {% extends 'base-helium.html' %}
-
 {% load static %}
 
+{% block stylesheets %}
+<link href="{% static 'css/helium.css' %}" rel="stylesheet">
+{% if exam %}
+<style type="text/css">
+body { background-color: {{ exam.color }}; }
+</style>
+{% endif %}
+{% endblock %}
+
 {% block content %}
-<div id="page-wrapper">
-  <section id="banner"><a href="/helium"><img src="{% static 'img/balloons.png' %}"/></a></section>
+  <section id="banner">
+    <a href="/helium"><img src="{% static 'img/balloons.png' %}"/></a>
+  </section>
   <section id="body-form">
-    <div id="content-container">
-    <div id="helium-nav">
-      <a href="/helium">&lt; Back to Helium home</a>
-      <ul class="nav navbar-right">
-        {% if user.is_authenticated %}
-        <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding-top: 0px">{{ user }}<span class="caret"></span></a>
-          <ul class="dropdown-menu" role="menu">
-          <li><a href="/">Site Home</a></li>
-          <li><a href="/helium">Helium Dashboard</a></li>
-          {% if user.is_superuser %}
-          <li><a href="/admin">Django Admin</a></li>
-          {% endif %}
-          <li><a href="/admin/logout">Log Out</a></li>
-          </ul>
-        </li>
-        {% else %}
-        <li class="dropdown">
-          <span><a href="/admin/login">Log In</a></span>
-        </li>
-        {% endif %}
-        </li>
-      </ul>
-      <div style="clear: both;"></div>
-    </div>
+  {% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|safe }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
 
-    {% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|safe }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
-
-    <h3>{% block pagetitle %}{% endblock %}</h3>
-    {% block layout-content %}
-    {% endblock %}
-    </div>
-    <hr />
+  <h3>{% block pagetitle %}{% endblock %}</h3>
+  {% block layout-content %}
+  {% endblock %}
+  </div>
+  <hr />
   </section>
 
   {% block layout-footer %}
   <section id="footer">
-    <p><a href="/helium">&lt; Back to Helium home</a></p>
+  <p><a href="/helium">&lt; Back to Helium home</a></p>
   </section>
   {% endblock %}
-</div>
 {% endblock %}
+
+{% block helium-scripts %}
+<script type="text/javascript" src="{% static 'js/autoselect.js' %}"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+  $.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (settings.type == 'POST' && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+  }}});
+
+  var autocomplete_options = {
+    'relevancy-sorting': false,
+    'alternative-spellings' : false,
+    'sort': false,
+    'delay': 250, // seems to not do anything? sad
+  }
+
+  $("#id_entity[type!=\"hidden\"]").selectToAutocomplete(autocomplete_options);
+  $("#id_mathlete[type!=\"hidden\"]").selectToAutocomplete(autocomplete_options);
+  $("#id_team[type!=\"hidden\"]").selectToAutocomplete(autocomplete_options);
+
+  var angle = 0;
+  $("#rotate_link").click(function() {
+    angle += 180;
+    $("#scan_img").css('transform', 'rotate('+angle+'deg)');
+  });
+});
+</script>
+{% endblock %} 
