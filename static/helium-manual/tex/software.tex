@@ -69,7 +69,7 @@ The former is $10$ problems scored algorithmically.
 The latter is $3$ problems worth $7$ points each.
 
 \ii There are $16$ mathletes split into three teams of five,
-corresponding to characters from \emph{L\'es Miserables},
+corresponding to characters from \emph{L\'{e}s Miserables},
 \emph{Wicked}, and the \emph{Phantom of the Opera},
 plus one unaffiliated individual named ``Evan Chen''.
 
@@ -152,11 +152,10 @@ This way other math tournaments can use the same code themselves.
 
 This upstream URL is maintained by a subtree via the command
 \begin{center}
-	\texttt{git subtree split --prefix=helium -b helium}
+	\texttt{git subtree push --prefix helium/ github-helium master}
 \end{center}
-to create a branch \texttt{helium} containing only code from this folder.
-Thereafter, we push this branch into the Git helium repository
-(to the master branch on Git: note that the branch names differ).
+One can also inspect such a branch locally via
+\texttt{git subtree split --prefix=helium}.
 
 The \texttt{README.txt} files provides a brief documentation
 on how to get set up with Helium in a different Django project.
