@@ -3,8 +3,11 @@
 
 {% block pagetitle %}Dashboard{% endblock %}
 
-{% block layout-banner %}
-{% endblock layout-banner %}
+{% block layout-header %}
+<section id="banner">
+<img src="{% static 'img/balloons.png' %}"/>
+</section>
+{% endblock %}
 
 {% block layout-content %}
 <h2>Helium 2.0 (<a href="{% static 'helium-manual/manual.pdf' %}">user manual</a>)</h2>

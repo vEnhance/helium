@@ -72,20 +72,20 @@ ul.messages > li.warning { color: orange; }
 ul.messages > li.info { color: blue; }
 
 /* Copied from HMMT layout.css */
-#content-container { 
-	max-width: 700px;
-	margin-left: auto;
-	margin-right: auto;
-}
 #banner img {
 	width: 100%;
 }
 #page-wrapper {
 	width: 80vw;
-	max-width: 900px;
+	max-width: 750px;
 	margin-left: auto;
 	margin-right: auto;
 }
+section#footer {
+	width: 80vw;
+	max-width: 750px;
+}
+
 
 #debug-warning {
 	background-color: #00CCA7 !important;

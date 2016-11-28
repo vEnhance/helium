@@ -11,9 +11,12 @@ body { background-color: {{ exam.color }}; }
 {% endblock %}
 
 {% block content %}
+  {% block layout-header %}
   <section id="banner">
     <a href="/helium"><img src="{% static 'img/balloons.png' %}"/></a>
   </section>
+  <p><a href="/helium">&lt; Back to Helium home</a></p>
+  {% endblock %}
   <section id="body-form">
   {% if messages %}
   <ul class="messages">
@@ -26,7 +29,6 @@ body { background-color: {{ exam.color }}; }
   <h3>{% block pagetitle %}{% endblock %}</h3>
   {% block layout-content %}
   {% endblock %}
-  </div>
   <hr />
   </section>
 
