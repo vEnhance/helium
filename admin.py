@@ -91,7 +91,7 @@ class VerdictAdmin(admin.ModelAdmin):
 	list_display = ('id', 'problem', 'entity', 'score', 'evidence_count', 'is_valid', 'is_done')
 	inlines = (EvidenceInline, ProblemScribbleInline,)
 	search_fields = ('problem__exam__name', 'entity__name',)
-	list_filter = (VerdictNoEntityFilter,)
+	list_filter = (VerdictNoEntityFilter, 'problem', 'problem__exam')
 
 @admin.register(He.models.EntirePDFScribble)
 class EntirePDFAdmin(admin.ModelAdmin):
