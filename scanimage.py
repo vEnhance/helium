@@ -1,5 +1,5 @@
 """
-HELIUM
+HELIUM 2
 (c) 2016 Evan Chen
 See LICENSE.txt for details.
 

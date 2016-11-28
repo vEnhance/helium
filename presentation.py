@@ -1,5 +1,5 @@
 """
-HELIUM
+HELIUM 2
 (c) 2016 Evan Chen
 See LICENSE.txt for details.
 
@@ -159,7 +159,7 @@ FINAL_TEXT_BANNER = """
 |  | |  | |  `---.|      |(_|  |  ('  '-'(_.-' |  |   |  | 
 `--' `--' `------'`------'  `--'    `-----'    `--'   `--' 
 
-HELIUM (c) 2016 Evan Chen
+HELIUM 2 (c) 2016 Evan Chen
 """.strip()
 
 def HMMT_text_report(queryset = None,
