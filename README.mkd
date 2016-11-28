@@ -1,0 +1,99 @@
+<pre>
+('-. .-.   ('-.                               _   .-')    
+( OO )  / _(  OO)                             ( '.( OO )_  
+,--. ,--.(,------.,--.      ,-.-') ,--. ,--.   ,--.   ,--.)
+|  | |  | |  .---'|  |.-')  |  |OO)|  | |  |   |   `.'   | 
+|   .|  | |  |    |  | OO ) |  |  \|  | | .-') |         | 
+|       |(|  '--. |  |`-' | |  |(_/|  |_|( OO )|  |'.'|  | 
+|  .-.  | |  .--'(|  '---.',|  |_.'|  | | `-' /|  |   |  | 
+|  | |  | |  `---.|      |(_|  |  ('  '-'(_.-' |  |   |  | 
+`--' `--' `------'`------'  `--'    `-----'    `--'   `--' 
+</pre>
+
+# HELIUM 2
+### Copyright (c) 2016 Evan Chen
+
+A manual for users is available in /helium/static/helium-manual/.
+Also most of the code is more or less commented thoroughly.
+Have fun!
+
+See LICENSE.txt for license details (MIT license).
+Note in particular that
+
+> The above copyright notice and this permission notice shall be included in all
+> copies or substantial portions of the Software.
+
+### SETUP
+
+If you are using Helium outside of an HMMT context,
+you should do the following to get it set up with Django.
+
+##### Step 1: Application
+Create a Django application, as usual:  
+```django-admin startproject example```
+
+##### Step 2: Clone Helium
+Clone the Helium repository into a directory "/helium".  
+```git clone https://github.com/vEnhance/helium```
+
+##### Step 3: Add URL's
+In `example/urls.py`, add `url(r'^helium/', include('helium.urls'))` into urlpatterns.
+Thus the file should look something like:  
+```
+from django.conf.urls import url, include
+from django.contrib import admin
+
+urlpatterns = [
+    url(r'^admin/', admin.site.urls),
+    url(r'^helium/', include("helium.urls")),
+]
+```
+
+##### Step 4: Add to `INSTALLED_APPS`
+
+In `example/settings.py`, add `helium` to installed applications:
+```
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    #...
+    'django.contrib.staticfiles',
+    'helium',
+]
+```
+
+##### Step 5: STATIC and MEDIA settings.
+
+Configure STATIC and MEDIA settings. This is done in `example/settings.py`.
+
+An example of such a setup might be:
+```
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+```
+
+##### Step 6: Add a `base.html` template
+
+Create a `base.html` template, probably for use site-wide.
+
+A **working example** of such a template is given as `helium/templates/base.html.EXAMPLE`.
+ 
+The template needs, regardless, to have the following blocks, used by Helium.
+
+* In the head of the document, a `helium-stylesheets` block where Helium stylesheets will be loaded
+* In the body of the document, a `content` block where Helium will insert the page content. If you have a wrapper `div` of some sort place it around the content block.
+* A `helium-scripts` block to load Helium-specific Javascript.
+
+If not already included, you should also add JQuery in:
+```
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script> 
+```
+
+##### Step 7: Run migrations
+
+The Helium models need to be migrated into the application:
+
+```python manage.py migrate```
+

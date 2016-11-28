@@ -72,7 +72,6 @@
     </script>
 
     {% block helium-scripts %}{% endblock %}
-    {% block scripts %}{% endblock %}
 
     <script type="text/x-mathjax-config">
         MathJax.Hub.Config({
