@@ -382,14 +382,11 @@ class ExamScribble(models.Model):
 		self.updateScribbles()
 		self.save()
 
-	def updateScribbles(self, queryset = None):
+	def updateScribbles(self):
 		"""Update all child scribbles once mathlete/team identified.
 		This should not need to be called directly; assign will do it for you."""
-		if queryset is None:
-			queryset = self.problemscribble_set.all()
-		for ps in queryset:
-			ps.verdict.entity = self.entity
-			ps.verdict.save()
+		queryset = Verdict.objects.filter(problemscribble__examscribble = self)
+		queryset.update(entity = self.entity)
 
 	def checkConflictVerdict(self, entity=None, purge=False):
 		"""Check that no integrity errors (uniqueness)
