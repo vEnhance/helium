@@ -645,12 +645,12 @@ def reports_extended(request):
 @user_passes_test(lambda u: u.is_superuser)
 def reports_full(request):
 	return HttpResponse(presentation.HMMT_text_report(zero_pad=False), content_type="text/html")
-def teaser(request):
+def reports_teaser(request):
 	"""ACCESSIBLE TO NON-STAFF!"""
 	return HttpResponse(presentation.HMMT_text_report(num_show=15, num_named=0), content_type="text/html")
 
 @user_passes_test(lambda u: u.is_superuser)
-def spreadsheet(request):
+def reports_spreadsheet(request):
 	sheets = collections.OrderedDict() # sheet name -> rows
 	all_rows = presentation.get_score_rows()
 

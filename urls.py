@@ -47,8 +47,8 @@ urlpatterns = [
 	url(r'^reports/short/$', views.reports_short),
 	url(r'^reports/extended/$', views.reports_extended),
 	url(r'^reports/full/$', views.reports_full), # super-user only
-	url(r'^reports/teaser/$', views.teaser),
-	url(r'^spreadsheet/$', views.spreadsheet),
+	url(r'^reports/teaser/$', views.reports_teaser), # public
+	url(r'^reports/spreadsheet/$', views.reports_spreadsheet), # super-user only
 	url(r'^management/([a-zA-Z]+)/$', views.run_management),
 	url(r'^$', views.index),
 ]
