@@ -665,9 +665,20 @@ def reports_spreadsheet(request):
 	response = HttpResponse(spreadsheet,\
 			content_type="application/vnd.oasis.opendocument.spreadsheet")
 	response['Content-Disposition'] = 'attachment; filename=scores-%s.ods' \
-			%time.strftime("%Y%m%d-%H%M%S")
+			% time.strftime("%Y%m%d-%H%M%S")
 	return response
 
+@staff_member_required
+def reports_awards(request):
+	queryset = He.models.ScoreRow.objects.filter(rank__lte = 10) # top 10 each
+	awards_tex= presentation.HMMT_awards(queryset)
+	r = HttpResponse(content_type='application/x-tex')
+	r.write(awards_tex)
+	r['Content-Disposition'] = 'attachment; filename=awards-%s.tex' \
+			% time.strftime("%Y%m%d-%H%M%S")
+	return r
+
+## MANAGEMENT
 @user_passes_test(lambda u: u.is_superuser)
 def run_management(request, command_name):
 	"""Starts a thread which runs a specified management command"""
