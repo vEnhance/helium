@@ -126,9 +126,13 @@ class ResultPrinter:
 		output = r"\section{" + heading + "}" + "\n"
 		for rank, group in itertools.groupby(desc_rows, key = lambda r : r.rank):
 			title = heading + " \quad " + nth(rank) + " Place"
-			output += r"\enumframe{" + title + "}{%" + "\n"
+			output += r"\scoreframe{" + title + "}{%" + "\n"
+			# First get names of students/teams
 			for row in group:
 				output += " " * 2 + r"\item[" + nth(row.rank) + "] " + row.name + "\n"
+			output += "}{"
+			score = row.total # grab last score WLOG
+			output += str(int(score)) if score.is_integer() else "%.3f" %score
 			output += r"}" + "\n"
 		output += r"\begin{frame}{" + heading + "}" + "\n"
 		output += r"\begin{enumerate}" + "\n"
@@ -276,8 +280,9 @@ BEAMER_PREAMBLE = r"""\documentclass{beamer}
   \vskip0pt%
 }
 
-\newcommand{\enumframe}[2]{%
+\newcommand{\scoreframe}[3]{%
 \begin{frame}{#1}
+\Large With a score of \alert{#3},
 \begin{enumerate}
 \setlength{\itemindent}{3em}
 \Large #2
