@@ -1,6 +1,6 @@
 """
 HELIUM 2
-(c) 2016 Evan Chen
+(c) 2017 Evan Chen
 See LICENSE.txt for details.
 
 presentation.py
@@ -184,7 +184,7 @@ FINAL_TEXT_BANNER = """
 |  | |  | |  `---.|      |(_|  |  ('  '-'(_.-' |  |   |  | 
 `--' `--' `------'`------'  `--'    `-----'    `--'   `--' 
 
-HELIUM 2 (c) 2016 Evan Chen
+HELIUM 2 (c) 2017 Evan Chen
 """.strip()
 
 def HMMT_text_report(queryset = None,
@@ -252,7 +252,7 @@ def HMMT_text_report(queryset = None,
 
 BEAMER_PREAMBLE = r"""\documentclass{beamer}
 %% HMMT BEAMER AWARDS TEMPLATE
-%% (c) 2016 Evan Chen as part of Helium
+%% (c) 2017 Evan Chen as part of Helium
 %% See LICENSE.txt for details.
 
 \usetheme{CambridgeUS} % fitting
