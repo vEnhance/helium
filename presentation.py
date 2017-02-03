@@ -7,7 +7,7 @@ presentation.py
 
 This is responsible for the final presentation of results of tournament.
 It generates both text files and list of lists;
-in the latter case, spreadsheet.py has a function which makse them into spreadsheets.
+in the latter case, sheetapi.py has a function which makse them into spreadsheets.
 """
 
 import itertools

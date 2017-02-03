@@ -3,7 +3,7 @@ HELIUM 2
 (c) 2017 Evan Chen
 See LICENSE.txt for details.
 
-presentation.py
+sheetapi.py
 
 This produces spreadsheets in ODF format from Python lists.
 The get_odf_spreadsheet is an improved version of one inside Babbage.
@@ -46,3 +46,11 @@ def get_odf_spreadsheet(sheets):
 	st = StringIO()
 	doc.write(st)
 	return st.getvalue()
+
+def http_response(sheets):
+	odf = spreadsheet.get_odf_spreadsheet(sheets)
+	response = HttpResponse(odf,\
+			content_type="application/vnd.oasis.opendocument.spreadsheet")
+	response['Content-Disposition'] = 'attachment; filename=scores-%s.ods' \
+			% time.strftime("%Y%m%d-%H%M%S")
+	return response

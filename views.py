@@ -71,7 +71,7 @@ import scanimage
 import threader
 from presentation import ResultPrinter as RP
 import presentation
-import spreadsheet
+import sheetapi
 
 DONE_IMAGE_URL = static('img/done.jpg')
 
@@ -662,7 +662,7 @@ def reports_spreadsheet(request):
 	sheets["Aggr"] = RP(all_rows["Team Aggregate"]).get_sheet()
 	sheets["Sweeps"] = RP(all_rows["Sweepstakes"]).get_sheet()
 
-	odf = spreadsheet.get_odf_spreadsheet(sheets)
+	odf = sheetapi.get_odf_spreadsheet(sheets)
 	response = HttpResponse(odf,\
 			content_type="application/vnd.oasis.opendocument.spreadsheet")
 	response['Content-Disposition'] = 'attachment; filename=scores-%s.ods' \
