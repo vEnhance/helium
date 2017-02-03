@@ -17,6 +17,8 @@ from odf.text import P
 from django.http import HttpResponse, HttpResponseRedirect
 import time
 
+import unicodedata
+
 # Why isn't this built-in?
 def valuetype(val):
 	if isinstance(val, bool): return 'boolean'
@@ -39,11 +41,14 @@ def get_odf_spreadsheet(sheets):
 			for cell_content in list_row:
 				vtype = valuetype(cell_content)
 				if vtype == "boolean":
-					cell_content = ("YES" if cell_content else "NO")
+					cell_content = ("True" if cell_content else "False")
 					vtype = "string"
+				elif vtype == "string":
+					cell_content = unicodedata.normalize('NFKD', unicode(cell_content)).encode('ascii', 'ignore')
 				table_cell = TableCell(valuetype=vtype, value=cell_content)
 				if vtype == "string":
-					table_cell.addElement(P(text=str(cell_content)))
+					s = str(cell_content)
+					table_cell.addElement(P(text=s))
 				table_row.addElement(table_cell)
 			sheet.addElement(table_row)
 	st = StringIO()
