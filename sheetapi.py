@@ -14,6 +14,9 @@ from odf.opendocument import OpenDocumentSpreadsheet
 from odf.table import Table, TableRow, TableCell
 from odf.text import P
 
+from django.http import HttpResponse, HttpResponseRedirect
+import time
+
 # Why isn't this built-in?
 def valuetype(val):
 	if isinstance(val, bool): return 'boolean'
@@ -47,10 +50,10 @@ def get_odf_spreadsheet(sheets):
 	doc.write(st)
 	return st.getvalue()
 
-def http_response(sheets):
-	odf = spreadsheet.get_odf_spreadsheet(sheets)
+def http_response(sheets, name):
+	odf = get_odf_spreadsheet(sheets)
 	response = HttpResponse(odf,\
 			content_type="application/vnd.oasis.opendocument.spreadsheet")
-	response['Content-Disposition'] = 'attachment; filename=scores-%s.ods' \
-			% time.strftime("%Y%m%d-%H%M%S")
+	response['Content-Disposition'] = 'attachment; filename=%s-%s.ods' \
+			% (name, time.strftime("%Y%m%d-%H%M%S"))
 	return response
