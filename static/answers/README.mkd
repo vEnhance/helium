@@ -1,0 +1,8 @@
+Here are the existing answer sheets for February.
+
+scanimage.py can be used in order to check the Helium regions line up.
+Run it as
+
+> python scanimage.py february-answersheet.pdf
+
+for example, and it will generate several JPG images of the cut-out regions.
