@@ -38,7 +38,8 @@ class ResultRow:
 		"""Input: a dictionary d from ScoreRow.object.values()"""
 		self.total = d['total']
 		if len(d['cached_score_string']) > 0:
-			self.scores = [float(x) for x in d['cached_score_string'].split(',')] # so much for DRY
+			self.scores = [float(x) if x != 'None' else None \
+					for x in d['cached_score_string'].split(',')] # so much for DRY, qq
 		else:
 			self.scores = []
 		self.rank = d['rank']
@@ -56,24 +57,33 @@ class ResultPrinter:
 	def __init__(self, rows):
 		self.rows = list(rows)
 		self.rows.sort(key = lambda r : r.rank)
+
+
 	def get_table(self, heading = None, num_show = None, num_named = None, zero_pad = True,
 			float_string = "%4.2f", int_string = "%4d"):
 		output = get_heading(heading) if heading is not None else ''
 		if len(self.rows) == 0: return output # assume >= 1 entry
-		max_length = max(len(r.scores) for r in self.rows) # take longest row for zero padding
+
+		def score_to_string(x):
+			"""Given x \in [Int, Float, None], return a string rep"""
+			if x is None:
+				zero = int_string % 0
+				return zero if zero_pad else zero.replace('0', '-')
+			elif type(x) == int or x == 0:
+				return int_string % x
+			elif type(x) == float:
+				return float_string % x
+			else:
+				return str(x)
+
 		for row in self.rows:
 			if num_show is not None and row.rank > num_show:
 				break
 			output += "%4d. " % row.rank
 			output += "%7.2f"  % row.total
-			if max_length > 1: # sum of more than one thing
-				if zero_pad:
-					scores = row.scores + [0,] * (max_length - len(row.scores))
-				else:
-					scores = row.scores
+			if len(row.scores) > 1:
 				output += "  |  "
-				output += " ".join([int_string %x if type(x) == int or x == 0 \
-						else float_string %x  for x in scores])
+				output += " ".join([score_to_string(x) for x in row.scores])
 			output += "  |  "
 			if num_named is None or row.rank <= num_named:
 				output += row.name
@@ -112,7 +122,8 @@ class ResultPrinter:
 			sheetrow = [row.rank, row.name, \
 					round(row.total, ndigits = precision)]
 			if len(row.scores) > 1:
-				sheetrow += [round(s, ndigits = precision) if s else 0 for s in row.scores]
+				sheetrow += [round(s, ndigits = precision) if s is not None\
+						else None for s in row.scores]
 			sheet.append(sheetrow)
 		return sheet
 
