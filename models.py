@@ -518,12 +518,13 @@ class ScoreRow(models.Model):
 	@property
 	def scores(self):
 		if len(self.cached_score_string) > 0:
-			return [float(x) for x in self.cached_score_string.split(',')]
+			return [float(x) if x != 'None' else None\
+					for x in self.cached_score_string.split(',')]
 		else:
 			return []
 	def set_scores(self, scores):
 		self.cached_score_string = ','.join([str(x) for x in scores])
-		self.total = sum(scores)
+		self.total = sum([(x or 0) for x in scores])
 	class Meta:
 		unique_together = ('category', 'entity',)
 

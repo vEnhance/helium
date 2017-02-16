@@ -38,25 +38,28 @@ class Command(BaseCommand):
 		teams = list(He.models.Entity.teams.all())
 		exams = list(He.models.Exam.objects.all())
 
-		all_scores = {} # exam.id -> entity.id -> list of scores
 		team_exam_scores = collections.defaultdict(list) # entity.id -> list of exam total scores
-
-		all_rows = []
+		all_rows = [] # all rows
 
 		# Scoring in usual way . . .
+		all_scores = {} # exam.id -> entity.id -> list of scores
 		for exam in exams:
 			all_scores[exam.id] = collections.defaultdict(list)
 
+		exam_pcount = list(He.models.Problem.objects.all().values_list('exam__id', flat=True))
 		for d in He.models.Verdict.objects\
 				.filter(score__isnull=False, entity__isnull=False)\
-				.order_by('problem__problem_number')\
 				.values("problem__exam_id", "entity_id",
-						"problem__weight", "score", "problem__allow_partial"):
+						"problem__weight", "score", "problem__allow_partial",
+						"problem__problem_number"):
+			prob_number = d['problem__problem_number']
 			exam_id = d['problem__exam_id']
 			entity_id = d['entity_id']
 			weighted_score = d['problem__weight'] * d['score'] \
 					if not d['problem__allow_partial'] else d['score']
-			all_scores[exam_id][entity_id].append(weighted_score)
+			if not entity_id in all_scores[exam_id]:
+				all_scores[exam_id][entity_id] = [None] * exam_pcount.count(exam_id)
+			all_scores[exam_id][entity_id][prob_number-1] = weighted_score
 
 		for exam in exams:
 			entities = mathletes if exam.is_indiv else teams
