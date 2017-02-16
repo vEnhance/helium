@@ -3,16 +3,19 @@ Here are some tasks you need to do to set up Helium
 to work before the tournament, and after grading.
 
 \section{Database maintenance}
-\subsection{Clearing the database}
-You should first clear out the old exams, verdicts, etc.\ from the database
-before another run of the tournament.
-If you want to save a copy of all the data,
-you can do so using Django management:
+\subsection{Rinse the database}
+For posterity, first save another copy of the data using Django management:
 \begin{center}
-	\texttt{python manage.py dumpdata helium --format yaml}.
+	\texttt{python manage.py dumpdata helium --indent 1}.
 \end{center}
-This will get you a YAML file with all Helium related data.
-If you ever need it back you can then reload it with \texttt{loaddata}.
+This will output a file with all Helium related data.
+Thus if you ever need it back you can then reload it with \texttt{loaddata}.
+
+Then, one should SSH into the instance and run the following command.
+\begin{center}
+	\texttt{python manage.py helium\_rinse}
+\end{center}
+which will clear all Helium-related data.
 
 \subsection{Import exams from Babbage}
 You need to populate the Helium tables with exams.
