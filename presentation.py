@@ -231,6 +231,10 @@ BEAMER_PREAMBLE = r"""\documentclass{beamer}
 
 \usetheme{CambridgeUS} % fitting
 
+%% UNCOMMENT THIS once you have the image in your working directory
+\setbeamertemplate{logo}{%
+%\includegraphics[height=0.8cm]{logo-transparent-black.png}%
+}
 
 \setbeamertemplate{footline}{}%
 \setbeamertemplate{headline}{
@@ -254,7 +258,6 @@ BEAMER_PREAMBLE = r"""\documentclass{beamer}
 \end{enumerate}
 \end{frame}%
 }
-
 
 \newcommand{\tournament}{\ifcase \month \or January\or February\or March\or %
 April\or May \or June\or July\or August\or September\or October\or November\or %
