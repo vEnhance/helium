@@ -68,7 +68,7 @@ class ExamAdmin(admin.ModelAdmin):
 
 @admin.register(He.models.Problem)
 class ProblemAdmin(admin.ModelAdmin):
-	list_display = ('id', 'exam', 'problem_number', 'weight', 'allow_partial')
+	list_display = ('id', 'exam', 'problem_number', 'answer', 'weight', 'allow_partial')
 	search_fields = ('exam', 'problem_number',)
 	list_filter = ('exam__name',)
 
