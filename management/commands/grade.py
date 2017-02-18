@@ -24,7 +24,9 @@ class Command(BaseCommand):
 
 	def get_sweeps_scores(self, teams, scores, weight = 400):
 		"""Given teams and scores, yield pairs (team, weighted_score)"""
-		max_score = max(sum(sc) for sc in scores.values())\
+		def total(sc):
+			return sum([x for x in sc if x is not None])
+		max_score = max(total(sc) for sc in scores.values())\
 				if len(scores) > 0 else 0
 		if max_score > 0:
 			mult = float(weight) / max_score
