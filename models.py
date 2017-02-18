@@ -338,7 +338,7 @@ class ExamScribble(models.Model):
 	name_image = models.ImageField(upload_to='scans/names/', blank=False, null=True,
 			help_text = "This is the image of the `name` field for the scan.")
 		# blargh. These should really be null=False, but it makes testing hard.
-	needs_attention = models.CharField(max_length=80, blank=True, default='',
+	needs_attention = models.CharField(max_length=200, blank=True, default='',
 			help_text = "Text description of an issue with this scan "
 			"(no name, no such student, et cetera).")
 	last_sent_time = models.IntegerField(blank=True, null=True,
