@@ -26,7 +26,9 @@ class EvidenceInline(admin.TabularInline):
 class ProblemScribbleInline(admin.TabularInline):
 	model = He.models.ProblemScribble
 	fields = ('verdict', 'prob_image', 'last_sent_time')
-
+class ExamScribbleInline(admin.TabularInline):
+	model = He.models.ExamScribble
+	fields = ('entity', 'needs_attention',)
 
 class TeamFilter(admin.SimpleListFilter):
 	title = "Individual vs Team"
@@ -95,7 +97,8 @@ class VerdictAdmin(admin.ModelAdmin):
 
 @admin.register(He.models.EntirePDFScribble)
 class EntirePDFAdmin(admin.ModelAdmin):
-	list_display = ('name', 'id', 'is_done', 'exam',)
+	list_display = ('name', 'id', 'is_done', 'exam', 'page_count')
+	inlines = (ExamScribbleInline,)
 	list_filter = ('is_done', 'exam',)
 	search_fields = ('name',)
 
