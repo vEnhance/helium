@@ -88,11 +88,11 @@
 		<ul>
 		<li><a href="/helium/find-paper">Find Paper</a></li>
 		<li><a href="/helium/view-conflicts/own/">View Your Conflicts</a></li>
+		<li><a href="/helium/view-conflicts/all/">View All Conflicts</a> (admin)</li>
 		<li><a href="{% static 'answers/february-answersheet.pdf' %}">HMMT Feb Answer Sheets (PDF)</a></li>
 		<li><a href="{% static 'answers/november-answersheet.pdf' %}">HMMT Nov Answer Sheets (PDF)</a></li>
 		<li><a href="{% static 'answers/internal-answersheet.pdf' %}">Example Answer Sheets (PDF)</a></li>
 		{% if request.user.is_superuser %}
-			<li><a href="/helium/view-conflicts/all/">View All Conflicts</a> (admin)</li>
 			<li><a href="/admin/helium/">Django Admin</a> (admin)</li>
 		{% endif %}
 		</ul>
