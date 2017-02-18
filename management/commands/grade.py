@@ -33,7 +33,7 @@ class Command(BaseCommand):
 		else:
 			mult = 0
 		for team in teams:
-			yield (team, sum(scores[team.id]) * mult)
+			yield (team, total(scores[team.id]) * mult)
 
 	def handle(self, *args, **kwargs):
 		mathletes = list(He.models.Entity.mathletes.all())
