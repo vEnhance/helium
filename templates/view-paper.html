@@ -18,9 +18,14 @@ This paper is from the scan
 <h4>Verdicts</h4>
 {% include "_table.html" %}
 
-{% if request.user.is_superuser and entity %}
+{% if request.user.is_superuser %}
 <h4>Change Scores (Admin)</h4>
-{% include "_form.html" with form=gradeform action=gradeurl submit_name="Change Scores" %}
+	{% if entity %}
+	{% include "_form.html" with form=gradeform action=gradeurl submit_name="Change Scores" %}
+	{% else %}
+	You have to assign this paper to an entity before
+	you can change the scores assigned to it.
+	{% endif %}
 {% endif %}
 
 {% endblock %}
