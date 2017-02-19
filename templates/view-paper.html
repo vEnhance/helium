@@ -9,6 +9,8 @@
 {% include "_form.html" with form=matchform submit_name="Match Exam" %}
 
 <h4>Original Scan</h4>
+This paper is from the scan
+<a href="/helium/view-pdf/{{ examscribble.pdf_scribble.id }}">{{ examscribble.pdf_scribble.name }}</a>.
 <a name="scan"></a>
 {% include "_scanstage.html" with examscribble=examscribble image_url=examscribble.full_image.url is_full=True %}
 {% endif %}
