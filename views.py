@@ -376,8 +376,7 @@ def ajax_next_scan(request):
 	scribbles = scribbles.filter(examscribble__needs_attention='')
 	# Cool-down and position
 	scribbles = scribbles.exclude(verdict__evidence__user = request.user)\
-			.filter(id__gt = pos).exclude(last_sent_time__gte = time.time() - 10)
-			# cooldown, pos
+			.filter(id__gt = pos).exclude(last_sent_time__gte = time.time() - 4)
 
 	ret = []
 	for ps in scribbles[0:n]:
@@ -465,7 +464,7 @@ def ajax_next_match(request):
 	else:
 		scribbles = He.models.ExamScribble.objects\
 				.filter(entity__isnull=True, needs_attention=u'')\
-				.exclude(last_sent_time__gte = time.time() - 20) # cooldown
+				.exclude(last_sent_time__gte = time.time() - 10) # cooldown
 	scribbles = scribbles.filter(id__gt = pos)
 
 	ret = []
