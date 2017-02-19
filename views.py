@@ -279,7 +279,7 @@ def view_paper(request, *args):
 		except He.models.ExamScribble.DoesNotExist:
 			es = None
 	context = {}
-	if request.method == 'POST': # submitted an update here
+	if request.method == 'POST': # submitted an update for needs_attention
 		try:
 			examscribble_id = int(request.POST['examscribble_id'])
 			examscribble = He.models.ExamScribble.objects.get(id=examscribble_id)
@@ -297,6 +297,7 @@ def view_paper(request, *args):
 				messages.success(request, "Matched exam for %s" %prev_entity)
 		context['matchform'] = form
 		es.refresh_from_db()
+		entity = es.entity # refresh entity
 	elif es is not None:
 		context['matchform'] = forms.ExamScribbleMatchRobustForm(\
 					user = request.user, examscribble = es)
