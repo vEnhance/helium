@@ -76,14 +76,20 @@ class ResultPrinter:
 			else:
 				return str(x)
 
+		# Take longest row for zero padding
+		max_length= max(len(r.scores) for r in self.rows)
 		for row in self.rows:
 			if num_show is not None and row.rank > num_show:
 				break
+			if zero_pad is True and max_length > 1:
+				scores = row.scores + [0,] * (max_length-len(row.scores))
+			else:
+				scores = row.scores
 			output += "%4d. " % row.rank
 			output += "%7.2f"  % row.total
-			if len(row.scores) > 1:
+			if len(scores) > 1:
 				output += "  |  "
-				output += " ".join([score_to_string(x) for x in row.scores])
+				output += " ".join([score_to_string(x) for x in scores])
 			output += "  |  "
 			if num_named is None or row.rank <= num_named:
 				output += row.name
