@@ -6,7 +6,7 @@ to work before the tournament, and after grading.
 \subsection{Rinse the database}
 For posterity, first save another copy of the data using Django management:
 \begin{center}
-	\texttt{python manage.py dumpdata helium --indent 1}.
+	\texttt{python manage.py dumpdata helium --indent 1}
 \end{center}
 This will output a file with all Helium related data.
 Thus if you ever need it back you can then reload it with \texttt{loaddata}.
@@ -71,11 +71,16 @@ Thus you can test this locally and make adjustments to the regions if needed.
 \section{Name stickers}
 Make sure tournament directors are printing out name stickers for the students;
 this will make grading life a lot easier.
+Students should be instructed to:
+place their name stickers in the field that says ``name'',
+but still write their ID number in the blanks provided manually.
+
 Also, on personalized schedules for teams, print out ID numbers.
 Doing so will expedite the process of grading significantly.
 
 This task takes place outside of Helium, and varies between tournaments.
 The bottom line is that \textbf{ensure students and teams know their ID's}.
+
 \section{Sanity checking results}
 Once grading is done, you should do the following clean-up tasks.
 \begin{itemize}
@@ -130,3 +135,9 @@ It may be wise to run ``grade'' throughout the day,
 just to make sure that things are looking okay.
 The $\alpha$ and $\beta$ values won't be correct, but that's okay;
 we don't need those values when we're just sanity checking results.
+\section{Printing results}
+The easy part.  After running the ``grade'' command,
+the dashboard has several links to the scores in various formats
+(OpenDocument spreadsheet, text file, etc),
+and an automated awards presentation TeX file.
+Congratulations on finishing!

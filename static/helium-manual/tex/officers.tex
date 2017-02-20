@@ -2,24 +2,27 @@
 This assumes you have super-user privileges.
 So it contains some higher-level administration tasks.
 
-\section{Uploading scans}
-Self-explanatory, but some gotchas:
+\section{Uploading scans (the scanning squad)}
+Self-explanatory in theory, but hard to in practice.
+Usually, we end up having a squad of about five people
+who sit next to a scanner and process all the incoming exams.
+Here is my suggestion for how to do it:
 \begin{itemize}
 	\ii Pre-process the paper:
 	\begin{itemize}
 		\ii Remove staples from scans, if any.
-		You may need to have a squad of people do this \emph{en masse}.
+		You should have a squad of people do this \emph{en masse}.
 		\ii At the moment we don't have image processing,
-		so please make sure all scans are correctly rotated.
+		so please \textbf{make sure all scans are correctly rotated and oriented}.
 	\end{itemize}
 
-	\ii \textbf{Upload the scans in grayscale}, NOT black/white or color.
+	\ii \textbf{\color{red} Upload the scans in grayscale, NOT black/white or color}.
 	Using color slows down processing, and using black/white makes the scan
 	illegible since we generally print exams on colored paper.
 
 	\ii I strongly recommend using the \textbf{following organizational procedure}:
 	\begin{itemize}
-		\ii Upload the scans in batches of 25 pages each.
+		\ii Upload the scans in batches of 20 pages each.
 		(Batches longer than this may cause issues on most scanners).
 		\ii Number the batches $1$, $2$, \dots, $n$.
 		Write the number of the batch in sharpie on the first page,
@@ -67,22 +70,83 @@ there are two switches you need to flip for every exam:
 These are safety features designed to minimize the risk
 of someone accidentally uploading scans to the wrong test, for example.
 
-\section{Dealing with troublesome name matches}
-There are two ways to get to here:
+\section{Conflict resolution}
+First, I should describe the logic behind verdicts.
+For each exam there are two parameters:
 \begin{itemize}
-	\ii If you open ``find paper'', you will get a list of all name matches
-	for which some difficulty appeared.
+	\ii A \textbf{minimum majority} for the verdict to be valid,
+	defined as a constant $n$ such that an $n$-to-$1$ majority suffices.
+	\ii If valid, a \textbf{minimum number of graders} needed before
+	the verdict considers itself done.
+	(So setting this number to $2$ is double-grading,
+	$3$ is triple-grading, etc.\ and the default is $3$.)
+\end{itemize}
+
+Officers get an extra panel called ``View All Conflicts''.
+This lets you see the grading conflicts for \emph{everyone}.
+
+\begin{center}
+	\includegraphics[width=0.8\textwidth]{images/all-conflict.png}
+\end{center}
+
+Given a conflict, you can open the verdict page corresponding to it,
+at which point you can submit your own evidence.
+If you like being final authority,
+there should also be an option to submit this evidence in ``God mode''
+which will settle the verdict once and for all.
+\section{Find papers}
+You can locate specific papers
+by selecting ``Find Papers'' from the index page.
+Some ways to do so:
+\begin{itemize}
+	\ii You can look up by exam and entity.
+	\ii You can scroll through the pages of the PDF files.
+	\ii A list of papers which need moderator attention
+	will appear here (see Section~\ref{sec:view_full}).
+	Dealing with them described in next section.
+\end{itemize}
+
+\begin{center}
+	\includegraphics[width=0.6\textwidth]{images/viewpaper2.png}
+\end{center}
+
+If the paper has an exam scribble associated,
+that will also be displayed,
+along with a form to change the name associated to it
+(in case of error).
+
+\begin{center}
+	\includegraphics[width=0.6\textwidth]{images/viewpaper1.png}
+\end{center}
+
+\section{Troublesome scans}
+Scans get marked for administrator attention either by graders,
+or by Helium itself when users try to match papers.
+
+There are two ways to get to a list of such papers.
+\begin{itemize}
+	\ii The ``Find Paper'' link mentioned in previous section. (Recommended.)
 	\ii If you open the interface for matching exams for $X$,
 	at the very bottom of the page there is a link
 	to view only the scans which need administrative attention.
+	(Not recommended.)
 \end{itemize}
+Helium refuses to give out papers to graders
+that have been marked with attention until after they have been dealt with.
+Here is how you can deal with them.
 
-Some of these reasons are entered to humans:
-for example, ``no name''.
-Do with these as you see fit.
+\subsection{Papers wrong in name only}
+There are two types of such errors:
+those entered by humans, and those by Helium.
 
-The tricky situation is auto-attention generated papers
-which occur when a student is repeated.
+First, sometimes a human will flag a scan for attention
+because they can't match it to a student or team
+(e.g.\ ``this paper doesn't have a name visible'').
+In that case, all you have to do is match it the correct student,
+submit that, and then all will be well again.
+
+The tricky situation is auto-marked papers
+which occur when a student/team is repeated.
 Consider the following situation:
 \begin{quote}
 	You match a geometry exam to a student ``Christine Daae''.  
@@ -94,7 +158,7 @@ An error will appear linking to the first \emph{verdict}
 it finds for a geometry problem taken by Christine Daae.
 
 \begin{center}
-	\includegraphics[width=0.7\textwidth]{images/conflict3.png}
+	%\includegraphics[width=0.7\textwidth]{images/conflict3.png}
 	\includegraphics[width=0.7\textwidth]{images/conflict2.png}
 \end{center}
 
@@ -123,54 +187,31 @@ There are a couple things you could do.
 	if you really understand Helium well and have a compelling reason to do so.
 \end{itemize}
 
-\section{Find papers}
-You can locate specific papers
-by selecting ``Find Papers'' from the index page.
-Some ways to do so:
-\begin{itemize}
-	\ii You can look up by exam and entity.
-	\ii You can scroll through the pages of the PDF files.
-	\ii A list of papers which need moderator attention
-	will appear here (see Section~\ref{sec:view_full}).
-\end{itemize}
+\subsection{Other troublesome scans}
+\label{sec:trouble_scan}
+Graders may also flag scans for administrator attention for other 
+more serious reasons:
+the scan is upside down, or mis-aligned, et cetera.
+This is more serious, since even after you find the name to match it too,
+the short-answer graders will be confused by the scan anyways.
 
-\begin{center}
-	\includegraphics[width=0.6\textwidth]{images/viewpaper2.png}
-\end{center}
+To resolve these you should use the following procedure:
+\begin{enumerate}
+	\ii Match the paper to the correct name at the top of the form,
+	but \emph{also} fill in the field with ``Issues''.
+	This will both match the paper to a student/team,
+	yet still fill in the reason field
+	(so Helium will not give the scan to short-answer graders).
 
-If the paper has an exam scribble associated,
-that will also be displayed,
-along with a form to change the name associated to it
-(in case of error).
+	\ii Enter the scores for the paper manually,
+	under the ``Change Scores (Admin)'' heading.
+	Do this in God mode,
+	since you don't want regular graders to have to deal with this.
+	
+	\ii Release the paper from attention now,
+	by re-doing the match in Step 1.
+\end{enumerate}
 
-\begin{center}
-	\includegraphics[width=0.6\textwidth]{images/viewpaper1.png}
-\end{center}
-
-\section{Conflict resolution}
-First, I should describe the logic behind verdicts.
-For each exam there are two parameters:
-\begin{itemize}
-	\ii A \textbf{minimum majority} for the verdict to be valid,
-	defined as a constant $n$ such that an $n$-to-$1$ majority suffices.
-	\ii If valid, a \textbf{minimum number of graders} needed before
-	the verdict considers itself done.
-	(So setting this number to $2$ is double-grading,
-	$3$ is triple-grading, etc.\ and the default is $3$.)
-\end{itemize}
-
-Officers get an extra panel called ``View All Conflicts''.
-This lets you see the grading conflicts for \emph{everyone}.
-
-\begin{center}
-	\includegraphics[width=0.8\textwidth]{images/all-conflict.png}
-\end{center}
-
-Given a conflict, you can open the verdict page corresponding to it,
-at which point you can submit your own evidence.
-If you like being final authority,
-there should also be an option to submit this evidence in ``God mode''
-which will settle the verdict once and for all.
 \section{Management}
 Several commands are available in the \texttt{manage.py}.
 Many of them are revealed through the Helium interface too:
@@ -192,15 +233,11 @@ is some operation you need to do not supported by the existing views.
 \subsection{Someone uploaded PDF to wrong exam!}
 Well, that's a bummer. 
 Delete the relevant PDF file from the Django admin interface.
-This will kill of the exam and problem scribbles too.
+This will kill off the exam scribbles and problem scribbles too.
 
 As of December 2016, deleted problem scribbles will also kill
 off the verdict to which they were attached.
 That should mostly save things. No promises though.
 
 \subsection{A page is rotated!}
-If you manage to find a rotated exam,
-you can first mark the exam scribble as ``needing attention''.
-This will block it from being handout out to staff members.
-Then, you should probably manually grade the exam in God mode.
-
+See Section \ref{sec:trouble_scan}.
