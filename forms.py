@@ -229,7 +229,7 @@ class ExamScribbleMatchRobustForm(forms.Form):
 				required = False,
 				widget = forms.Textarea(attrs = {'cols' : '40%', 'rows' : '3'}),
 				help_text = "Note here if there are any problems with this scribble, "
-					"like \"no name\" or \"no such student\"; this un-assigns the student.")
+					"like \"no name\" or \"no such student\".")
 
 		if self.user.is_superuser:
 			self.fields['force'] = forms.BooleanField(
@@ -242,17 +242,19 @@ class ExamScribbleMatchRobustForm(forms.Form):
 		data = super(ExamScribbleMatchRobustForm, self).clean()
 		if not self.is_valid():
 			return
+		entity = data.get('entity', None)
 		if data['attention'] != '':
 			self.examscribble.needs_attention = data['attention']
-			self.examscribble.unassign() # un-assign since needs attention
-			return
+			if entity is None:
+				self.examscribble.unassign() # un-assign since needs attention
+				return
 		else:
 			self.examscribble.needs_attention = ""
 			self.examscribble.save()
 
-		entity = data.get('entity', None)
 		if entity is None:
-				self.add_error('entity', "No entity specified")
+			self.add_error('entity', "No entity specified")
+			return
 
 		# Now for each attached ProblemScribble...
 		# check if it's okay to update
