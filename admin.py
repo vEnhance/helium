@@ -116,7 +116,7 @@ class VerdictResource(resources.ModelResource):
 	class Meta:
 		skip_unchanged = True
 		model = He.models.Verdict
-		fields = ('id', 'problem', 'entity', 'score', 'evidence_count', 'is_valid', 'is_done')
+		fields = ('id', 'problem', 'entity', 'score', 'is_valid', 'is_done')
 @admin.register(He.models.Verdict)
 class VerdictAdmin(ImportExportModelAdmin):
 	list_display = ('id', 'problem', 'entity', 'score', 'evidence_count', 'is_valid', 'is_done')
@@ -125,52 +125,24 @@ class VerdictAdmin(ImportExportModelAdmin):
 	list_filter = (VerdictNoEntityFilter, 'problem', 'problem__exam')
 	resource_class = VerdictResource
 
-class EntirePDFResource(resources.ModelResource):
-	exam_name = fields.Field(column_name = 'Exam Name',
-			attribute = 'exam',
-			widget = widgets.ForeignKeyWidget(He.models.Exam, 'name'))
-	class Meta:
-		skip_unchanged = True
-		model = He.models.EntirePDFScribble
-		fields = ('name', 'id', 'is_done', 'exam_name', 'page_count')
 @admin.register(He.models.EntirePDFScribble)
 class EntirePDFAdmin(ImportExportModelAdmin):
 	list_display = ('name', 'id', 'is_done', 'exam', 'page_count')
 	inlines = (ExamScribbleInline,)
 	list_filter = ('is_done', 'exam',)
 	search_fields = ('name',)
-	resoure_class = EntirePDFResource
 
-class ExamScribbleResource(resources.ModelResource):
-	exam_name = fields.Field(column_name = 'Exam Name',
-			attribute = 'exam',
-			widget = widgets.ForeignKeyWidget(He.models.Exam, 'name'))
-	pdf_scribble_name = fields.Field(column_name = 'PDF Scribble Name',
-			attribute = 'pdf_scribble',
-			widget = widgets.ForeignKeyWidget(He.models.EntirePDFScribble, 'name'))
-	class Meta:
-		skip_unchanged = True
-		model = He.models.ExamScribble
-		fields = ('id', 'exam_name', 'entity', 'pdf_scribble_name', 'needs_attention',
-				'full_image', 'name_image')
 @admin.register(He.models.ExamScribble)
 class ExamScribbleAdmin(ImportExportModelAdmin):
 	list_display = ('id', 'exam', 'entity', 'pdf_scribble', 'needs_attention')
 	inlines = (ProblemScribbleInline,)
 	search_fields = ('entity__name',)
 	list_filter = ('exam__name',)
-	resource_class = ExamScribbleResource
 
-class ProblemScribbleResource(resources.ModelResource):
-	class Meta:
-		skip_unchanged = True
-		model = He.models.ProblemScribble
-		fields = ('id', 'verdict', 'examscribble', 'last_sent_time', 'prob_image')
 @admin.register(He.models.ProblemScribble)
 class ProblemScribbleAdmin(ImportExportModelAdmin):
 	list_display = ('id', 'verdict', 'examscribble', 'last_sent_time')
 	search_fields = ('verdict__entity__name',)
-	resource_class = ProblemScribbleResource
 
 class EvidenceResource(resources.ModelResource):
 	user_name = fields.Field(column_name = 'User Name',
@@ -197,39 +169,17 @@ class GutsScoreFuncAdmin(ImportExportModelAdmin):
 	search_fields = ('problem_number', 'description',)
 	resource_class = GutsScoreFuncResource
 
-class AlphaResource(resources.ModelResource):
-	class Meta:
-		skip_unchanged = True
-		model = He.models.EntityAlpha
-		fields = ('entity', 'cached_alpha', 'id')
 @admin.register(He.models.EntityAlpha)
 class AlphaAdmin(ImportExportModelAdmin):
 	list_display = ('entity', 'cached_alpha', 'id')
 	search_fields = ('entity__name',)
-	resource_class = AlphaResource
 
-class ScoreRowResource(resources.ModelResource):
-	class Meta:
-		skip_unchanged = True
-		model = He.models.ScoreRow
-		fields = ('entity', 'category', 'rank', 'total', 'scores')
 @admin.register(He.models.ScoreRow)
 class RowAdmin(ImportExportModelAdmin):
 	list_display = ('entity', 'category',  'rank', 'total', 'scores')
 	search_fields = ('category', 'entity__name',)
-	resource_class = ScoreRowResource
 
-class ThreadTaskResource(resources.ModelResource):
-	user_name = fields.Field(column_name = 'User Name',
-			attribute = 'user',
-			widget = widgets.ForeignKeyWidget(auth.models.User, 'name'))
-	class Meta:
-		skip_unchanged = True
-		model = He.models.ThreadTaskRecord
-		fields = ('id', 'name', 'user_name', 'status', 'time_created', 'last_updated', 'output',)
 @admin.register(He.models.ThreadTaskRecord)
 class ThreadTaskAdmin(ImportExportModelAdmin):
 	list_display = ('id', 'name', 'user', 'status', 'time_created', 'last_updated', 'output',)
 	search_fields = ('name', 'output',)
-	resource_class = ThreadTaskResource
-
