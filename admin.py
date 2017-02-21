@@ -147,7 +147,7 @@ class ProblemScribbleAdmin(ImportExportModelAdmin):
 class EvidenceResource(resources.ModelResource):
 	user_name = fields.Field(column_name = 'User Name',
 			attribute = 'user',
-			widget = widgets.ForeignKeyWidget(auth.models.User, 'name'))
+			widget = widgets.ForeignKeyWidget(auth.models.User, 'username'))
 	class Meta:
 		skip_unchanged = True
 		model = He.models.Evidence
