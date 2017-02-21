@@ -95,7 +95,7 @@ def beta_equation(beta, alphas, took, solved):
 	
 	for id in took:
 		alpha = alphas[id]
-		result += 1 / alpha * nu(alpha, beta) / (1 + nu(alpha, beta)) 
+		result += 1 / alpha * nu(alpha, beta) / (1 + nu(alpha, beta))
 
 	for id in solved:
 		alpha = alphas[id]

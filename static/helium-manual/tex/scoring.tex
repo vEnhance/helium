@@ -13,7 +13,7 @@ however, the algorithm will not use this assumption.
 \subsection{Output}
 Based on this, the algorithm outputs:
 \begin{itemize}
-	\ii An \textbf{strength} $\alpha_c \in \RR_{\ge 0}$ for each competitor $c$, and
+	\ii An \textbf{strength} $\alpha_c \in \mathbb R_{\ge 0}$ for each competitor $c$, and
 	\ii A \textbf{weight} $\beta_p \in [3,8]$ for each problem $p$,
 	which represents its difficulty.
 \end{itemize}
@@ -89,7 +89,7 @@ In light of this, we select the following parameters,
 which describe how the $\alpha_c$ and $\beta_p$ should be interpreted.
 \begin{itemize}
 	\ii The strength $\alpha = \alpha_c$ of each contestant
-	$c$ is \emph{a priori} distributed in $\RR_{\ge 0}$
+	$c$ is \emph{a priori} distributed in $\mathbb R_{\ge 0}$
 	according to
 	\begin{equation}
 		\mathbf P(\alpha) = \exp(-\alpha).
@@ -109,7 +109,7 @@ postulating that the probability that $c$ solves $p$ is
 	\mathbf P
 	\left( \text{$c$ solves $p$} 
 	\mid \alpha_c = \alpha \text{ and } \beta_p = \beta \right)
-	= \frac{\exp(-\beta/\alpha)}{1 + \exp(-\beta/\alpha)}.
+	= \frac{1}{1 + \exp(\beta/\alpha)}.
 	\label{eq:prob}
 \end{equation}
 Assuming \eqref{eq:cprior}, \eqref{eq:wprior}, \eqref{eq:prob}
@@ -127,8 +127,8 @@ The algorithm is a slightly modified version of the Rasch model.
 
 \subsection{Pseudocode}
 Let us for brevity denote the function in \eqref{eq:prob} by 
-\[ w(\alpha, \beta) \defeq \frac{\exp(-\beta/\alpha)}{1 + \exp(-\beta/\alpha)}. \]
-Note that $w(\alpha, \beta) \in (0,1)$,
+\[ w(\alpha, \beta) \defeq \frac{1}{1 + \exp(\beta/\alpha)}. \]
+Note that $w(\alpha, \beta) \in (0,1)$.
 
 Now consider the following systems of equations,
 whose origin we explain below.
