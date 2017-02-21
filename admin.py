@@ -9,10 +9,12 @@ This is fairly straightforward.
 It makes the Django admin interface usable, and is amazing.
 """
 
-from django.contrib import admin
+from django.contrib import admin, auth
 import helium as He
+from import_export import resources, widgets, fields
+from import_export.admin import ImportExportModelAdmin
 
-# Inline classes, so you can e.g. edit weight
+## INLINE CLASSES, so you can e.g. edit weight
 class EntityInline(admin.TabularInline):
 	model = He.models.Entity
 	# only used to display indivs, so hide shortname, is_team
@@ -30,6 +32,7 @@ class ExamScribbleInline(admin.TabularInline):
 	model = He.models.ExamScribble
 	fields = ('entity', 'needs_attention',)
 
+## FILTERS
 class TeamFilter(admin.SimpleListFilter):
 	title = "Individual vs Team"
 	parameter_name = 'type'
@@ -42,7 +45,6 @@ class TeamFilter(admin.SimpleListFilter):
 			return queryset.filter(is_team=False)
 		elif self.value() == "team":
 			return queryset.filter(is_team=True)
-
 class BadEntityFilter(admin.SimpleListFilter):
 	title = "Entities Causing Havoc"
 	parameter_name = 'missing'
@@ -54,25 +56,47 @@ class BadEntityFilter(admin.SimpleListFilter):
 		elif self.value() == "no_verdict":
 			return queryset.filter(verdict__isnull=True)
 
+class EntityResource(resources.ModelResource):
+	class Meta:
+		skip_unchanged = True
+		model = He.models.Entity
+		fields = ('name', 'shortname', 'id', 'team', 'number', 'is_team')
 @admin.register(He.models.Entity)
-class EntityAdmin(admin.ModelAdmin):
+class EntityAdmin(ImportExportModelAdmin):
 	list_display = ('name', 'shortname', 'id', 'team', 'number', 'is_team', 'size')
 	inlines = (EntityInline,)
 	search_fields = ('name', 'shortname',)
 	list_filter = (TeamFilter, BadEntityFilter,)
+	resource_class = EntityResource
 
+class ExamResource(resources.ModelResource):
+	class Meta:
+		skip_unchanged = True
+		model = He.models.Exam
+		fields = ('name', 'id', 'color', 'is_indiv', 'is_alg_scoring',
+				'is_scanned', 'min_grades', 'min_override')
 @admin.register(He.models.Exam)
-class ExamAdmin(admin.ModelAdmin):
+class ExamAdmin(ImportExportModelAdmin):
 	list_display = ('name', 'id',  'color', 'is_indiv', 'is_ready', 'is_alg_scoring', 'is_scanned', 'can_upload_scan', 'min_grades', 'min_override')
 	inlines = (ProblemInline,)
 	search_fields = ('name',)
 	list_filter = ('is_indiv', 'is_ready', 'is_alg_scoring', 'is_scanned',)
+	resource_class = ExamResource
 
+class ProblemResource(resources.ModelResource):
+	exam_name = fields.Field(column_name = 'Exam Name',
+			attribute = 'exam',
+			widget = widgets.ForeignKeyWidget(He.models.Exam, 'name'))
+	class Meta:
+		skip_unchanged = True
+		model = He.models.Problem
+		fields = ('id', 'exam_name', 'problem_number', 'answer', 'weight', 'allow_partial')
 @admin.register(He.models.Problem)
-class ProblemAdmin(admin.ModelAdmin):
+class ProblemAdmin(ImportExportModelAdmin):
 	list_display = ('id', 'exam', 'problem_number', 'answer', 'weight', 'allow_partial')
 	search_fields = ('exam', 'problem_number',)
 	list_filter = ('exam__name',)
+	resource_class = ProblemResource
 
 
 class VerdictNoEntityFilter(admin.SimpleListFilter):
@@ -88,54 +112,124 @@ class VerdictNoEntityFilter(admin.SimpleListFilter):
 		elif self.value() == "inaccessible":
 			return queryset.filter(entity__isnull=True, problemscribble__isnull=True)
 
+class VerdictResource(resources.ModelResource):
+	class Meta:
+		skip_unchanged = True
+		model = He.models.Verdict
+		fields = ('id', 'problem', 'entity', 'score', 'evidence_count', 'is_valid', 'is_done')
 @admin.register(He.models.Verdict)
-class VerdictAdmin(admin.ModelAdmin):
+class VerdictAdmin(ImportExportModelAdmin):
 	list_display = ('id', 'problem', 'entity', 'score', 'evidence_count', 'is_valid', 'is_done')
 	inlines = (EvidenceInline, ProblemScribbleInline,)
 	search_fields = ('problem__exam__name', 'entity__name',)
 	list_filter = (VerdictNoEntityFilter, 'problem', 'problem__exam')
+	resource_class = VerdictResource
 
+class EntirePDFResource(resources.ModelResource):
+	exam_name = fields.Field(column_name = 'Exam Name',
+			attribute = 'exam',
+			widget = widgets.ForeignKeyWidget(He.models.Exam, 'name'))
+	class Meta:
+		skip_unchanged = True
+		model = He.models.EntirePDFScribble
+		fields = ('name', 'id', 'is_done', 'exam_name', 'page_count')
 @admin.register(He.models.EntirePDFScribble)
-class EntirePDFAdmin(admin.ModelAdmin):
+class EntirePDFAdmin(ImportExportModelAdmin):
 	list_display = ('name', 'id', 'is_done', 'exam', 'page_count')
 	inlines = (ExamScribbleInline,)
 	list_filter = ('is_done', 'exam',)
 	search_fields = ('name',)
+	resoure_class = EntirePDFResource
 
+class ExamScribbleResource(resources.ModelResource):
+	exam_name = fields.Field(column_name = 'Exam Name',
+			attribute = 'exam',
+			widget = widgets.ForeignKeyWidget(He.models.Exam, 'name'))
+	pdf_scribble_name = fields.Field(column_name = 'PDF Scribble Name',
+			attribute = 'pdf_scribble',
+			widget = widgets.ForeignKeyWidget(He.models.EntirePDFScribble, 'name'))
+	class Meta:
+		skip_unchanged = True
+		model = He.models.ExamScribble
+		fields = ('id', 'exam_name', 'entity', 'pdf_scribble_name', 'needs_attention',
+				'full_image', 'name_image')
 @admin.register(He.models.ExamScribble)
-class ExamScribbleAdmin(admin.ModelAdmin):
+class ExamScribbleAdmin(ImportExportModelAdmin):
 	list_display = ('id', 'exam', 'entity', 'pdf_scribble', 'needs_attention')
 	inlines = (ProblemScribbleInline,)
 	search_fields = ('entity__name',)
 	list_filter = ('exam__name',)
+	resource_class = ExamScribbleResource
 
+class ProblemScribbleResource(resources.ModelResource):
+	class Meta:
+		skip_unchanged = True
+		model = He.models.ProblemScribble
+		fields = ('id', 'verdict', 'examscribble', 'last_sent_time', 'prob_image')
 @admin.register(He.models.ProblemScribble)
-class ProblemScribbleAdmin(admin.ModelAdmin):
+class ProblemScribbleAdmin(ImportExportModelAdmin):
 	list_display = ('id', 'verdict', 'examscribble', 'last_sent_time')
 	search_fields = ('verdict__entity__name',)
+	resource_class = ProblemScribbleResource
 
+class EvidenceResource(resources.ModelResource):
+	user_name = fields.Field(column_name = 'User Name',
+			attribute = 'user',
+			widget = widgets.ForeignKeyWidget(auth.models.User, 'name'))
+	class Meta:
+		skip_unchanged = True
+		model = He.models.Evidence
+		fields = ('id', 'verdict', 'user_name', 'score', 'god_mode')
 @admin.register(He.models.Evidence)
-class EvidenceAdmin(admin.ModelAdmin):
+class EvidenceAdmin(ImportExportModelAdmin):
 	list_display = ('id', 'verdict', 'user', 'score', 'god_mode')
 	search_fields = ('verdict__entity__name',)
+	resource_class = EvidenceResource
 
+class GutsScoreFuncResource(resources.ModelResource):
+	class Meta:
+		skip_unchanged = True
+		model = He.models.GutsScoreFunc
+		fields = ('problem_number', 'description', 'answer', 'problem_help_text', 'scoring_function')
 @admin.register(He.models.GutsScoreFunc)
-class GutsScoreFuncAdmin(admin.ModelAdmin):
+class GutsScoreFuncAdmin(ImportExportModelAdmin):
 	list_display = ('problem_number', 'description', 'answer', 'problem_help_text')
 	search_fields = ('problem_number', 'description',)
+	resource_class = GutsScoreFuncResource
 
+class AlphaResource(resources.ModelResource):
+	class Meta:
+		skip_unchanged = True
+		model = He.models.EntityAlpha
+		fields = ('entity', 'cached_alpha', 'id')
 @admin.register(He.models.EntityAlpha)
-class AlphaAdmin(admin.ModelAdmin):
+class AlphaAdmin(ImportExportModelAdmin):
 	list_display = ('entity', 'cached_alpha', 'id')
 	search_fields = ('entity__name',)
+	resource_class = AlphaResource
 
+class ScoreRowResource(resources.ModelResource):
+	class Meta:
+		skip_unchanged = True
+		model = He.models.ScoreRow
+		fields = ('entity', 'category', 'rank', 'total', 'scores')
 @admin.register(He.models.ScoreRow)
-class RowAdmin(admin.ModelAdmin):
+class RowAdmin(ImportExportModelAdmin):
 	list_display = ('entity', 'category',  'rank', 'total', 'scores')
 	search_fields = ('category', 'entity__name',)
+	resource_class = ScoreRowResource
 
+class ThreadTaskResource(resources.ModelResource):
+	user_name = fields.Field(column_name = 'User Name',
+			attribute = 'user',
+			widget = widgets.ForeignKeyWidget(auth.models.User, 'name'))
+	class Meta:
+		skip_unchanged = True
+		model = He.models.ThreadTaskRecord
+		fields = ('id', 'name', 'user_name', 'status', 'time_created', 'last_updated', 'output',)
 @admin.register(He.models.ThreadTaskRecord)
-class ThreadTaskAdmin(admin.ModelAdmin):
+class ThreadTaskAdmin(ImportExportModelAdmin):
 	list_display = ('id', 'name', 'user', 'status', 'time_created', 'last_updated', 'output',)
 	search_fields = ('name', 'output',)
+	resource_class = ThreadTaskResource
 
