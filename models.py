@@ -85,6 +85,7 @@ class Entity(models.Model):
 			help_text = "You can assign (unique) numbers here "
 			"if you can't assume names are pairwise distinct."
 			"This isn't used internally by Helium itself.")
+	# This shouldn't be marked unique=True since unique_together later on with team
 
 	def clean(self):
 		if self.team is not None and self.is_team:
