@@ -13,8 +13,9 @@ class Command(BaseCommand):
 		if raw_input("   Type `y` to continue: ").strip() != 'y':
 			return
 
+		if raw_input("   Type `y` to also clear entities: ").strip() == 'y':
+			He.models.Entity.objects.all().delete()
 		# Cascading will delete all other relevant objects
 		He.models.Exam.objects.all().delete()
-		He.models.Entity.objects.all().delete()
 		He.models.ThreadTaskRecord.objects.all().delete()
 		He.models.GutsScoreFunc.objects.all().delete()
