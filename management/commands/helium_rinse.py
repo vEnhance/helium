@@ -16,5 +16,5 @@ class Command(BaseCommand):
 		# Cascading will delete all other relevant objects
 		He.models.Exam.objects.all().delete()
 		He.models.Entity.objects.all().delete()
-		He.models.ThreadTaskRecord.objects.all().delete()
+		# He.models.ThreadTaskRecord.objects.all().delete()
 		He.models.GutsScoreFunc.objects.all().delete()
