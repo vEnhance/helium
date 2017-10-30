@@ -14,7 +14,7 @@ class Command(BaseCommand):
 
 		# Cascading will delete all other relevant objects
 		He.models.Verdict.objects.filter(problem__exam__is_scanned=True)\
-				.update(entity=None, score=None, is_valid=False, is_done=False)
+				.update(entity=None, score=None, is_valid=True, is_done=False)
 		He.models.Verdict.objects.filter(problem__exam__is_scanned=False).delete()
 		He.models.ExamScribble.objects.update(entity=None, last_sent_time=None)
 		He.models.Evidence.objects.all().delete()
