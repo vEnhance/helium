@@ -17,6 +17,17 @@ Then, one should SSH into the instance and run the following command.
 \end{center}
 which will clear all Helium-related data.
 
+There is also a command
+\begin{center}
+	\texttt{python manage.py helium\_dry}
+\end{center}
+which will clear all grading information entered by graders
+and name assignments, but not delete scans or entities.
+I added this command before November 2017 because
+I wanted to be able to use February 2017 data
+to re-simulate the grading experience.
+You don't have to use this, though.
+
 \subsection{Import exams from Babbage}
 You need to populate the Helium tables with exams.
 
