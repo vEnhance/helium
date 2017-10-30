@@ -10,7 +10,7 @@ class Command(BaseCommand):
 		print "Before this, it's recommended you save a copy of the data by running"
 		print "python manage.py dumpdata helium --indent 1"
 
-		if raw_input("   Type `y` to continue: ").strip() != 'y':
+		if raw_input("   Type `rinse` to continue: ").strip() != 'rinse':
 			return
 
 		# Cascading will delete all other relevant objects
