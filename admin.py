@@ -28,6 +28,7 @@ class EvidenceInline(admin.TabularInline):
 class ProblemScribbleInline(admin.TabularInline):
 	model = He.models.ProblemScribble
 	fields = ('verdict', 'prob_image', 'last_sent_time')
+	raw_id_fields = ('verdict',)
 class ExamScribbleInline(admin.TabularInline):
 	model = He.models.ExamScribble
 	fields = ('entity', 'needs_attention',)
@@ -143,6 +144,7 @@ class ExamScribbleAdmin(ImportExportModelAdmin):
 class ProblemScribbleAdmin(ImportExportModelAdmin):
 	list_display = ('id', 'verdict', 'examscribble', 'last_sent_time')
 	search_fields = ('verdict__entity__name',)
+	raw_id_fields = ('verdict', 'examscribble',)
 
 class EvidenceResource(resources.ModelResource):
 	user_name = fields.Field(column_name = 'User Name',
@@ -157,6 +159,7 @@ class EvidenceAdmin(ImportExportModelAdmin):
 	list_display = ('id', 'verdict', 'user', 'score', 'god_mode')
 	search_fields = ('verdict__entity__name',)
 	resource_class = EvidenceResource
+	raw_id_fields = ('verdict',)
 
 class GutsScoreFuncResource(resources.ModelResource):
 	class Meta:
