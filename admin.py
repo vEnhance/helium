@@ -25,6 +25,7 @@ class ProblemInline(admin.TabularInline):
 class EvidenceInline(admin.TabularInline):
 	model = He.models.Evidence
 	fields = ('verdict', 'user', 'score', 'god_mode')
+	raw_id_fields = ('user',)
 class ProblemScribbleInline(admin.TabularInline):
 	model = He.models.ProblemScribble
 	fields = ('verdict', 'prob_image', 'last_sent_time')
@@ -32,6 +33,7 @@ class ProblemScribbleInline(admin.TabularInline):
 class ExamScribbleInline(admin.TabularInline):
 	model = He.models.ExamScribble
 	fields = ('entity', 'needs_attention',)
+	raw_id_fields = ('entity',)
 
 ## FILTERS
 class TeamFilter(admin.SimpleListFilter):
@@ -125,6 +127,7 @@ class VerdictAdmin(ImportExportModelAdmin):
 	search_fields = ('problem__exam__name', 'entity__name',)
 	list_filter = (VerdictNoEntityFilter, 'problem', 'problem__exam')
 	resource_class = VerdictResource
+	raw_id_fields = ('entity',)
 
 @admin.register(He.models.EntirePDFScribble)
 class EntirePDFAdmin(ImportExportModelAdmin):
@@ -139,6 +142,7 @@ class ExamScribbleAdmin(ImportExportModelAdmin):
 	inlines = (ProblemScribbleInline,)
 	search_fields = ('entity__name',)
 	list_filter = ('exam__name',)
+	raw_id_fields = ('entity',)
 
 @admin.register(He.models.ProblemScribble)
 class ProblemScribbleAdmin(ImportExportModelAdmin):
@@ -159,7 +163,7 @@ class EvidenceAdmin(ImportExportModelAdmin):
 	list_display = ('id', 'verdict', 'user', 'score', 'god_mode')
 	search_fields = ('verdict__entity__name',)
 	resource_class = EvidenceResource
-	raw_id_fields = ('verdict',)
+	raw_id_fields = ('verdict', 'user',)
 
 class GutsScoreFuncResource(resources.ModelResource):
 	class Meta:
@@ -176,13 +180,16 @@ class GutsScoreFuncAdmin(ImportExportModelAdmin):
 class AlphaAdmin(ImportExportModelAdmin):
 	list_display = ('entity', 'cached_alpha', 'id')
 	search_fields = ('entity__name',)
+	raw_id_fields = ('entity',)
 
 @admin.register(He.models.ScoreRow)
 class RowAdmin(ImportExportModelAdmin):
 	list_display = ('entity', 'category',  'rank', 'total', 'scores')
 	search_fields = ('category', 'entity__name',)
+	raw_id_fields = ('entity',)
 
 @admin.register(He.models.ThreadTaskRecord)
 class ThreadTaskAdmin(ImportExportModelAdmin):
 	list_display = ('id', 'name', 'user', 'status', 'time_created', 'last_updated', 'output',)
 	search_fields = ('name', 'output',)
+	raw_id_fields = ('user',)
