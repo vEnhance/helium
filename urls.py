@@ -53,3 +53,5 @@ urlpatterns = [
 	url(r'^management/([a-zA-Z]+)/$', views.run_management),
 	url(r'^$', views.index),
 ]
+# TODO: should really use URL patterns here, sorry
+# didn't know they existed back when I wrote this thing
