@@ -13,12 +13,36 @@ in the latter case, sheetapi.py has a function which makse them into spreadsheet
 import itertools
 import collections
 import time
+import re
 
 import helium as He
 
 def get_heading(s):
 	"""Creates a heading from a string s"""
 	return s.upper() + "\n" + "=" * 60 + "\n"
+
+def tex_escape(text):
+	"""
+		:param text: a plain text message
+		:return: the message escaped to appear correctly in LaTeX
+		https://stackoverflow.com/a/25875504/4826845
+	"""
+	conv = {
+		'&': r'\&',
+		'%': r'\%',
+		'$': r'\$',
+		'#': r'\#',
+		'_': r'\_',
+		'{': r'\{',
+		'}': r'\}',
+		'~': r'\textasciitilde{}',
+		'^': r'\^{}',
+		'\\': r'\textbackslash{}',
+		'<': r'\textless ',
+		'>': r'\textgreater ',
+	}
+	regex = re.compile('|'.join(re.escape(unicode(key)) for key in sorted(conv.keys(), key = lambda item: - len(item))))
+	return regex.sub(lambda match: conv[match.group()], text)
 
 
 def get_score_rows(queryset = None):
@@ -108,7 +132,7 @@ class ResultPrinter:
 			output += r"\scoreframe{" + title + "}{%" + "\n"
 			# First get names of students/teams
 			for row in group:
-				output += " " * 2 + r"\item[" + nth(row.rank) + "] " + row.name + "\n"
+				output += " " * 2 + r"\item[" + nth(row.rank) + "] " + tex_escape(row.name) + "\n"
 			output += "}{"
 			score = row.total # grab last score WLOG
 			output += str(int(score)) if score.is_integer() else "%.3f" %score
@@ -116,7 +140,7 @@ class ResultPrinter:
 		output += r"\begin{frame}{" + heading + "}" + "\n"
 		output += r"\begin{enumerate}" + "\n"
 		for row in reversed(desc_rows):
-			output += " "*4 + r"\item[" + nth(row.rank) + "] " + row.name + "\n"
+			output += " "*4 + r"\item[" + nth(row.rank) + "] " + tex_escape(row.name) + "\n"
 		output += r"\end{enumerate}" + "\n"
 		output += r"\end{frame}" + "\n"
 		output += r"% End awards for " + heading
