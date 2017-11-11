@@ -136,7 +136,8 @@ class VerdictAdmin(ImportExportModelAdmin):
 	list_display = ('id', 'problem', 'entity', 'score', 'evidence_count', 'is_valid', 'is_done')
 	inlines = (EvidenceInline, ProblemScribbleInline,)
 	search_fields = ('problem__exam__name', 'entity__name',)
-	list_filter = (VerdictNoEntityFilter, AmusementFilter, 'problem__exam', 'problem',)
+	list_filter = (VerdictNoEntityFilter, AmusementFilter, 'is_valid', 'is_done',
+			'problem__exam', 'problem',)
 	resource_class = VerdictResource
 	raw_id_fields = ('entity',)
 
