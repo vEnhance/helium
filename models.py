@@ -470,7 +470,7 @@ class Evidence(models.Model):
 	def clean(self):
 		if not self.verdict.problem.allow_partial and not self.score in (0,1):
 			raise ValidationError("All-or-nothing problem with non-binary score")
-		if not user.is_superuser and self.god_mode is True:
+		if not self.user.is_superuser and self.god_mode is True:
 			raise ValidationError("Only super-users may submit in GOD MODE")
 
 	class Meta:
