@@ -10,6 +10,7 @@ It makes the Django admin interface usable, and is amazing.
 """
 
 from django.contrib import admin, auth
+from django.db.models import Count
 import helium as He
 from import_export import resources, widgets, fields
 from import_export.admin import ImportExportModelAdmin
@@ -114,6 +115,16 @@ class VerdictNoEntityFilter(admin.SimpleListFilter):
 			return queryset.filter(entity__isnull=True, problemscribble__isnull=False)
 		elif self.value() == "inaccessible":
 			return queryset.filter(entity__isnull=True, problemscribble__isnull=True)
+class AmusementFilter(admin.SimpleListFilter):
+	title = "Amusing Verdicts"
+	parameter_name = 'controversial'
+	def lookups(self, request, model_admin):
+		return (("high", "Controversial"),)
+	def queryset(self, request, queryset):
+		if self.value() is None:
+			return queryset
+		else:
+			return queryset.annotate(n=Count('evidence')).filter(n__gt=5)
 
 class VerdictResource(resources.ModelResource):
 	class Meta:
@@ -125,14 +136,14 @@ class VerdictAdmin(ImportExportModelAdmin):
 	list_display = ('id', 'problem', 'entity', 'score', 'evidence_count', 'is_valid', 'is_done')
 	inlines = (EvidenceInline, ProblemScribbleInline,)
 	search_fields = ('problem__exam__name', 'entity__name',)
-	list_filter = (VerdictNoEntityFilter, 'problem', 'problem__exam')
+	list_filter = (VerdictNoEntityFilter, AmusementFilter, 'problem__exam', 'problem',)
 	resource_class = VerdictResource
 	raw_id_fields = ('entity',)
 
 	actions = ('reset_verdict',)
 	def reset_verdict(self, request, queryset):
 		He.models.Evidence.objects.filter(verdict__in=queryset).delete()
-		queryset.update(is_valid=True, is_done=False)
+		queryset.update(score=None, is_valid=True, is_done=False)
 
 @admin.register(He.models.EntirePDFScribble)
 class EntirePDFAdmin(ImportExportModelAdmin):
