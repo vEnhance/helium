@@ -129,6 +129,11 @@ class VerdictAdmin(ImportExportModelAdmin):
 	resource_class = VerdictResource
 	raw_id_fields = ('entity',)
 
+	actions = ('reset_verdict',)
+	def reset_verdict(self, request, queryset):
+		He.models.Evidence.objects.filter(verdict__in=queryset).delete()
+		queryset.update(is_valid=True, is_done=False)
+
 @admin.register(He.models.EntirePDFScribble)
 class EntirePDFAdmin(ImportExportModelAdmin):
 	list_display = ('name', 'id', 'is_done', 'exam', 'page_count')
