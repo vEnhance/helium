@@ -230,8 +230,9 @@ We'll talk more about these commands in the next chapter.
 \section{Other Administration}
 The Django admin interface can be used if there
 is some operation you need to do not supported by the existing views.
+
 \subsection{Someone uploaded PDF to wrong exam!}
-Well, that's a bummer. 
+Well, that's a bummer.
 Delete the relevant PDF file from the Django admin interface.
 This will kill off the exam scribbles and problem scribbles too.
 
@@ -241,3 +242,17 @@ That should mostly save things. No promises though.
 
 \subsection{A page is rotated!}
 See Section \ref{sec:trouble_scan}.
+
+\subsection{A problem had the wrong answer!}
+Well, guess you need to re-grade said problem.
+
+If you open the ``Verdicts'' admin,
+under the ``Action'' menu near tho top,
+there is a command called ``reset verdict''.
+If you select a bunch of verdicts and use this command,
+all the evidence's associated to that verdict will be erased.
+
+In particular, if you have an entire problem that needs to be regraded,
+then you should use the panel on the right to filter
+only the verdicts for that particular problem,
+and then use this command in order to reset them all.
