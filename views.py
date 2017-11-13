@@ -377,7 +377,7 @@ def ajax_next_scan(request):
 	scribbles = scribbles.filter(examscribble__needs_attention='')
 	# Cool-down and position
 	scribbles = scribbles.exclude(verdict__evidence__user = request.user)\
-			.filter(id__gt = pos).exclude(last_sent_time__gte = time.time() - 4)
+			.filter(id__gt = pos).exclude(last_sent_time__gte = time.time() - 1) # cooldown
 
 	ret = []
 	for ps in scribbles[0:n]:
