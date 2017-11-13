@@ -373,8 +373,8 @@ def ajax_next_scan(request):
 
 	scribbles = He.models.ProblemScribble.objects.filter(
 			verdict__problem=problem, verdict__is_done=False)
-	# Prevent giving out scribbles that need attention
-	scribbles = scribbles.filter(examscribble__needs_attention='')
+	# # Prevent giving out scribbles that need attention
+	# scribbles = scribbles.filter(examscribble__needs_attention='')
 	# Cool-down and position
 	scribbles = scribbles.exclude(verdict__evidence__user = request.user)\
 			.filter(id__gt = pos).exclude(last_sent_time__gte = time.time() - 1) # cooldown
