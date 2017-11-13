@@ -163,7 +163,7 @@ class Exam(models.Model):
 			help_text = "Whether the scan grader will show this problem or not. "
 			"For example, this should almost certainly be False for Guts round.")
 
-	min_grades = models.IntegerField(default=3,
+	min_grades = models.IntegerField(default=4,
 			help_text="This is the minimum number of graders required before "
 			" a problem is marked as `done grading` by the system.")
 	min_override = models.IntegerField(default=5,
