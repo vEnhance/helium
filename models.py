@@ -166,9 +166,9 @@ class Exam(models.Model):
 	min_grades = models.IntegerField(default=3,
 			help_text="This is the minimum number of graders required before "
 			" a problem is marked as `done grading` by the system.")
-	min_override = models.IntegerField(default=3,
+	min_override = models.IntegerField(default=5,
 			help_text="Number of graders required to override a grading conflict. "
-			"For example, the default setting is that a 3:1 majority is sufficient "
+			"For example, the default setting is that a 5:1 majority is sufficient "
 			"to override a conflicting grade.")
 
 	def __unicode__(self): return self.name

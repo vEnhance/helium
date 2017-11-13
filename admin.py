@@ -124,7 +124,7 @@ class AmusementFilter(admin.SimpleListFilter):
 		if self.value() is None:
 			return queryset
 		else:
-			return queryset.annotate(n=Count('evidence')).filter(n__gt=5)
+			return queryset.annotate(n=Count('evidence')).filter(n__gt=7)
 
 class VerdictResource(resources.ModelResource):
 	class Meta:
