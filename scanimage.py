@@ -31,9 +31,9 @@ This will generate the cut-outs of the first page of that PDF file.
 By design, this module is agnostic to remaining components of helium.
 """
 
-from wand.image import Image
-import wand.api
-import wand.image
+# from wand.image import Image
+# import wand.api
+# import wand.image
 import ctypes
 # This also requires: imagemagick, ghostscript, freetype
 
@@ -44,13 +44,14 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 # This is some hocus pocus to let us to use arbitrary imagemagick
 # It was orignally used for threshold but later that part disappeared
 # so now it's just sitting here doing not much
-MagickEvaluateImage = wand.api.library.MagickEvaluateImage
-MagickEvaluateImage.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_double]
+# MagickEvaluateImage = wand.api.library.MagickEvaluateImage
+# MagickEvaluateImage.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_double]
 def evaluate(self, operation, argument):
-	MagickEvaluateImage(
-		self.wand,
-		wand.image.EVALUATE_OPS.index(operation),
-		  self.quantum_range * float(argument))
+	pass
+#	MagickEvaluateImage(
+#		self.wand,
+#		wand.image.EVALUATE_OPS.index(operation),
+#		self.quantum_range * float(argument))
 
 
 # These are in (x1, x2, y1, y2) format
