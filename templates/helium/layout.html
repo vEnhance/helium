@@ -13,9 +13,9 @@ body { background-color: {{ exam.color }}; }
 {% block content %}
   {% block layout-header %}
   <section id="banner">
-    <a href="/helium"><img src="{% static 'img/balloons.png' %}"/></a>
+	  <a href="{% url 'index' %}"><img src="{% static 'img/balloons.png' %}"/></a>
   </section>
-  <p><a href="/helium">&lt; Back to Helium home</a></p>
+  <p><a href="{% url 'index' %}">&lt; Back to Helium home</a></p>
   {% endblock %}
   <section id="body-form">
   {% if messages %}
@@ -34,7 +34,7 @@ body { background-color: {{ exam.color }}; }
 
   {% block layout-footer %}
   <section id="footer">
-  <p><a href="/helium">&lt; Back to Helium home</a></p>
+  <p><a href="{% url 'index' %}">&lt; Back to Helium home</a></p>
   <p>Helium &copy; 2017 Evan Chen</p>
   </section>
   {% endblock %}

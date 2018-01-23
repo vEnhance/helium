@@ -24,7 +24,7 @@
 	Alternatively, use "Match Scans" if you want to match children to names.
 	Avoid "Upload Scans" unless instructed to do so.</i></p>
 
-<form action="/helium/grade-scans/redir/" method="post">
+<form action="{% url 'grade_scans_redir' %}" method="post">
 	<div class="clearfix">
 		<div class="col-xs-8">
 		{% csrf_token %}
@@ -36,7 +36,7 @@
 	</div>
 </form>
 
-<form action="/helium/fast-match/redir/" method="post">
+<form action="{% url 'fast_match_redir' %}" method="post">
 	<div class="clearfix">
 		<div class="col-xs-8">
 		{% csrf_token %}
@@ -49,13 +49,13 @@
 </form>
 
 <ul>
-	<li><a href="/helium/upload-scans">Upload Scans</a></li>
+	<li><a href="{% url 'upload_scans' %}">Upload Scans</a></li>
 </ul>
 
 <h4>Grade by Physical Papers</h4>
 <p><i>Do not use these tools for exams graded by scans!</i></p>
 
-<form action="/helium/old-grader/exam/redir/" method="post">
+<form action="{% url 'old_grader_exam_redir' %}" method="post">
 	<div class="clearfix">
 		<div class="col-xs-8">
 		{% csrf_token %}
@@ -66,7 +66,7 @@
 		</div>
 	</div>
 </form>
-<form action="/helium/old-grader/problem/redir/" method="post">
+<form action="{% url 'old_grader_problem_redir' %}" method="post">
 	<div class="clearfix">
 		<div class="col-xs-8">
 		{% csrf_token %}
@@ -79,16 +79,16 @@
 </form>
 
 <ul>
-	<li><a href="/helium/estimation-calc">Guts Estimation Calculator</a></li>
+	<li><a href="{% url 'estimation_calc' %}">Guts Estimation Calculator</a></li>
 </ul>
 
 <h4>View</h4>
 <div class="clearfix">
 	<div class="col-xs-6">
 		<ul>
-		<li><a href="/helium/find-paper">Find Paper (and Issues)</a></li>
-		<li><a href="/helium/view-conflicts/own/">View Your Conflicts</a></li>
-		<li><a href="/helium/view-conflicts/all/">View All Conflicts</a> (admin)</li>
+		<li><a href="{% url 'find_paper' %}">Find Paper (and Issues)</a></li>
+		<li><a href="{% url 'view_conflicts_own' %}">View Your Conflicts</a></li>
+		<li><a href="{% url 'view_conflicts_all' %}">View All Conflicts</a> (admin)</li>
 		<li><a href="{% static 'answers/february-answersheet.pdf' %}">HMMT Feb Answer Sheets (PDF)</a></li>
 		<li><a href="{% static 'answers/november-answersheet.pdf' %}">HMMT Nov Answer Sheets (PDF)</a></li>
 		<li><a href="{% static 'answers/internal-answersheet.pdf' %}">Example Answer Sheets (PDF)</a></li>
@@ -100,15 +100,14 @@
 	</div>
 	<div class="col-xs-6">
 		<ul>
-		<li><a href="/helium/progress-problems/">Progress Grading</a></li>
-		<li><a href="/helium/progress-scans/">Progress Matching Scans</a></li>
-		<li><a href="/helium/reports/short/">Print Short Results</a></li>
-		<li><a href="/helium/reports/extended/">Print Extended Results</a></li>
-		<li><a href="/helium/reports/awards/">Get Awards Beamer</a></li>
-		{# <li><a href="/helium/reports/teaser/">Print Teaser</a></li> #}
+		<li><a href="{% url 'progress_problems' %}">Progress Grading</a></li>
+		<li><a href="{% url 'progress_scans' %}">Progress Matching Scans</a></li>
+		<li><a href="{% url 'results_short' %}">Print Short Results</a></li>
+		<li><a href="{% url 'results_extended' %}">Print Extended Results</a></li>
+		<li><a href="{% url 'reports_awards' %}">Get Awards Beamer</a></li>
 		{% if request.user.is_superuser %}
-			<li><a href="/helium/reports/full/">Print Full Results</a> (admin)</li>
-			<li><a href="/helium/reports/spreadsheet/">Score Spreadsheet</a> (admin)</li>
+			<li><a href="{% url 'reports_full' %}">Print Full Results</a> (admin)</li>
+			<li><a href="{% url 'reports_spreadsheet' %}">Score Spreadsheet</a> (admin)</li>
 		{% endif %}
 		</ul>
 	</div>
@@ -117,11 +116,11 @@
 {% if request.user.is_superuser %}
 <h4>Management Commands</h4>
 <ul>
-	<li><a href="/helium/management/algscore/">Run Algorithmic Scoring</a></li>
-	<li><a href="/helium/management/grade/">Run Grading</a></li>
-	<li><a href="/helium/management/cleanverdicts/">Clean Verdicts</a></li>
-	<li><a href="/helium/management/updatescribbles/">Update Scribbles</a></li>
-	<li><a href="/helium/management/releaseattention/">Release Scribbles from Attention Queue</a></li>
+	<li><a href="{% url 'manage' 'algscore' %}">Run Algorithmic Scoring</a></li>
+	<li><a href="{% url 'manage' 'grade' %}">Run Grading</a></li>
+	<li><a href="{% url 'manage' 'cleanverdicts' %}">Clean Verdicts</a></li>
+	<li><a href="{% url 'manage' 'updatescribbles' %}">Update Scribbles</a></li>
+	<li><a href="{% url 'manage' 'releaseattention' %}">Release Scribbles from Attention Queue</a></li>
 </ul>
 {% endif %}
 {% endblock %}

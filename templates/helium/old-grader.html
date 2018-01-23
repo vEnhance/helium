@@ -18,7 +18,7 @@ but if you leave certain fields blank they will not be processed.</p>
 If you are confident your own entered entry is correct,
 you should use the "override" button below.</p>
 
-<p>Use <a target="_new" href="/helium/estimation-calc">this widget</a>
+<p>Use <a target="_new" href="{% url 'estimation_calc' %}">this widget</a>
 for grading Guts estimation questions.</p>
 
 {% include "helium/form.html" with form=form submit_name="Enter Scores" %}

@@ -10,7 +10,7 @@
 
 <h4>Original Scan</h4>
 This paper is from the scan
-<a href="/helium/view-pdf/{{ examscribble.pdf_scribble.id }}">{{ examscribble.pdf_scribble.name }}</a>.
+<a href="{% url 'view_pdf' examscribble.pdf_scribble.id %}">{{ examscribble.pdf_scribble.name }}</a>.
 <a name="scan"></a>
 {% include "helium/scanstage.html" with examscribble=examscribble image_url=examscribble.full_image.url is_full=True %}
 {% endif %}
