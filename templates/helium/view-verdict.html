@@ -1,4 +1,4 @@
-{% extends 'layout-helium.html' %}
+{% extends 'helium/layout.html' %}
 {% load static %}
 
 {% block pagetitle %}{{ verdict.problem }} for {{ verdict.entity }}{% endblock %}
@@ -6,19 +6,19 @@
 {% block layout-content %}
 
 {% if verdict.problemscribble %}
-{% include "_scanstage.html" with image_url=verdict.problemscribble.prob_image.url examscribble=verdict.problemscribble.examscribble %}
+{% include "helium/scanstage.html" with image_url=verdict.problemscribble.prob_image.url examscribble=verdict.problemscribble.examscribble %}
 {% endif %}
 
 {% if verdict.entity %}
 <h4>Submit Evidence</h4>
-{% include "_form.html" with form=form submit_name="Submit Evidence" %}
+{% include "helium/form.html" with form=form submit_name="Submit Evidence" %}
 {% else %}
 <p>This scan needs to be matched to a student before you can
 change the score from here.</p>
 {% endif %}
 
 <h4>Existing Evidences</h4>
-{% include "_table.html" %}
+{% include "helium/table.html" %}
 
 <h4>Final Judgment</h4>
 <ul>
