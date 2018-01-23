@@ -101,7 +101,7 @@ def index(request):
 			'problemform' : forms.ProblemNoScanSelectForm(),
 			'examform' : forms.ExamNoScanSelectForm(),
 			}
-	return render(request, "helium.html", context)
+	return render(request, "helium/index.html", context)
 
 ## VIEWS FOR CLASSICAL GRADER
 def _old_grader(request, exam, problems):
@@ -134,7 +134,7 @@ def _old_grader(request, exam, problems):
 				'form' : forms.ExamGradingRobustForm(
 					exam = exam, problems = problems, user = request.user),
 				}
-	return render(request, "old-grader.html", context)
+	return render(request, "helium/old-grader.html", context)
 @staff_member_required
 def old_grader_exam_redir(request):
 	return _redir_obj_id(request,
@@ -178,7 +178,7 @@ def fast_match(request, exam_id, attention=False):
 	field = forms.EntityModelChoiceField(queryset = takers)
 	widgetHTML = field.widget.render(name = "entity", value = "", attrs = {'id' : 'id_entity'})
 	context = {'exam' : exam, 'entities' : takers, 'widgetHTML' : widgetHTML, 'show_attention' : show_attention}
-	return render(request, "fast-match.html", context)
+	return render(request, "helium/fast-match.html", context)
 
 ## VIEWS FOR SCAN GRADER
 @staff_member_required
@@ -189,7 +189,7 @@ def grade_scans_redir(request):
 @staff_member_required
 def grade_scans(request, problem_id):
 	problem = He.models.Problem.objects.get(id=int(problem_id))
-	return render(request, "grade-scans.html",
+	return render(request, "helium/grade-scans.html",
 			{'problem' : problem, 'exam': problem.exam})
 
 ## VIEWS FOR VERDICTS AND SCANS
@@ -236,7 +236,7 @@ def view_verdict(request, verdict_id):
 		tr['God Mode'] = str(evidence.god_mode)
 		table.append(tr)
 	context = {'columns' : columns, 'table' : table, 'form' : form, 'verdict' : verdict}
-	return render(request, "view-verdict.html", context)
+	return render(request, "helium/view-verdict.html", context)
 @staff_member_required
 def find_paper(request):
 	if request.method == "POST":
@@ -264,7 +264,7 @@ def find_paper(request):
 	else:
 		context['show_attention'] = False
 		
-	return render(request, "find-paper.html", context)
+	return render(request, "helium/find-paper.html", context)
 @staff_member_required
 def view_paper(request, *args):
 	if len(args) == 1: # view-paper/scan/examscribble.id/
@@ -327,21 +327,21 @@ def view_paper(request, *args):
 			problems = exam.problem_set.all(),
 			show_god = True)
 	context['gradeurl'] = "/helium/old-grader/exam/%d/" %exam.id
-	return render(request, "view-paper.html", context)
+	return render(request, "helium/view-paper.html", context)
 
 @staff_member_required
 def view_conflicts_all(request):
 	columns, table = _get_vtable(request, He.models.Verdict.objects\
 			.filter(is_valid=False, problem__exam__is_ready = True) )
 	context = {'columns' : columns, 'table' : table, 'pagetitle' : 'All Grading Conflicts'}
-	return render(request, "table-only.html", context)
+	return render(request, "helium/table-only.html", context)
 @staff_member_required
 def view_conflicts_own(request):
 	columns, table = _get_vtable(request, He.models.Verdict.objects\
 			.filter(is_valid=False, problem__exam__is_ready = True,
 				evidence__user = request.user) )
 	context = {'columns' : columns, 'table' : table, 'pagetitle' : 'Own Grading Conflicts'}
-	return render(request, "table-only.html", context)
+	return render(request, "helium/table-only.html", context)
 
 ## AJAX HOOKS
 ### Ajax for scan grader
@@ -499,7 +499,7 @@ def ajax_task_query(request):
 def view_task(request, task_id):
 	task_record = He.models.ThreadTaskRecord.objects.get(id=task_id)
 	context = {"task" : task_record}
-	return render(request, "view-task.html", context)
+	return render(request, "helium/view-task.html", context)
 
 ## PROGRESS REPORTS
 @staff_member_required
@@ -535,7 +535,7 @@ def progress_problems(request):
 		table.append(tr)
 
 	context = {'columns' : columns, 'table' : table, 'pagetitle' : 'Grading Progress'}
-	return render(request, "table-only.html", context)
+	return render(request, "helium/table-only.html", context)
 @staff_member_required
 def progress_scans(request):
 	"""Generates a table showing how quickly the scans are being matched for a problem."""
@@ -568,14 +568,14 @@ def progress_scans(request):
 		table.append(tr)
 
 	context = {'columns' : columns, 'table' : table, 'pagetitle' : 'Scans Progress'}
-	return render(request, "table-only.html", context)
+	return render(request, "helium/table-only.html", context)
 
 ## ESTIMATION CALC
 @staff_member_required
 def estimation_calc(request):
 	"""This is a calculator for guts estimation problems."""
 	scoring_fns = He.models.GutsScoreFunc.objects.all()
-	return render(request, "estimation-calc.html", {'scoring_fns' : scoring_fns})
+	return render(request, "helium/estimation-calc.html", {'scoring_fns' : scoring_fns})
 
 ## SCAN UPLOAD AND TABLES
 @staff_member_required
@@ -614,7 +614,7 @@ def upload_scans(request):
 				messages.success(request, "PDF %s is OK, now processing" %pdf_name)
 	else:
 		form = forms.UploadScanForm()
-	return render(request, "upload-scans.html", {'form' : form})
+	return render(request, "helium/upload-scans.html", {'form' : form})
 
 @staff_member_required
 def view_pdf_redir(request):
@@ -637,7 +637,7 @@ def view_pdf(request, pdfscribble_id):
 		table.append(tr)
 	context = {'columns' : columns, 'table' : table,
 			'pagetitle' : '%s (%s)' %(pdfscribble, pdfscribble.exam)}
-	return render(request, "table-only.html", context)
+	return render(request, "helium/table-only.html", context)
 
 ## SCORE REPORTS
 @staff_member_required

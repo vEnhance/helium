@@ -5,7 +5,7 @@
 		(Click here to rotate 180 degrees)
 	</a>
 	{% else %}
-	<a href="/helium/view-paper/scan/{{ examscribble.id }}/#scan" class="scanzoom" target="_blank">
+	<a href="{% url 'view_paper_scan' examscribble.id %}#scan" class="scanzoom" target="_blank">
 		(Click here to view full paper)
 	</a>
 	{% endif %}

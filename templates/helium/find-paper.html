@@ -1,4 +1,4 @@
-{% extends 'layout-helium.html' %}
+{% extends 'helium/layout.html' %}
 {% load static %}
 
 {% block pagetitle %}Find Papers{% endblock %}
@@ -9,10 +9,10 @@ verdicts and evidence for a specific
 entity and exam.</p>
 
 <h4>Search by Name</h4>
-{% include '_form.html' with form=eesform submit_name="Look up" %}
+{% include 'helium/form.html' with form=eesform submit_name="Look up" %}
 
 <h4>Search by PDF</h4>
-<form action="/helium/view-pdf/redir/" method="post">
+<form action="{% url view_pdf_redir %}" method="post">
 	<div class="clearfix">
 		<div class="col-xs-8">
 		{% csrf_token %}
@@ -26,7 +26,7 @@ entity and exam.</p>
 
 {% if show_attention %}
 <h4>Exam Scribbles Needing Attention</h4>
-{% include '_table.html' %}
+{% include 'helium/table.html' %}
 {% endif %}
 
 
