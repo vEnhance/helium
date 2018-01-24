@@ -12,7 +12,7 @@ entity and exam.</p>
 {% include 'helium/form.html' with form=eesform submit_name="Look up" %}
 
 <h4>Search by PDF</h4>
-<form action="{% url view_pdf_redir %}" method="post">
+<form action="{% url 'view_pdf_redir' %}" method="post">
 	<div class="clearfix">
 		<div class="col-xs-8">
 		{% csrf_token %}
