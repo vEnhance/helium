@@ -35,23 +35,11 @@ By design, this module is agnostic to remaining components of helium.
 #import wand.api
 #import wand.image
 import ctypes
+import ghostscript
 # This also requires: imagemagick, ghostscript, freetype
 
 import StringIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
-
-# http://stackoverflow.com/a/26252400/4826845
-# This is some hocus pocus to let us to use arbitrary imagemagick
-# It was orignally used for threshold but later that part disappeared
-# so now it's just sitting here doing not much
-#MagickEvaluateImage = wand.api.library.MagickEvaluateImage
-#MagickEvaluateImage.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_double]
-def evaluate(self, operation, argument):
-	MagickEvaluateImage(
-		self.wand,
-		wand.image.EVALUATE_OPS.index(operation),
-		  self.quantum_range * float(argument))
-
 
 # These are in (x1, x2, y1, y2) format
 CUTOUT_FULL_REGION = [0.00, 1.00, 0.00, 1.00] # name area
@@ -77,7 +65,18 @@ def to_django_file(image, filename):
 	image.save(io)
 	f = InMemoryUploadedFile(io, None, filename, 'image/jpeg', io.len, None)
 	return f
-		
+
+# from https://stackoverflow.com/questions/331918/converting-a-pdf-to-a-series-of-images-with-python/36113000#36113000
+def pdf_to_jpeg(pdf_path, defjpeg_path):
+    # this is a little bitdef absurddenput_path, jpeg_output_path):
+    args = ["pdf2jpeg", # actual value doesn't matter
+            "-dNOPAUSE",
+            "-sDEVICE=jpeg",
+            "-r144",
+            "-sOutputFile=" + jpeg_output_path,
+            pdf_input_path]
+    ghostscript.Ghostscript(*args)
+
 class AnswerSheetImage:
 	"""This is a wrapper class that has all the data of a single answer sheet"""
 	def __init__(self, image, fprefix):
@@ -85,7 +84,6 @@ class AnswerSheetImage:
 		self.full_image = Image(image = image)
 		self.full_image.format = 'jpg' # convert to jpg
 		self.image = Image(image = self.full_image)
-		# evaluate(self.image, 'threshold', 0.90)
 
 	def get_django_cutout(self, rect, filename):
 		width = self.image.width
@@ -126,7 +124,6 @@ if __name__ == "__main__":
 	# This is for testing.
 	# You call python scan.py <filename>
 	# and it will output (in current directory) all image files
-
 	import sys
 	def saveDjangoFile(f):
 		with open(f.name, 'w') as target:
