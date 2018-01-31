@@ -371,21 +371,34 @@ def ajax_next_scan(request):
 	n = int(request.POST['num_to_load'])
 	pos = int(request.POST['pos'])
 
+	## LOOK FOR PAPERS THIS DUDE CAN GRADE
 	scribbles = He.models.ProblemScribble.objects.filter(
 			verdict__problem=problem, verdict__is_done=False)
-	# # Prevent giving out scribbles that need attention
-	# scribbles = scribbles.filter(examscribble__needs_attention='')
-	# Cool-down and position
-	scribbles = scribbles.exclude(verdict__evidence__user = request.user)\
-			.filter(id__gt = pos).exclude(last_sent_time__gte = time.time() - 1) # cooldown
+	# never give something seen before
+	scribbles = scribbles.exclude(verdict__evidence__user = request.user)
+	# don't give scribbles that have too many conflicts
+	scribbles = scribbles.annotate(badness = Count('verdict__evidence'))
+	scribbles = scribbles.exclude(badness__gt = problem.exam.min_override*2+2)
 
+	# 1. Go through the stack
+	later_scribbles = scribbles.filter(id__gt = pos)\
+			.exclude(last_sent_time__gte = time.time() - 1) # cooldown
 	ret = []
-	for ps in scribbles[0:n]:
+	for ps in later_scribbles[0:n]:
 		ps.last_sent_time = time.time()
 		ps.save()
 		ret.append([ps.id, ps.prob_image.url, ps.examscribble.id, ps.verdict.id])
+	# 2. If we reached the end of stack, restart from beginning
+	#    and this time don't worry about cool-down times
 	if len(ret) < n: # all done!
+		earlier_scribbles = scribbles
+		for ps in earlier_scribbles[0:n-len(ret)]:
+			ret.append([ps.id, ps.prob_image.url, ps.examscribble.id, ps.verdict.id])
+	# 3. If still nothing, mark as done
+	if len(ret) < n:
 		ret.append([0, DONE_IMAGE_URL, 0, 0])
+	print(tuple(x[0] for x in ret))
+
 	return HttpResponse( json.dumps(ret), content_type = 'application/json' )
 
 ### Ajax for filling in classical grader
