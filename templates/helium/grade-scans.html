@@ -45,6 +45,7 @@ $(document).ready(function() {
 	// Items are ordered tuples (scribble id, image url, examscribble id, verdict id)
 	// current_index describes which one we currently have
 	var stream = [];
+	var seen_ids = []; // just the ID
 	var current_index = 0; // the current index inside the stream
 	var sid = 0; // current scribble's ID
 	var pos = 0; // maximum scribble ID given out
@@ -63,11 +64,13 @@ $(document).ready(function() {
 				problem_id : {{ problem.id }},
 				num_to_load : n,
 				pos : pos,
+				exclude : seen_ids.slice(-3),
 			},
 		}).done(function(result) {
 			for (var i=0; i<result.length; i++) {
 				var data = result[i];
 				stream.push(data);
+				seen_ids.push(data[0]);
 				pos = data[0];
 				$('<img />').attr('src', data[1]); // preload the image
 				if (is_waiting) { // If pending, load next scan

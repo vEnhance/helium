@@ -362,7 +362,7 @@ def ajax_submit_scan(request):
 @staff_member_required
 @require_POST
 def ajax_next_scan(request):
-	"""POST arguments: num_to_load, problem_id.
+	"""POST arguments: num_to_load, problem_id, pos, exclude.
 	RETURN: list of (scribble id, scribble url, examscribble id, verdict id)"""
 
 	problem_id = int(request.POST['problem_id'])
@@ -379,10 +379,16 @@ def ajax_next_scan(request):
 	# don't give scribbles that have too many conflicts
 	scribbles = scribbles.annotate(badness = Count('verdict__evidence'))
 	scribbles = scribbles.exclude(badness__gt = problem.exam.min_override*2+2)
+	# don't give scribbles already in stream
+	excludes = request.POST.getlist('exclude[]')
+	print 'Exclude'+str(excludes)
+	print request.POST
+	for e in excludes[-3:]:
+		scribbles = scribbles.exclude(id = e)
 
 	# 1. Go through the stack
 	later_scribbles = scribbles.filter(id__gt = pos)\
-			.exclude(last_sent_time__gte = time.time() - 1) # cooldown
+			.exclude(last_sent_time__gte = time.time() - 5) # cooldown of 5s
 	ret = []
 	for ps in later_scribbles[0:n]:
 		ps.last_sent_time = time.time()
