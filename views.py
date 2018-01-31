@@ -594,29 +594,30 @@ def upload_scans(request):
 						"No action taken." % pdf_name)
 			else:
 				pdfscribble = He.models.EntirePDFScribble(name = pdf_name, exam = exam)
-				num_pages = 0
-				sheets = scanimage.get_answer_sheets(pdf_file, filename = pdf_name)
-				for sheet in sheets:
-					if num_pages == 0: pdfscribble.save()
-					num_pages += 1
-					es = He.models.ExamScribble(
-							pdf_scribble = pdfscribble,
-							exam = exam,
-							full_image = sheet.get_full_file(),
-							name_image = sheet.get_name_file())
-					es.save()
-					n = 0 # problem number
-					for prob_img in sheet.get_problem_files():
-						n += 1
-						es.createProblemScribble(n, prob_img)
-				if num_pages == 0:
-					messages.error(request, "No pages were produced from this PDF!")
-				else:
+				pdfscribble.save()
+				def target_function():
+					num_pages = 0
+					sheets = scanimage.get_answer_sheets(pdf_file, filename = pdf_name)
+					for sheet in sheets:
+						if num_pages == 0: pdfscribble.save()
+						num_pages += 1
+						es = He.models.ExamScribble(
+								pdf_scribble = pdfscribble,
+								exam = exam,
+								full_image = sheet.get_full_file(),
+								name_image = sheet.get_name_file())
+						es.save()
+						n = 0 # problem number
+						for prob_img in sheet.get_problem_files():
+							n += 1
+							es.createProblemScribble(n, prob_img)
+					assert num_pages > 0, "0 pages were produced!"
 					pdfscribble.is_done = True
 					pdfscribble.save()
-					messages.success(request, "PDF %s is OK, %d pages"
-							%(pdf_name, num_pages))
-				# threader.run_async(target_function, user = request.user, name = "upload_scans")
+					return "%d pages" % num_pages
+				threader.run_async(target_function,
+						user = request.user, name = "upload_scans")
+				messages.success(request, "PDF %s uploaded" %pdf_name)
 	else:
 		form = forms.UploadScanForm()
 	return render(request, "helium/upload-scans.html", {'form' : form})
