@@ -18,10 +18,7 @@ which extract the relevant parts:
 The return types of the cut-outs are Django InMemoryUploadedFile objects;
 these allow storage in the database.
 
-Dependencies:
-	* The Wand Python module should be installed.
-	* The system should have imagemagick, ghostscript, freetype
-	  so that Wand can function.
+This requires GhostScript.
 
 On a system one can perform a "test run" by calling this as main
 (and indeed static/answers/run-cutout-test.py symlinks to this file).
@@ -31,28 +28,14 @@ This will generate the cut-outs of the first page of that PDF file.
 By design, this module is agnostic to remaining components of helium.
 """
 
-# from wand.image import Image
-# import wand.api
-# import wand.image
 import ctypes
-# This also requires: imagemagick, ghostscript, freetype
+import ghostscript
+import tempfile
+import os
+from PIL import Image
 
 import StringIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
-
-# http://stackoverflow.com/a/26252400/4826845
-# This is some hocus pocus to let us to use arbitrary imagemagick
-# It was orignally used for threshold but later that part disappeared
-# so now it's just sitting here doing not much
-# MagickEvaluateImage = wand.api.library.MagickEvaluateImage
-# MagickEvaluateImage.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_double]
-def evaluate(self, operation, argument):
-	pass
-#	MagickEvaluateImage(
-#		self.wand,
-#		wand.image.EVALUATE_OPS.index(operation),
-#		self.quantum_range * float(argument))
-
 
 # These are in (x1, x2, y1, y2) format
 CUTOUT_FULL_REGION = [0.00, 1.00, 0.00, 1.00] # name area
@@ -69,65 +52,81 @@ CUTOUT_PROBLEM_REGIONS = [
 		[0.45, 1.00, 0.62, 0.80], # problem 9
 		[0.45, 1.00, 0.74, 0.92], # problem 10
 	]
+
 def to_django_file(image, filename):
 	"""http://stackoverflow.com/a/4544525/4826845
 	This takes as input an image and a filename and as output
 	returns an object which can be stored in Django file models"""
 
 	io = StringIO.StringIO()
-	image.save(io)
+	image.save(io, format='JPEG')
 	f = InMemoryUploadedFile(io, None, filename, 'image/jpeg', io.len, None)
 	return f
-		
+
 class AnswerSheetImage:
 	"""This is a wrapper class that has all the data of a single answer sheet"""
-	def __init__(self, image, fprefix):
-		self.fprefix = fprefix
-		self.full_image = Image(image = image)
-		self.full_image.format = 'jpg' # convert to jpg
-		self.image = Image(image = self.full_image)
-		# evaluate(self.image, 'threshold', 0.90)
+	def __init__(self, image, name):
+		self.full_image = image
+		self.name = name
 
 	def get_django_cutout(self, rect, filename):
-		width = self.image.width
-		height = self.image.height
+		width = self.full_image.width
+		height = self.full_image.height
 		x1, x2, y1, y2 = rect
 		left = int(width * x1)
 		right = int(width * x2)
 		top = int(height * y1)
 		bottom = int(height * y2)
-		with self.image[left:right, top:bottom] as cutout:
-			return to_django_file(cutout, filename)
+		crop = self.full_image.crop((left, top, right, bottom))
+		return to_django_file(crop, filename)
 
 	def get_full_file(self):
-		filename = '%s-full.jpg' % self.fprefix
+		filename = '%s-full.jpg' % self.name
 		return to_django_file(self.full_image, filename)
 
 	def get_name_file(self):
-		filename = '%s-name.jpg' % self.fprefix
+		filename = '%s-name.jpg' % self.name
 		return self.get_django_cutout(CUTOUT_NAME_REGION, filename)
 
 	def get_problem_files(self):
 		for i, rect in enumerate(CUTOUT_PROBLEM_REGIONS):
-			filename = '%s-prob-%02d.jpg' % (self.fprefix, i+1)
+			filename = '%s-prob-%02d.jpg' % (self.name, i+1)
 			yield self.get_django_cutout(rect, filename)
 
-def get_answer_sheets(f, filename):
+def get_answer_sheets(in_memory_fh, filename):
 	"""Given a file object f, yield answer sheet objects."""
 	if filename.endswith('.pdf'): # which SHOULD be the case!
-		prefix = filename[:-4] # strip pdf extension if applicable
-	else:
-		prefix = filename
-	with Image(file = f, resolution = (140, 140)) as full_pdf:
-		for i, page in enumerate(full_pdf.sequence):
-			yield AnswerSheetImage(image = page,
-					fprefix = "%s-sheet%04d" %(f.name, i+1))
+		prefix = filename[:-4] # strip pdf extension
+		tempdir = tempfile.mkdtemp(prefix='tmp-helium-')
+
+		# from https://stackoverflow.com/a/36113000/4826845
+		with tempfile.NamedTemporaryFile(prefix='scan-helium-',
+				delete=False, suffix=".pdf") as temp_pdf_file:
+			temp_pdf_file.write(in_memory_fh.read())
+		pdf_input_path = temp_pdf_file.name
+		args = ["evan chen is really cool", # actual value doesn't matter
+				"-dNOPAUSE",
+				"-sDEVICE=jpeg",
+				"-r144",
+				"-sOutputFile=" + os.path.join(tempdir, prefix+"-sheet%04d.jpg"),
+				pdf_input_path]
+		ghostscript.Ghostscript(*args)
+
+		for n in xrange(1,10000):
+			name = prefix+"-sheet%04d" % n
+			image_path = os.path.join(tempdir, name+".jpg")
+			if not os.path.exists(image_path):
+				break
+			yield AnswerSheetImage(image = Image.open(image_path), name = name)
+
+	elif filename.endswith('.zip'): # which SHOULD be the case!
+		prefix = filename[:-4] # strip zip extension
+		pass # TODO
 
 if __name__ == "__main__":
 	# This is for testing.
 	# You call python scan.py <filename>
 	# and it will output (in current directory) all image files
-
 	import sys
 	def saveDjangoFile(f):
 		with open(f.name, 'w') as target:
@@ -135,7 +134,7 @@ if __name__ == "__main__":
 				target.write(chunk)
 
 	if len(sys.argv) == 0:
-		print "Need to specify a filename"
+		sys.stderr.write("Need to specify a filename" + "\n")
 	else:
 		filename = sys.argv[1]
 		with open(filename) as pdf:

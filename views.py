@@ -362,7 +362,7 @@ def ajax_submit_scan(request):
 @staff_member_required
 @require_POST
 def ajax_next_scan(request):
-	"""POST arguments: num_to_load, problem_id.
+	"""POST arguments: num_to_load, problem_id, pos, exclude.
 	RETURN: list of (scribble id, scribble url, examscribble id, verdict id)"""
 
 	problem_id = int(request.POST['problem_id'])
@@ -371,21 +371,40 @@ def ajax_next_scan(request):
 	n = int(request.POST['num_to_load'])
 	pos = int(request.POST['pos'])
 
+	## LOOK FOR PAPERS THIS DUDE CAN GRADE
 	scribbles = He.models.ProblemScribble.objects.filter(
 			verdict__problem=problem, verdict__is_done=False)
-	# # Prevent giving out scribbles that need attention
-	# scribbles = scribbles.filter(examscribble__needs_attention='')
-	# Cool-down and position
-	scribbles = scribbles.exclude(verdict__evidence__user = request.user)\
-			.filter(id__gt = pos).exclude(last_sent_time__gte = time.time() - 1) # cooldown
+	# never give something seen before
+	scribbles = scribbles.exclude(verdict__evidence__user = request.user)
+	# don't give scribbles that have too many conflicts
+	scribbles = scribbles.annotate(badness = Count('verdict__evidence'))
+	scribbles = scribbles.exclude(badness__gt = problem.exam.min_override*2+2)
+	# don't give scribbles already in stream
+	excludes = request.POST.getlist('exclude[]')
+	print 'Exclude'+str(excludes)
+	print request.POST
+	for e in excludes[-3:]:
+		scribbles = scribbles.exclude(id = e)
 
+	# 1. Go through the stack
+	later_scribbles = scribbles.filter(id__gt = pos)\
+			.exclude(last_sent_time__gte = time.time() - 5) # cooldown of 5s
 	ret = []
-	for ps in scribbles[0:n]:
+	for ps in later_scribbles[0:n]:
 		ps.last_sent_time = time.time()
 		ps.save()
 		ret.append([ps.id, ps.prob_image.url, ps.examscribble.id, ps.verdict.id])
+	# 2. If we reached the end of stack, restart from beginning
+	#    and this time don't worry about cool-down times
 	if len(ret) < n: # all done!
+		earlier_scribbles = scribbles
+		for ps in earlier_scribbles[0:n-len(ret)]:
+			ret.append([ps.id, ps.prob_image.url, ps.examscribble.id, ps.verdict.id])
+	# 3. If still nothing, mark as done
+	if len(ret) < n:
 		ret.append([0, DONE_IMAGE_URL, 0, 0])
+	print(tuple(x[0] for x in ret))
+
 	return HttpResponse( json.dumps(ret), content_type = 'application/json' )
 
 ### Ajax for filling in classical grader
@@ -596,22 +615,28 @@ def upload_scans(request):
 				pdfscribble = He.models.EntirePDFScribble(name = pdf_name, exam = exam)
 				pdfscribble.save()
 				def target_function():
+					num_pages = 0
 					sheets = scanimage.get_answer_sheets(pdf_file, filename = pdf_name)
 					for sheet in sheets:
+						if num_pages == 0: pdfscribble.save()
+						num_pages += 1
 						es = He.models.ExamScribble(
 								pdf_scribble = pdfscribble,
 								exam = exam,
 								full_image = sheet.get_full_file(),
 								name_image = sheet.get_name_file())
 						es.save()
-						n = 0
+						n = 0 # problem number
 						for prob_img in sheet.get_problem_files():
 							n += 1
 							es.createProblemScribble(n, prob_img)
+					assert num_pages > 0, "0 pages were produced!"
 					pdfscribble.is_done = True
 					pdfscribble.save()
-				threader.run_async(target_function, user = request.user, name = "upload_scans")
-				messages.success(request, "PDF %s is OK, now processing" %pdf_name)
+					return "%d pages" % num_pages
+				threader.run_async(target_function,
+						user = request.user, name = "upload_scans")
+				messages.success(request, "PDF %s uploaded" %pdf_name)
 	else:
 		form = forms.UploadScanForm()
 	return render(request, "helium/upload-scans.html", {'form' : form})

@@ -82,10 +82,12 @@ For each exam there are two parameters:
 \begin{itemize}
 	\ii A \textbf{minimum majority} for the verdict to be valid,
 	defined as a constant $n$ such that an $n$-to-$1$ majority suffices.
+	The default is $n=4$.
 	\ii If valid, a \textbf{minimum number of graders} needed before
 	the verdict considers itself done.
 	(So setting this number to $2$ is double-grading,
 	$3$ is triple-grading, $4$ is quadruple-grading, \dots.)
+	The default is triple-grading.
 \end{itemize}
 
 Officers get an extra panel called ``View All Conflicts''.
@@ -100,6 +102,13 @@ at which point you can submit your own evidence.
 If you like being final authority,
 there should also be an option to submit this evidence in ``God mode''
 which will settle the verdict once and for all.
+
+Starting in 2018, Helium will actually stop giving sufficiently
+controversial answers out for grading
+(specifically, it will not give a problem out during normal grading
+if more than $2n+2$ people have read it already).
+So this is necessary to deal with those super-controversial answers.
+
 \section{Find papers}
 You can locate specific papers
 by selecting ``Find Papers'' from the index page.

@@ -8,12 +8,16 @@
 Compare the answer for the given problem with the image shown below.
 For an all-or-nothing problem,
 input a score of either 0 or 1 in the textbox below, then press return.
-You will then automatically be shown a different scan.</p>
+You will then automatically be shown a different scan.
+Towards the end of the stack for a problem,
+you may see the same answer several times
+(due to latency between submitting a score
+and having it saved into the database). This is normal.</p>
 
 <p><b>Ludicrous Speed:</b>
 <input type="checkbox" id="ludicrous_speed"
 	{% if not problem.allow_partial %}checked{% endif%}/></p>
-<p>(Enable ludicrous speed only if you plan to enter one-digit answers only.
+<p>(Enable ludicrous speed if you plan to enter one-digit answers only.
 If enabled, you don't need to press "return".)
 </p>
 
@@ -41,6 +45,7 @@ $(document).ready(function() {
 	// Items are ordered tuples (scribble id, image url, examscribble id, verdict id)
 	// current_index describes which one we currently have
 	var stream = [];
+	var seen_ids = []; // just the ID
 	var current_index = 0; // the current index inside the stream
 	var sid = 0; // current scribble's ID
 	var pos = 0; // maximum scribble ID given out
@@ -59,11 +64,13 @@ $(document).ready(function() {
 				problem_id : {{ problem.id }},
 				num_to_load : n,
 				pos : pos,
+				exclude : seen_ids.slice(-3),
 			},
 		}).done(function(result) {
 			for (var i=0; i<result.length; i++) {
 				var data = result[i];
 				stream.push(data);
+				seen_ids.push(data[0]);
 				pos = data[0];
 				$('<img />').attr('src', data[1]); // preload the image
 				if (is_waiting) { // If pending, load next scan
