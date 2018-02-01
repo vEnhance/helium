@@ -381,8 +381,6 @@ def ajax_next_scan(request):
 	scribbles = scribbles.exclude(badness__gt = problem.exam.min_override*2+2)
 	# don't give scribbles already in stream
 	excludes = request.POST.getlist('exclude[]')
-	print 'Exclude'+str(excludes)
-	print request.POST
 	for e in excludes[-3:]:
 		scribbles = scribbles.exclude(id = e)
 
@@ -403,7 +401,6 @@ def ajax_next_scan(request):
 	# 3. If still nothing, mark as done
 	if len(ret) < n:
 		ret.append([0, DONE_IMAGE_URL, 0, 0])
-	print(tuple(x[0] for x in ret))
 
 	return HttpResponse( json.dumps(ret), content_type = 'application/json' )
 
