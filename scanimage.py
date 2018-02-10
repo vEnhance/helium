@@ -38,8 +38,8 @@ import StringIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
 
 # These are in (x1, x2, y1, y2) format
-CUTOUT_FULL_REGION = [0.00, 1.00, 0.00, 1.00] # name area
-CUTOUT_NAME_REGION = [0.00, 1.00, 0.07, 0.36] # name area
+CUTOUT_FULL_REGION = [0.00, 1.00, 0.00, 1.00] # full region
+CUTOUT_NAME_REGION = [0.00, 1.00, 0.02, 0.36] # name area
 CUTOUT_PROBLEM_REGIONS = [
 		[0.00, 0.55, 0.31, 0.49], # problem 1
 		[0.00, 0.55, 0.42, 0.60], # problem 2
