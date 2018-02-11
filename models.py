@@ -235,6 +235,11 @@ class Verdict(models.Model):
 			help_text = "Whether this verdict should be read by more normal users "
 			"as determined by the min_grades setting of the exam. "
 			"You should not need to touch this setting; it is auto-computed.")
+	scanned_at = models.DateTimeField(blank=True, null=True,
+			help_text = "When the verdict was created based on scans. "
+			"None if the Verdict isn't associated to a scan. "
+			"Should not be edited manually. "
+			"This is actually a hack to deal with bulk_update issues")
 
 	def __unicode__(self):
 		if self.entity is not None:
@@ -358,16 +363,6 @@ class ExamScribble(models.Model):
 	@property
 	def is_indiv(self):
 		return self.exam.is_indiv
-
-	def createProblemScribble(self, n, prob_image):
-		"""Creates a problem scribble from problem number (n) and prob_image"""
-		problem = Problem.objects.get(problem_number = n, exam = self.exam)
-		v = Verdict.objects.create(problem = problem)
-		v.save()
-		ps = ProblemScribble.objects.create(
-				examscribble = self,
-				verdict = v,
-				prob_image = prob_image)
 
 	def assign(self, entity):
 		"""Identifies the scan as being owned by an entity.

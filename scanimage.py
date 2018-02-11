@@ -52,6 +52,7 @@ CUTOUT_PROBLEM_REGIONS = [
 		[0.45, 1.00, 0.62, 0.80], # problem 9
 		[0.45, 1.00, 0.74, 0.92], # problem 10
 	]
+PROBLEMS_PER_SHEET = 10
 
 def to_django_file(image, filename):
 	"""http://stackoverflow.com/a/4544525/4826845
@@ -119,9 +120,9 @@ def get_answer_sheets(in_memory_fh, filename):
 				break
 			yield AnswerSheetImage(image = Image.open(image_path), name = name)
 
-	elif filename.endswith('.zip'): # which SHOULD be the case!
+	elif filename.endswith('.zip'):
 		prefix = filename[:-4] # strip zip extension
-		pass # TODO
+		return # TODO not implemented
 
 if __name__ == "__main__":
 	# This is for testing.

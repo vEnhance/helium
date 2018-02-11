@@ -614,22 +614,59 @@ def upload_scans(request):
 				pdfscribble = He.models.EntirePDFScribble(name = pdf_name, exam = exam)
 				pdfscribble.save()
 				def target_function():
-					num_pages = 0
-					sheets = scanimage.get_answer_sheets(pdf_file, filename = pdf_name)
+					# get problem ID's
+					pdicts = He.models.Problem.objects\
+							.filter(problem_number=n, exam=exam)\
+							.values('id', 'problem_number')
+					pids = dict( (_['problem_number'], _['id']) for _ in pdicts)
+					
+					# queue up things to bulk create
+					sheets = list(scanimage.get_answer_sheets(pdf_file, filename = pdf_name))
+					problems_per_sheet = scanimage.PROBLEMS_PER_SHEET
+					num_sheets = len(sheets)
+					assert num_sheets > 0, "0 pages were produced!"
+
+					# bulk create verdicts for this PDF
+					v_to_bulk_create = []
+					now = time.time()
+					for n in range(1, problems_per_sheet+1):
+						v_to_bulk_create += [
+								He.models.Verdict(problem = pids[n], scanned_at = now)\
+								for _ in num_sheets]
+					He.models.Verdict.objects.bulk_create(v_to_bulk_create)
+
+					# Get a list of ID's to use for these verdicts
+					vids = collections.defaultdict(list)
+
+					for problem_id, vid in He.models.Verdict.objects\
+							.filter(scanned_at=now)\
+							.values_list('problem_id', 'id'):
+						vids[problem_id].append(vid)
+						# heh now you know why scanned_at is here
+
+					ps_to_bulk_create = []
 					for sheet in sheets:
-						if num_pages == 0: pdfscribble.save()
-						num_pages += 1
 						es = He.models.ExamScribble(
 								pdf_scribble = pdfscribble,
 								exam = exam,
 								full_image = sheet.get_full_file(),
 								name_image = sheet.get_name_file())
-						es.save()
+						es.save() # sad, don't see a way around this without PostGre D:
+
 						n = 0 # problem number
-						for prob_img in sheet.get_problem_files():
+						for prob_image in sheet.get_problem_files():
 							n += 1
-							es.createProblemScribble(n, prob_img)
-					assert num_pages > 0, "0 pages were produced!"
+							verdict_id = vids[pids[n]].pop()
+							ps_to_bulk_create.append(He.models.ProblemScribble(
+								examscribble = es,
+								verdict = verdict_id,
+								prob_image = prob_image))
+
+					for n in range(1, problems_per_sheet+1):
+						assert len(vids[pids[n]])==0, "not all ID's used"
+					He.models.ProblemScribble.objects.bulk_create(ps_to_bulk_create)
+
+					# OK, all done
 					pdfscribble.is_done = True
 					pdfscribble.save()
 					return "%d pages" % num_pages
