@@ -91,8 +91,10 @@ class ResultPrinter:
 		def score_to_string(x):
 			"""Given x \in [Int, Float, None], return a string rep"""
 			if x is None:
-				zero = int_string % 0
-				return zero if zero_pad else zero.replace('0', '-')
+				if zero_pad:
+					return int_string % 0
+				else:
+					return (int_string % 99).replace("9", "-") # use "--" for blanks
 			elif type(x) == int or x == 0:
 				return int_string % x
 			elif type(x) == float:
