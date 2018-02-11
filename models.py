@@ -391,37 +391,17 @@ class ExamScribble(models.Model):
 		queryset = Verdict.objects.filter(problemscribble__examscribble = self)
 		queryset.update(entity = self.entity)
 
-	def checkConflictVerdict(self, entity=None, purge=False):
+	def checkConflictVerdict(self, entity=None):
 		"""Check that no integrity errors (uniqueness)
 		will arise before updateScribbles.
-		If passed with the `purge` option, it will instead destroy
-		existing Verdict and Evidence objects that conflict.
 		Returns None if no issues arise,
-		otherwise returns an example of a Verdict which is bad.
-		Note that purge is DANGEROUS and should use with judgment."""
+		otherwise returns an example of a Verdict which is bad."""
 
 		if entity is None:
 			entity = self.entity
-		for ps in self.problemscribble_set.all():
-			verdict = ps.verdict
-			problem = verdict.problem
-			try: # search for conflicts
-				bad_v = Verdict.objects.get(entity=entity, problem=problem)
-			except Verdict.DoesNotExist:
-				pass
-			else:
-				if bad_v == verdict:
-					# wef, these are the same?
-					# OK, something really screwy must have happened,
-					# but this is fine
-					continue
-				# UH-OH, there's already a verdict attached
-				if not purge: return bad_v # return counterexample and exit
-				else: # forcefully grab all evidence from v then delete it
-					logging.warn("Deleting " + str(bad_v.id) + " = " + str(bad_v))
-					bad_v.delete()
-					verdict.updateDecisions()
-		return None # no conflicts
+		bad_verdicts = Verdict.objects.filter(entity = entity, problem__exam = self.exam)\
+				.exclude(problemscribble__examscribble = self)
+		return bad_verdicts.first()
 
 	class Meta:
 		unique_together = ('exam', 'entity')

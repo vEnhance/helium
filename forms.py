@@ -231,13 +231,6 @@ class ExamScribbleMatchRobustForm(forms.Form):
 				help_text = "Note here if there are any problems with this scribble, "
 					"like \"no name\" or \"no such student\".")
 
-		if self.user.is_superuser:
-			self.fields['force'] = forms.BooleanField(
-					label = 'Override',
-					required = False,
-					help_text = "Super-users can use this to cause havoc. "
-							"Please avoid using unless you know what it does.")
-
 	def clean(self):
 		data = super(ExamScribbleMatchRobustForm, self).clean()
 		if not self.is_valid():
@@ -258,8 +251,7 @@ class ExamScribbleMatchRobustForm(forms.Form):
 
 		# Now for each attached ProblemScribble...
 		# check if it's okay to update
-		bad_v = self.examscribble.checkConflictVerdict(
-				entity, purge = data.get('force', False))
+		bad_v = self.examscribble.checkConflictVerdict(entity)
 		if bad_v is None: # we are OK
 			data['entity'] = entity
 			self.examscribble.assign(entity)
