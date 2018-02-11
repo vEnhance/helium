@@ -182,11 +182,11 @@ class ExamGradingRobustForm(forms.Form):
 		is_forceful = is_god or data['force'] # is_god implies is_forceful
 
 		for problem in self.problems:
-			field_name = 'p' + str(problem.problem_number)
-			v, _ = He.models.Verdict.objects.get_or_create(entity=entity, problem=problem)
 			user_score = data.get(field_name, None)
 			if user_score is None:
 				continue
+			field_name = 'p' + str(problem.problem_number)
+			v, _ = He.models.Verdict.objects.get_or_create(entity=entity, problem=problem)
 			if v.score is not None and user_score != v.score and not is_forceful:
 				previous_graders = [unicode(e.user) for e in v.evidence_set.all()]
 				if len(previous_graders) > 1 or previous_graders[0] != unicode(self.user):
