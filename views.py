@@ -483,6 +483,8 @@ def ajax_next_match(request):
 				.filter(entity__isnull=True, needs_attention=u'')\
 				.exclude(last_sent_time__gte = time.time() - 10) # cooldown
 	scribbles = scribbles.filter(id__gt = pos)
+	scribbles = scribbles.filter(pdf_scribble__is_done = True)
+	# don't match things not done converting! Sorry Ben Qi
 
 	ret = []
 	for es in scribbles[0:n]:

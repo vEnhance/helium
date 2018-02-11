@@ -332,7 +332,7 @@ class ExamScribble(models.Model):
 			help_text = "The PDF from which the exam scribble comes from.")
 	exam = models.ForeignKey(Exam,
 			help_text = "The exam associated to an exam scribble file.")
-	# ^ technically redundant, TODO rewrite to pdf_scribble__exam
+	# ^ technically redundant
 	entity = models.ForeignKey(Entity, blank=True, null=True,
 			help_text = "This is the entity the scan belongs to. "
 			"It is None if the scan has not yet been identified.")
