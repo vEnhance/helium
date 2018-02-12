@@ -152,10 +152,13 @@ This way other math tournaments can use the same code themselves.
 
 This upstream URL is maintained by a subtree via the command
 \begin{center}
-	\texttt{git subtree push --prefix helium/ github-helium master}
+	\texttt{git subtree push --prefix helium/ REMOTE-NAME master}
 \end{center}
 One can also inspect such a branch locally via
-\texttt{git subtree split --prefix=helium}.
+\begin{center}
+	\texttt{git subtree split --prefix=helium}.
+\end{center}
+before pushing.
 
 The \texttt{README.txt} files provides a brief documentation
 on how to get set up with Helium in a different Django project.
