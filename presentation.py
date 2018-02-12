@@ -86,6 +86,7 @@ class ResultPrinter:
 	def get_table(self, heading = None, num_show = None, num_named = None, zero_pad = True,
 			float_string = "%4.2f", int_string = "%4d"):
 		output = get_heading(heading) if heading is not None else ''
+		pre_num = heading[0] if heading else " "
 		if len(self.rows) == 0: return output # assume >= 1 entry
 
 		def score_to_string(x):
@@ -111,7 +112,7 @@ class ResultPrinter:
 				scores = row.scores + [0,] * (max_length-len(row.scores))
 			else:
 				scores = row.scores
-			output += "%4d. " % row.rank
+			output += pre_num + "%4d. " % row.rank
 			output += "%7.2f"  % row.total
 			if len(scores) > 1:
 				output += "  |  "
