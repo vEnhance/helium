@@ -72,7 +72,6 @@ import scanimage
 import threader
 from presentation import ResultPrinter as RP
 import presentation
-import sheetapi
 
 DONE_IMAGE_URL = static('img/done.jpg')
 
@@ -712,17 +711,7 @@ def reports_teaser(request):
 
 @user_passes_test(lambda u: u.is_superuser)
 def reports_spreadsheet(request):
-	sheets = collections.OrderedDict() # sheet name -> rows
-	all_rows = presentation.get_score_rows()
-
-	## Individual Results
-	for exam in He.models.Exam.objects.all():
-		sheets[unicode(exam)] = RP(all_rows[exam.name]).get_sheet()
-	sheets["Indiv"] = RP(all_rows["Individual Overall"]).get_sheet()
-	sheets["Aggr"] = RP(all_rows["Team Aggregate"]).get_sheet()
-	sheets["Sweeps"] = RP(all_rows["Sweepstakes"]).get_sheet()
-
-	odf = sheetapi.get_odf_spreadsheet(sheets)
+	odf = presentation.HMMT_spreadsheet()
 	response = HttpResponse(odf,\
 			content_type="application/vnd.oasis.opendocument.spreadsheet")
 	response['Content-Disposition'] = 'attachment; filename=scores-%s.ods' \

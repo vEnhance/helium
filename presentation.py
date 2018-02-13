@@ -14,6 +14,7 @@ import itertools
 import collections
 import time
 import re
+import sheetapi
 
 import helium as He
 
@@ -80,10 +81,12 @@ class ResultPrinter:
 	(the latter which should probably be fed into get_odf_spreadsheet"""
 	def __init__(self, rows):
 		self.rows = list(rows)
+		self.len = max(len(r.scores) for r in self.rows)
 		self.rows.sort(key = lambda r : r.rank)
 
 
-	def get_table(self, heading = None, num_show = None, num_named = None, zero_pad = True,
+	def get_table(self, heading = None, num_show = None,
+			num_named = None, zero_pad = True,
 			float_string = "%4.2f", int_string = "%4d"):
 		output = get_heading(heading) if heading is not None else ''
 		pre_num = heading[0] if heading else " "
@@ -104,12 +107,11 @@ class ResultPrinter:
 				return str(x)
 
 		# Take longest row for zero padding
-		max_length= max(len(r.scores) for r in self.rows)
 		for row in self.rows:
 			if num_show is not None and row.rank > num_show:
 				break
-			if zero_pad is True and max_length > 1:
-				scores = row.scores + [0,] * (max_length-len(row.scores))
+			if zero_pad is True and self.len > 1:
+				scores = row.scores + [0,] * (self.len-len(row.scores))
 			else:
 				scores = row.scores
 			output += pre_num + "%4d. " % row.rank
@@ -149,8 +151,12 @@ class ResultPrinter:
 		output += r"% End awards for " + heading
 		return output
 
-	def get_sheet(self, precision = 2):
-		sheet = [["Rank", "Name", "Total"]]
+	def get_sheet(self, precision = 4, heading = None):
+		header_row = ["Rank", "Name", "Total"]
+		if self.len > 1 and heading is not None:
+			pre_num = heading[0] if heading else ""
+			header_row += [pre_num + str(i) for i in range(1,self.len+1)]
+		sheet = [header_row]
 		for row in self.rows:
 			sheetrow = [row.rank, row.name, \
 					round(row.total, ndigits = precision)]
@@ -160,6 +166,7 @@ class ResultPrinter:
 			sheet.append(sheetrow)
 		return sheet
 
+RP = ResultPrinter # for brevity
 
 ### HMMT TEXT REPORT
 
@@ -210,8 +217,6 @@ def HMMT_text_report(queryset = None,
 
 	all_rows = get_score_rows(queryset)
 
-	RP = ResultPrinter # for brevity
-
 	## Individual Results
 	rows = all_rows['Individual Overall']
 	output += RP(rows).get_table("Overall Individuals (Alphas)",
@@ -253,7 +258,18 @@ def HMMT_text_report(queryset = None,
 	output += "</pre></body></html>"
 	return output
 
+def HMMT_spreadsheet(queryset = None):
+	sheets = collections.OrderedDict() # sheet name -> rows
+	all_rows = get_score_rows(queryset)
 
+	for exam in He.models.Exam.objects.all():
+		sheets[unicode(exam)] = RP(all_rows[exam.name]).get_sheet(heading = exam.name)
+	sheets["Indiv"] = RP(all_rows["Individual Overall"]).get_sheet(heading = None)
+	sheets["Aggr"] = RP(all_rows["Team Aggregate"]).get_sheet(heading = "")
+	sheets["Sweeps"] = RP(all_rows["Sweepstakes"]).get_sheet(heading = None)
+
+	odf = sheetapi.get_odf_spreadsheet(sheets)
+	return odf
 
 ## AWARDS
 
