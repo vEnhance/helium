@@ -3,6 +3,8 @@
 
 # See https://www.hmmt.co/static/scoring-algorithm.pdf for English description
 
+# No longer in use, all grading/weighting is done in algscore.py
+
 from math import exp, fabs
 from operator import itemgetter
 
