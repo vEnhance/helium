@@ -122,7 +122,10 @@ def get_answer_sheets(in_memory_fh, filename):
 
 	elif filename.endswith('.zip'):
 		prefix = filename[:-4] # strip zip extension
-		return # TODO not implemented
+		raise NotImplementedError("Not yet implemented zip")
+
+	else:
+		raise NotImplementedError("You are a terrible person")
 
 if __name__ == "__main__":
 	# This is for testing.
@@ -139,7 +142,7 @@ if __name__ == "__main__":
 	else:
 		filename = sys.argv[1]
 		with open(filename) as pdf:
-			sheets = get_answer_sheets(pdf, "example")
+			sheets = get_answer_sheets(pdf, "example.pdf")
 			a = next(sheets) # answer sheet 1 only
 
 			saveDjangoFile(a.get_full_file())
