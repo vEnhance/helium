@@ -103,13 +103,6 @@ def check_method_compatible(filename, method):
 		return filename.lower().endswith('.zip')
 	return False
 
-def create_sheet_from_path(raw_image_path, name):
-	edited_image_path = raw_image_path + "-shrunk.jpg"
-	raw_image = Image.open(raw_image_path)
-	raw_image.thumbnail((680, 880), Image.BICUBIC) # shrink it
-	raw_image.save(edited_image_path)
-	return AnswerSheetImage(image = Image.open(edited_image_path), name = name)
-
 def get_answer_sheets(in_memory_fh, filename, method):
 	"""Given a file object f, yield answer sheet objects
 	Currently supported: PDF, ZIP."""
@@ -143,7 +136,11 @@ def get_answer_sheets(in_memory_fh, filename, method):
 			raw_image_path = os.path.join(tempdir, name+".jpg")
 			if not os.path.exists(raw_image_path):
 				break
-			yield create_sheet_from_path(raw_image_path, name)
+			edited_image_path = raw_image_path + "-shrunk.jpg"
+			raw_image = Image.open(raw_image_path)
+			raw_image.thumbnail((680, 880), Image.BICUBIC) # shrink it
+			raw_image.save(edited_image_path)
+			yield AnswerSheetImage(image = Image.open(edited_image_path), name = name)
 
 	elif method == "zip":
 		tempdir = tempfile.mkdtemp(prefix='tmp-helium-')
@@ -152,8 +149,8 @@ def get_answer_sheets(in_memory_fh, filename, method):
 		for image_name in archive.namelist():
 			if not image_name.lower().endswith(".jpg"):
 				continue # wrong extension
-			raw_image_path = os.path.join(tempdir, image_name)
-			yield create_sheet_from_path(raw_image_path, name = image_name[:-4])
+			yield AnswerSheetImage(image = Image.open(
+				os.path.join(tempdir, image_name)), name = image_name[:-4])
 	else:
 		raise NotImplementedError("There is no such method %s." %method)
 
