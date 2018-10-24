@@ -106,7 +106,7 @@ def check_method_compatible(filename, method):
 def create_sheet_from_path(raw_image_path, name):
 	edited_image_path = raw_image_path + "-shrunk.jpg"
 	raw_image = Image.open(raw_image_path)
-	raw_image.thumbnail((680, 880)) # shrink it
+	raw_image.thumbnail((680, 880), Image.BICUBIC) # shrink it
 	raw_image.save(edited_image_path)
 	return AnswerSheetImage(image = Image.open(edited_image_path), name = name)
 
