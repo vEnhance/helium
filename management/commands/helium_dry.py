@@ -6,7 +6,7 @@ class Command(BaseCommand):
 	"This lets you restart the grading without redoing scanning."
 
 	def handle(self, *args, **kwargs):
-		print "Before this doing, it's recommended you save a copy of the data by running"
+		print "Before this it's recommended you save a copy of the data by running"
 		print "python manage.py dumpdata helium --indent 1"
 
 		if raw_input("   Type `dry` to continue: ").strip() != 'dry':
