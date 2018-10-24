@@ -67,19 +67,18 @@ class Command(BaseCommand):
 			entities = mathletes if exam.is_indiv else teams
 			all_rows += self.rank_entities(exam.name, entities, all_scores[exam.id])
 
-		# Individual alphas for all mathletes
-		# For now this is duplication, but if we e.g. decide we ever
-		# want to switch to using sums of scores on tests,
-		# this way we can do so
-		alphas = collections.defaultdict(lambda: (0.0,)) # mathlete -> (alpha,)
-		for d in He.models.EntityAlpha.objects.values('entity_id', 'cached_alpha'):
-			alphas[d['entity_id']] = (d['cached_alpha'],)
-		all_rows += self.rank_entities("Individual Overall", mathletes, alphas)
-
-		# Team Individual Aggregate
+		# For each mathelete, create a table with their sum of individual scores.
+		individual_totals = {} # mathlete id -> [tot1, tot2, ...]
+		for mathlete in mathletes:
+			individual_totals[mathlete.id] = [
+					sum(all_scores[exam.id].get(mathlete.id, []))
+					for exam in exams if exam.is_indiv]
+		all_rows += self.rank_entities("Individual Overall", mathletes, individual_totals)
+		
+		# then sum the individual scores for everyone
 		aggr = collections.defaultdict(tuple)
 		for team in teams:
-			aggr[team.id] = [alphas[m.id][0] for m in mathletes if m.team == team]
+			aggr[team.id] = [individual_totals[m.id][0] for m in mathletes if m.team == team]
 			aggr[team.id].sort(reverse=True)
 		all_rows += self.rank_entities("Team Aggregate", teams, aggr)
 

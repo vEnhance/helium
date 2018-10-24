@@ -110,15 +110,14 @@ class ResultPrinter:
 		for row in self.rows:
 			if num_show is not None and row.rank > num_show:
 				break
-			if zero_pad is True and self.len > 1:
+			if zero_pad is True:
 				scores = row.scores + [0,] * (self.len-len(row.scores))
 			else:
 				scores = row.scores
 			output += pre_num + "%4d. " % row.rank
 			output += "%7.2f"  % row.total
-			if len(scores) > 1:
-				output += "  |  "
-				output += " ".join([score_to_string(x) for x in scores])
+			output += "  |  "
+			output += " ".join([score_to_string(x) for x in scores])
 			output += "  |  "
 			if num_named is None or row.rank <= num_named:
 				output += row.name
@@ -219,8 +218,9 @@ def HMMT_text_report(queryset = None,
 
 	## Individual Results
 	rows = all_rows['Individual Overall']
-	output += RP(rows).get_table("Overall Individuals (Alphas)",
-			num_show = num_show, num_named = num_named)
+	output += RP(rows).get_table(heading = "Overall Individual Awards",
+			num_show = num_show, num_named = num_named,
+			float_string = "%5.2f", int_string = "%5d")
 	output += "\n"
 
 	indiv_exams = He.models.Exam.objects.filter(is_indiv=True)
@@ -242,7 +242,8 @@ def HMMT_text_report(queryset = None,
 	# Indiv aggregate
 	rows = all_rows["Team Aggregate"]
 	output += RP(rows).get_table("Team Aggregate",
-			num_show = num_show, num_named = num_named)
+			num_show = num_show, num_named = num_named,
+			float_string = "%6.2f", int_string = "%6d")
 	output += "\n"
 
 	# Sweepstakes
