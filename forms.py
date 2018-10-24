@@ -16,7 +16,7 @@ in the clean() method (not sure if this is the right thing to do).
 from django import forms
 import django.utils.safestring
 import helium as He
-
+import scanimage
 
 class EntityModelChoiceField(forms.ModelChoiceField):
 	"""This is a model choice field which returns verbose names for entities"""
@@ -89,14 +89,23 @@ class EntityExamSelectForm(forms.Form):
 		self.cleaned_data['entity'] = entity
 
 class UploadScanForm(forms.Form):
-	"""Takes an exam and a PDF scan of several pages"""
+	"""Takes an exam and a scan of several pages"""
 	exam = forms.ModelChoiceField(
 			label = "Exam",
 			queryset = He.models.Exam.objects.filter(can_upload_scan=True),
 			help_text = "Please, please, PLEASE check this is right!")
-	pdf = forms.FileField(label = "Upload PDF",
-			help_text = "Note file names must be unique; "\
+	scan_file = forms.FileField(label = "Upload scan",
+			help_text = "Either PDF or ZIP. File names must be unique; "\
 			"this is a safety feature to prevent accidental double submission.")
+	convert_method = forms.ChoiceField(label = "Method",
+			help_text = "This is the method that the server uses to convert "\
+			"the supplied file to scans.  "\
+			"If you don't know what you're doing, use the first option.",
+			choices = (
+				("poppler", "PDF Poppler"),
+				("ghostscript", "PDF Ghostscript"),
+				("zip", "ZIP file"),
+			))
 
 class NeedsAttentionForm(forms.ModelForm):
 	"""A simple form which toggles whether a exam scribble needs attention."""

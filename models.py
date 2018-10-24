@@ -321,7 +321,8 @@ class EntirePDFScribble(models.Model):
 			help_text = "The name of the PDF file, which must be unique "\
 			"(this is a safety feature to prevent accidental double uploads). ")
 	exam = models.ForeignKey(Exam, help_text = "The exam associated to this PDF.")
-	is_done = models.BooleanField(default=False, help_text = "Whether the PDF is done converting.")
+	is_done = models.BooleanField(default=False,
+			help_text = "Whether the PDF is done converting.")
 	def page_count(self):
 		return self.examscribble_set.count()
 	def __unicode__(self): return unicode(self.name)

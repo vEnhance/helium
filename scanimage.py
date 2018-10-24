@@ -28,10 +28,10 @@ This will generate the cut-outs of the first page of that PDF file.
 By design, this module is agnostic to remaining components of helium.
 """
 
-import ctypes
-import ghostscript
+import zipfile
 import tempfile
 import os
+import subprocess
 from PIL import Image
 
 import StringIO
@@ -94,38 +94,62 @@ class AnswerSheetImage:
 			filename = '%s-prob-%02d.jpg' % (self.name, i+1)
 			yield self.get_django_cutout(rect, filename)
 
-def get_answer_sheets(in_memory_fh, filename):
-	"""Given a file object f, yield answer sheet objects."""
-	if filename.endswith('.pdf'): # which SHOULD be the case!
+def check_method_compatible(filename, method):
+	"""Returns a string with an error message if not OK,
+	otherwise returns None."""
+	if method == "poppler" or method == 'ghostscript':
+		return filename.lower().endswith('.pdf')
+	elif method == "zip":
+		return filename.lower().endswith('.zip')
+	return False
+
+def get_answer_sheets(in_memory_fh, filename, method):
+	"""Given a file object f, yield answer sheet objects
+	Currently supported: PDF, ZIP."""
+	if method == "poppler" or method == "ghostscript":
 		prefix = filename[:-4] # strip pdf extension
 		tempdir = tempfile.mkdtemp(prefix='tmp-helium-')
-
 		# from https://stackoverflow.com/a/36113000/4826845
 		with tempfile.NamedTemporaryFile(prefix='scan-helium-',
 				delete=False, suffix=".pdf") as temp_pdf_file:
 			temp_pdf_file.write(in_memory_fh.read())
 		pdf_input_path = temp_pdf_file.name
-		args = ["evan chen is really cool", # actual value doesn't matter
-				"-dNOPAUSE",
-				"-sDEVICE=jpeg",
-				"-r144",
-				"-sOutputFile=" + os.path.join(tempdir, prefix+"-sheet%04d.jpg"),
-				pdf_input_path]
-		ghostscript.Ghostscript(*args)
 
-		for n in xrange(1,10000):
-			name = prefix+"-sheet%04d" % n
+		# generate the images now from PDF using an external command
+		if method == "ghostscript":
+			import ghostscript # the can of worms
+			args = ["evan chen is really cool", # actual value doesn't matter
+					"-dNOPAUSE",
+					"-sDEVICE=jpeg",
+					"-r144",
+					"-sOutputFile=" + os.path.join(tempdir, prefix+"-%03d.jpg"),
+					pdf_input_path]
+			ghostscript.Ghostscript(*args)
+		else: # method == "poppler"
+			command = 'pdfimages -all %s %s' \
+					%(pdf_input_path, os.path.join(tempdir, prefix))
+			os.system(command)
+
+		for n in xrange(0,1000):
+			if method=='ghostscript' and n == 0: continue # gs is 1-indexed
+			name = prefix+"-%03d" % n
 			image_path = os.path.join(tempdir, name+".jpg")
 			if not os.path.exists(image_path):
 				break
 			yield AnswerSheetImage(image = Image.open(image_path), name = name)
 
-	elif filename.endswith('.zip'):
+	elif method == "zip":
 		prefix = filename[:-4] # strip zip extension
-		raise NotImplementedError("Not yet implemented zip")
+		tempdir = tempfile.mkdtemp(prefix='tmp-helium-')
+		archive = zipfile.ZipFile(in_memory_fh)
+		archive.extractall(tempdir)
+		for image_name in archive.namelist():
+			if not image_name.lower().endswith(".jpg"): continue
+			image_path = os.path.join(tempdir, image_name)
+			yield AnswerSheetImage(image = Image.open(image_path), name = image_name[:-4])
 
 	else:
-		raise NotImplementedError("You are a terrible person")
+		raise NotImplementedError("There is no such method %s." %method)
 
 if __name__ == "__main__":
 	# This is for testing.

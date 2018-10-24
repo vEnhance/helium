@@ -56,6 +56,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.contrib import messages
 from django.db.models import Count
 from django.utils.html import escape
+from django.utils import timezone
 import django.core.management
 import django.db
 import json
@@ -63,7 +64,6 @@ import logging
 import collections
 import random
 import time
-from datetime import datetime
 
 # The following imports are Helium specific
 import helium as He
@@ -602,72 +602,88 @@ def upload_scans(request):
 	if request.method == "POST":
 		form = forms.UploadScanForm(request.POST, request.FILES)
 		if form.is_valid():
-			pdf_file = request.FILES['pdf']
-			pdf_name = pdf_file.name
+			def fail_err(error_message):
+				messages.error(request, error_message)
+				return render(request, "helium/upload-scans.html", {'form' : form})
+
+			scan_file = request.FILES['scan_file']
+			scan_name = scan_file.name
 			exam = form.cleaned_data['exam']
-			if not pdf_name.endswith(".pdf") and not pdf_name.endswith(".PDF"):
-				messages.error(request, "File must end with .pdf or .PDF.")
-			elif He.models.EntirePDFScribble.objects.filter(name = pdf_name).exists():
-				messages.error(request, "PDF with name %s was already uploaded. "\
-						"No action taken." % pdf_name)
-			else:
-				pdfscribble = He.models.EntirePDFScribble(name = pdf_name, exam = exam)
-				pdfscribble.save()
-				# get problem ID's
-				pdicts = He.models.Problem.objects.filter(exam=exam)\
-						.values('id', 'problem_number')
-				pids = dict( (_['problem_number'], _['id']) for _ in pdicts)
-				
-				# queue up things to bulk create
-				sheets = list(scanimage.get_answer_sheets(pdf_file, filename = pdf_name))
-				problems_per_sheet = scanimage.PROBLEMS_PER_SHEET
-				num_sheets = len(sheets)
-				assert num_sheets > 0, "0 pages were produced!"
+			convert_method  = form.cleaned_data['convert_method']
 
-				# bulk create verdicts for this PDF
-				v_to_bulk_create = []
-				now = datetime.now()
-				for n in xrange(1, problems_per_sheet+1):
-					v_to_bulk_create += [
-							He.models.Verdict(problem_id = pids[n], scanned_at = now)\
-							for _ in xrange(num_sheets)]
-				He.models.Verdict.objects.bulk_create(v_to_bulk_create)
+			# check that this file doesn't exist already, quit if does
+			if He.models.EntirePDFScribble.objects.filter(name = scan_name).exists():
+				return fail_err("Scan with name %s was already uploaded. "\
+						"No action taken." % scan_name)
+			# check filetype compatible with method
+			if not scanimage.check_method_compatible(scan_name, convert_method):
+				return fail_err("The method you chose isn't compatible "\
+						"with the file you uploaded.")
 
-				# Get a list of ID's to use for these verdicts
-				vids = collections.defaultdict(list)
+			# get the actual scans now
+			sheets = list(scanimage.get_answer_sheets(
+				scan_file, filename = scan_name, method = convert_method))
+			problems_per_sheet = scanimage.PROBLEMS_PER_SHEET
+			num_sheets = len(sheets)
+			assert num_sheets > 0, "No sheets produced"
 
-				for problem_id, vid in He.models.Verdict.objects\
-						.filter(scanned_at=now)\
-						.values_list('problem_id', 'id'):
-					vids[problem_id].append(vid)
-					# heh now you know why scanned_at is here
+			# OK, the scanner didn't crash, let's create the object
+			pdfscribble = He.models.EntirePDFScribble(name = scan_name, exam = exam)
+			pdfscribble.save()
 
-				ps_to_bulk_create = []
-				for sheet in sheets:
-					es = He.models.ExamScribble(
-							pdf_scribble = pdfscribble,
-							exam = exam,
-							full_image = sheet.get_full_file(),
-							name_image = sheet.get_name_file())
-					es.save() # sad, don't see a way around this without PostGre D:
+			# get relevant problem ID's
+			pdicts = He.models.Problem.objects.filter(exam=exam)\
+					.values('id', 'problem_number')
+			pids = dict( (_['problem_number'], _['id']) for _ in pdicts)
 
-					n = 0 # problem number
-					for prob_image in sheet.get_problem_files():
-						n += 1
-						verdict_id = vids[pids[n]].pop()
-						ps_to_bulk_create.append(He.models.ProblemScribble(
-							examscribble = es,
-							verdict_id = verdict_id,
-							prob_image = prob_image))
+			# bulk create verdicts for this PDF
+			v_to_bulk_create = []
+			now = timezone.now()
+			for n in xrange(1, problems_per_sheet+1):
+				v_to_bulk_create += [
+						He.models.Verdict(problem_id = pids[n], scanned_at = now)\
+						for _ in xrange(num_sheets)]
+			He.models.Verdict.objects.bulk_create(v_to_bulk_create)
 
-				for n in range(1, problems_per_sheet+1):
-					assert len(vids[pids[n]])==0, "not all ID's used"
-				He.models.ProblemScribble.objects.bulk_create(ps_to_bulk_create)
+			# Get a list of ID's to use for these verdicts
+			vids = collections.defaultdict(list)
+			for problem_id, vid in He.models.Verdict.objects\
+					.filter(scanned_at=now)\
+					.values_list('problem_id', 'id'):
+				vids[problem_id].append(vid)
+				# heh now you know why scanned_at is here
 
-				# OK, all done
-				pdfscribble.is_done = True
-				pdfscribble.save()
-				messages.success(request, "PDF %s uploaded" %pdf_name)
+			ps_to_bulk_create = []
+			for sheet in sheets:
+				es = He.models.ExamScribble(
+						pdf_scribble = pdfscribble,
+						exam = exam,
+						full_image = sheet.get_full_file(),
+						name_image = sheet.get_name_file())
+				es.save() # sad, don't see a way around this without PostGre D:
+
+				n = 0 # problem number
+				for prob_image in sheet.get_problem_files():
+					n += 1
+					verdict_id = vids[pids[n]].pop()
+					ps_to_bulk_create.append(He.models.ProblemScribble(
+						examscribble = es,
+						verdict_id = verdict_id,
+						prob_image = prob_image))
+
+			for n in range(1, problems_per_sheet+1):
+				assert len(vids[pids[n]])==0, "not all ID's used"
+			He.models.ProblemScribble.objects.bulk_create(ps_to_bulk_create)
+
+			# OK, all done
+			pdfscribble.is_done = True
+			pdfscribble.save()
+			messages.success(request,
+					"%s uploaded and converted successfully" %scan_name)
+			form = forms.UploadScanForm() # fresh form for next upload
+		else:
+			# form is invalid, do nothing
+			pass
 	else:
 		form = forms.UploadScanForm()
 	return render(request, "helium/upload-scans.html", {'form' : form})
