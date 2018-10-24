@@ -13,7 +13,6 @@ General overview of models:
   based on Evidence (one for each grader who read the problem)
 * ExamScribble and ProblemScribble objects keep track of scans
 * EntirePDFScribble is a container for keeping track of uploaded PDF's
-* EntityAlpha is a way to store alpha values (so we don't have to keep recomputing them)
 * GutsScoreFunc is a stupid applet that lets you compute guts estimation scores
 * ScoreRow is used for the caching of score results
 * ThreadTask is used for the management of async tasks (see threader.py)
@@ -477,13 +476,6 @@ class GutsScoreFunc(models.Model):
 		return "Guts %d" %self.problem_number
 	
 
-# HMMT object to store pairs of alpha and entity
-class EntityAlpha(models.Model):
-	"""This is a storage object which keeps the alpha value for an entity.
-	(Algorithmic scoring for HMMT.)"""
-	entity = models.OneToOneField(Entity, on_delete=models.CASCADE)
-	cached_alpha = models.FloatField(blank=True, null=True)
-
 class ScoreRow(models.Model):
 	"""This is a storage object which keeps the exam scores for an entity."""
 	category = models.CharField(max_length=80,\
@@ -532,12 +524,5 @@ class ThreadTaskRecord(models.Model):
 #	return [v.problem.intweight * (v.score or 0)
 #		if not v.problem.allow_partial else (v.score or 0)
 #		for v in queryset]
-
-def get_alpha(entity):
-	"""Wrapper function to look up the alpha value for an entity.
-	Creates the EntityAlpha object if it doesn't yet exist.
-	Returns 0 if no alpha value has been assigned yet."""
-	m, _ = EntityAlpha.objects.get_or_create(entity=entity)
-	return m.cached_alpha or 0
 
 # vim: foldnestmax=1 foldlevel=1 fdm=indent

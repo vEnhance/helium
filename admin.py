@@ -193,12 +193,6 @@ class GutsScoreFuncAdmin(ImportExportModelAdmin):
 	search_fields = ('problem_number', 'description',)
 	resource_class = GutsScoreFuncResource
 
-@admin.register(He.models.EntityAlpha)
-class AlphaAdmin(ImportExportModelAdmin):
-	list_display = ('entity', 'cached_alpha', 'id')
-	search_fields = ('entity__name',)
-	raw_id_fields = ('entity',)
-
 @admin.register(He.models.ScoreRow)
 class RowAdmin(ImportExportModelAdmin):
 	list_display = ('entity', 'category',  'rank', 'total', 'scores')

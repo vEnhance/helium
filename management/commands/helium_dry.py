@@ -18,5 +18,4 @@ class Command(BaseCommand):
 		He.models.Verdict.objects.filter(problem__exam__is_scanned=False).delete()
 		He.models.ExamScribble.objects.update(entity=None, last_sent_time=None)
 		He.models.Evidence.objects.all().delete()
-		He.models.EntityAlpha.objects.all().delete()
 		He.models.ScoreRow.objects.all().delete()
