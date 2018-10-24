@@ -625,7 +625,8 @@ def upload_scans(request):
 				scan_file, filename = scan_name, method = convert_method))
 			problems_per_sheet = scanimage.PROBLEMS_PER_SHEET
 			num_sheets = len(sheets)
-			assert num_sheets > 0, "No sheets produced"
+			if num_sheets == 0:
+				return fail_err("No sheets produced!")
 
 			# OK, the scanner didn't crash, let's create the object
 			pdfscribble = He.models.EntirePDFScribble(name = scan_name, exam = exam)
