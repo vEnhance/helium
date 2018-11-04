@@ -656,24 +656,20 @@ def upload_scans(request):
 
 			def get_entity(exam, sheet):
 				# Entity derivation
-				qrs = tuple(set(sheet.get_qr_codes(dump=False)))
-				entity = None
-				for qr in qrs:
-					idtype = qr[0]  # C: competitor, T: team
-					idval = int(qr[1:])  # numeric ID value
-					if exam.is_indiv and ('C' == idtype):
-						queryset = He.models.Entity.mathletes.filter(number=idval)
-					elif exam.is_team and ('T' == idtype):
-						queryset = He.models.Entity.team.filter(number=idval)
-					else:
-						continue
-					queryset = list(queryset)
-					if 1 == len(queryset):  # Unique resulting entity
-						if entity is None:
-							entity = queryset[0]
-						else:  # Uh-oh, multiple valid QR codes found!!! :'(
+				qrs = set(sheet.get_qr_codes())
+				try:
+					if 1 == len(qrs):
+						qr = qrs.pop()
+						idtype = qr[0]  # C: competitor, T: team
+						idval = int(qr[1:])  # numeric ID value
+						if exam.is_indiv and ('C' == idtype):
+							return He.models.Entity.mathletes.get(number=idval)
+						elif exam.is_team and ('T' == idtype):
+							return He.models.Entity.team.get(number=idval)
+						else:
 							return None
-				return entity
+				except:
+					return None
 
 			ps_to_bulk_create = []
 			exams_to_assign = []

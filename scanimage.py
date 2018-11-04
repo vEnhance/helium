@@ -92,12 +92,16 @@ class AnswerSheetImage:
 		filename = '%s-name.jpg' % self.name
 		return self.get_django_cutout(CUTOUT_NAME_REGION, filename)
 
-	# dump=False returns a list of QR codes instead
-	def get_qr_codes(self, dump=True):
+	# dump=True returns a file of the QR codes instead
+	def get_qr_codes(self, dump=False):
+		"""Returns all QR codes found as a list, or a file is dump=True"""
 		filename = '%s-qr.txt' % self.name
 		image = cv2.imread(self.raw_path)
+		# Make the QR codes easier to find
+		image[image > 127] = 255
+		image[image < 128] = 0
 		qrs = pyzbar.decode(image)
-		data = sorted(qr.data for qr in qrs)
+		data = [qr.data for qr in qrs]
 		if not dump:
 			return data
 		codes = ','.join(data)
@@ -119,7 +123,7 @@ def check_method_compatible(filename, method):
 		return filename.lower().endswith('.zip')
 	return False
 
-def get_answer_sheets(in_memory_fh, filename, method="ghostscript"):
+def get_answer_sheets(in_memory_fh, filename, method="poppler"):
 	"""Given a file object f, yield answer sheet objects
 	Currently supported: PDF, ZIP."""
 	if method in ("poppler", "ghostscript", "magick"):
@@ -132,7 +136,7 @@ def get_answer_sheets(in_memory_fh, filename, method="ghostscript"):
 		pdf_input_path = temp_pdf_file.name
 
 		if method == "magick": # method == "magick"
-			command = 'convert -density 150 %s -quality 10 %s' \
+			command = 'convert -density 144 %s -quality 10 %s' \
 					%(pdf_input_path, os.path.join(tempdir, prefix+"-%03d.jpg"))
 			os.system(command)
 		# generate the images now from PDF using an external command
@@ -141,7 +145,7 @@ def get_answer_sheets(in_memory_fh, filename, method="ghostscript"):
 			args = ["evan chen is really cool", # actual value doesn't matter
 					"-dNOPAUSE",
 					"-sDEVICE=jpeg",
-					"-r300",
+					"-r144",
 					"-sOutputFile=" + os.path.join(tempdir, prefix+"-%03d.jpg"),
 					pdf_input_path]
 			ghostscript.Ghostscript(*args)
@@ -191,11 +195,11 @@ if __name__ == "__main__":
 	else:
 		filename = sys.argv[1]
 		with open(filename) as pdf:
-			sheets = get_answer_sheets(pdf, "example.pdf")
+			sheets = get_answer_sheets(pdf, "example.pdf", "poppler")
 			a = next(sheets) # answer sheet 1 only
 
 			saveDjangoFile(a.get_full_file())
 			saveDjangoFile(a.get_name_file())
-			saveDjangoFile(a.get_qr_codes())
+			saveDjangoFile(a.get_qr_codes(dump=True))
 			for pf in a.get_problem_files():
 				saveDjangoFile(pf)

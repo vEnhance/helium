@@ -102,8 +102,8 @@ class UploadScanForm(forms.Form):
 			"the supplied file to scans.  "\
 			"If you don't know what you're doing, use the first option.",
 			choices = (
-				("ghostscript", "PDF Ghostscript"),
 				("poppler", "PDF Poppler"),
+				("ghostscript", "PDF Ghostscript"),
 				("magick", "PDF ImageMagick"),
 				("zip", "ZIP file"),
 			))
