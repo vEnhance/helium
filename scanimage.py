@@ -33,6 +33,8 @@ import tempfile
 import os
 import subprocess
 from PIL import Image
+from pyzbar import pyzbar
+import cv2
 
 import StringIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
@@ -66,9 +68,10 @@ def to_django_file(image, filename):
 
 class AnswerSheetImage:
 	"""This is a wrapper class that has all the data of a single answer sheet"""
-	def __init__(self, image, name):
+	def __init__(self, image, name, raw_path):
 		self.full_image = image
 		self.name = name
+		self.raw_path = raw_path
 
 	def get_django_cutout(self, rect, filename):
 		width = self.full_image.width
@@ -89,6 +92,19 @@ class AnswerSheetImage:
 		filename = '%s-name.jpg' % self.name
 		return self.get_django_cutout(CUTOUT_NAME_REGION, filename)
 
+	# dump=False returns a list of QR codes instead
+	def get_qr_codes(self, dump=True):
+		filename = '%s-qr.txt' % self.name
+		image = cv2.imread(self.raw_path)
+		qrs = pyzbar.decode(image)
+		data = sorted(qr.data for qr in qrs)
+		if not dump:
+			return data
+		codes = ','.join(data)
+		io = StringIO.StringIO()
+		io.write(codes)
+		return InMemoryUploadedFile(io, None, filename, 'plain/txt', io.len, None)
+
 	def get_problem_files(self):
 		for i, rect in enumerate(CUTOUT_PROBLEM_REGIONS):
 			filename = '%s-prob-%02d.jpg' % (self.name, i+1)
@@ -97,16 +113,16 @@ class AnswerSheetImage:
 def check_method_compatible(filename, method):
 	"""Returns a string with an error message if not OK,
 	otherwise returns None."""
-	if method == "poppler" or method == 'ghostscript':
+	if method in("poppler", "ghostscript", "magick"):
 		return filename.lower().endswith('.pdf')
 	elif method == "zip":
 		return filename.lower().endswith('.zip')
 	return False
 
-def get_answer_sheets(in_memory_fh, filename, method):
+def get_answer_sheets(in_memory_fh, filename, method="ghostscript"):
 	"""Given a file object f, yield answer sheet objects
 	Currently supported: PDF, ZIP."""
-	if method == "poppler" or method == "ghostscript":
+	if method in ("poppler", "ghostscript", "magick"):
 		prefix = filename[:-4] # strip pdf extension
 		tempdir = tempfile.mkdtemp(prefix='tmp-helium-')
 		# from https://stackoverflow.com/a/36113000/4826845
@@ -115,13 +131,17 @@ def get_answer_sheets(in_memory_fh, filename, method):
 			temp_pdf_file.write(in_memory_fh.read())
 		pdf_input_path = temp_pdf_file.name
 
+		if method == "magick": # method == "magick"
+			command = 'convert -density 150 %s -quality 10 %s' \
+					%(pdf_input_path, os.path.join(tempdir, prefix+"-%03d.jpg"))
+			os.system(command)
 		# generate the images now from PDF using an external command
-		if method == "ghostscript":
+		elif method == "ghostscript":
 			import ghostscript # the can of worms
 			args = ["evan chen is really cool", # actual value doesn't matter
 					"-dNOPAUSE",
 					"-sDEVICE=jpeg",
-					"-r144",
+					"-r300",
 					"-sOutputFile=" + os.path.join(tempdir, prefix+"-%03d.jpg"),
 					pdf_input_path]
 			ghostscript.Ghostscript(*args)
@@ -140,7 +160,9 @@ def get_answer_sheets(in_memory_fh, filename, method):
 			raw_image = Image.open(raw_image_path)
 			raw_image.thumbnail((680, 880), Image.BICUBIC) # shrink it
 			raw_image.save(edited_image_path)
-			yield AnswerSheetImage(image = Image.open(edited_image_path), name = name)
+			yield AnswerSheetImage(
+					image = Image.open(edited_image_path), name = name,
+					raw_path = raw_image_path)
 
 	elif method == "zip":
 		tempdir = tempfile.mkdtemp(prefix='tmp-helium-')
@@ -174,5 +196,6 @@ if __name__ == "__main__":
 
 			saveDjangoFile(a.get_full_file())
 			saveDjangoFile(a.get_name_file())
+			saveDjangoFile(a.get_qr_codes())
 			for pf in a.get_problem_files():
 				saveDjangoFile(pf)

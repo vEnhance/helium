@@ -609,7 +609,7 @@ def upload_scans(request):
 			scan_file = request.FILES['scan_file']
 			scan_name = scan_file.name
 			exam = form.cleaned_data['exam']
-			convert_method  = form.cleaned_data['convert_method']
+			convert_method = form.cleaned_data['convert_method']
 
 			# check that this file doesn't exist already, quit if does
 			if He.models.EntirePDFScribble.objects.filter(name = scan_name).exists():
@@ -654,14 +654,41 @@ def upload_scans(request):
 				vids[problem_id].append(vid)
 				# heh now you know why scanned_at is here
 
+			def get_entity(exam, sheet):
+				# Entity derivation
+				qrs = tuple(set(sheet.get_qr_codes(dump=False)))
+				entity = None
+				for qr in qrs:
+					idtype = qr[0]  # C: competitor, T: team
+					idval = int(qr[1:])  # numeric ID value
+					if exam.is_indiv and ('C' == idtype):
+						queryset = He.models.Entity.mathletes.filter(number=idval)
+					elif exam.is_team and ('T' == idtype):
+						queryset = He.models.Entity.team.filter(number=idval)
+					else:
+						continue
+					queryset = list(queryset)
+					if 1 == len(queryset):  # Unique resulting entity
+						if entity is None:
+							entity = queryset[0]
+						else:  # Uh-oh, multiple valid QR codes found!!! :'(
+							return None
+				return entity
+
 			ps_to_bulk_create = []
+			exams_to_assign = []
 			for sheet in sheets:
+				entity = get_entity(exam, sheet)
+
 				es = He.models.ExamScribble(
 						pdf_scribble = pdfscribble,
 						exam = exam,
 						full_image = sheet.get_full_file(),
 						name_image = sheet.get_name_file())
 				es.save() # sad, don't see a way around this without PostGre D:
+
+				if entity:
+					exams_to_assign.append((es, entity))
 
 				n = 0 # problem number
 				for prob_image in sheet.get_problem_files():
@@ -675,6 +702,9 @@ def upload_scans(request):
 			for n in range(1, problems_per_sheet+1):
 				assert len(vids[pids[n]])==0, "not all ID's used"
 			He.models.ProblemScribble.objects.bulk_create(ps_to_bulk_create)
+
+			for e, ent in exams_to_assign:
+				e.assign(ent)
 
 			# OK, all done
 			pdfscribble.is_done = True

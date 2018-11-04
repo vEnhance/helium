@@ -102,8 +102,9 @@ class UploadScanForm(forms.Form):
 			"the supplied file to scans.  "\
 			"If you don't know what you're doing, use the first option.",
 			choices = (
-				("poppler", "PDF Poppler"),
 				("ghostscript", "PDF Ghostscript"),
+				("poppler", "PDF Poppler"),
+				("magick", "PDF ImageMagick"),
 				("zip", "ZIP file"),
 			))
 
@@ -230,10 +231,12 @@ class ExamScribbleMatchRobustForm(forms.Form):
 		self.exam = self.examscribble.exam
 
 		if self.exam.is_indiv:
+			self.initial['entity'] = self.exam.entity
 			self.fields['entity'] = EntityModelChoiceField(\
 					queryset = He.models.Entity.mathletes.all(),
 					label = "Mathlete", required=False)
 		else:
+			self.initial['entity'] = self.exam.entity
 			self.fields['entity'] = EntityModelChoiceField(\
 					queryset = He.models.Entity.teams.all(),
 					label = "Team", required=False)
