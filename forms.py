@@ -229,14 +229,13 @@ class ExamScribbleMatchRobustForm(forms.Form):
 		self.user = kwargs.pop('user')
 		super(forms.Form, self).__init__(*args, **kwargs)
 		self.exam = self.examscribble.exam
+		self.initial['entity'] = self.examscribble.entity
 
 		if self.exam.is_indiv:
-			self.initial['entity'] = self.exam.entity
 			self.fields['entity'] = EntityModelChoiceField(\
 					queryset = He.models.Entity.mathletes.all(),
 					label = "Mathlete", required=False)
 		else:
-			self.initial['entity'] = self.exam.entity
 			self.fields['entity'] = EntityModelChoiceField(\
 					queryset = He.models.Entity.teams.all(),
 					label = "Team", required=False)
