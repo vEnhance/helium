@@ -168,8 +168,10 @@ def get_answer_sheets(in_memory_fh, filename, method="poppler"):
 		for image_name in archive.namelist():
 			if not image_name.lower().endswith(".jpg"):
 				continue # wrong extension
-			yield AnswerSheetImage(image = Image.open(
-				os.path.join(tempdir, image_name)), name = image_name[:-4])
+			raw_path = os.path.join(tempdir, image_name)
+			yield AnswerSheetImage(image = Image.open(raw_path),
+					name = image_name[:-4],
+					raw_path = raw_path)
 	else:
 		raise NotImplementedError("There is no such method %s." %method)
 
