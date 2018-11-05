@@ -656,6 +656,7 @@ def upload_scans(request):
 
 			def get_entity(exam, sheet):
 				# Entity derivation
+				if exam.uses_qr is False: return None
 				qr = sheet.get_qr_code()
 				try:
 					idtype = qr[0]  # C: competitor, T: team
@@ -681,7 +682,7 @@ def upload_scans(request):
 						name_image = sheet.get_name_file())
 				es.save() # sad, don't see a way around this without PostGre D:
 
-				if entity:
+				if entity is not None:
 					exams_to_assign.append((es, entity))
 
 				n = 0 # problem number
@@ -697,8 +698,8 @@ def upload_scans(request):
 				assert len(vids[pids[n]])==0, "not all ID's used"
 			He.models.ProblemScribble.objects.bulk_create(ps_to_bulk_create)
 
-			for e, ent in exams_to_assign:
-				e.assign(ent)
+			for es, entity in exams_to_assign:
+				es.assign(entity)
 
 			# OK, all done
 			pdfscribble.is_done = True

@@ -161,6 +161,8 @@ class Exam(models.Model):
 	is_scanned = models.BooleanField(default=False,
 			help_text = "Whether the scan grader will show this problem or not. "
 			"For example, this should almost certainly be False for Guts round.")
+	uses_qr = models.BooleanField(default=False,
+			help_text = "Whether to enable QR codes for name matching for this test. ")
 
 	min_grades = models.IntegerField(default=3,
 			help_text="This is the minimum number of graders required before "
