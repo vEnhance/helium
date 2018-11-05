@@ -92,22 +92,15 @@ class AnswerSheetImage:
 		filename = '%s-name.jpg' % self.name
 		return self.get_django_cutout(CUTOUT_NAME_REGION, filename)
 
-	# dump=True returns a file of the QR codes instead
-	def get_qr_codes(self, dump=False):
-		"""Returns all QR codes found as a list, or a file is dump=True"""
-		filename = '%s-qr.txt' % self.name
+	def get_qr_code(self):
+		"""Returns the QR code on the page (None if not exactly one found)"""
 		image = cv2.imread(self.raw_path)
 		# Make the QR codes easier to find
 		image[image > 127] = 255
 		image[image < 128] = 0
 		qrs = pyzbar.decode(image)
-		data = [qr.data for qr in qrs]
-		if not dump:
-			return data
-		codes = ','.join(data)
-		io = StringIO.StringIO()
-		io.write(codes)
-		return InMemoryUploadedFile(io, None, filename, 'plain/txt', io.len, None)
+		if len(qrs) != 1: return None
+		return qrs[0].data
 
 	def get_problem_files(self):
 		for i, rect in enumerate(CUTOUT_PROBLEM_REGIONS):
@@ -200,6 +193,7 @@ if __name__ == "__main__":
 
 			saveDjangoFile(a.get_full_file())
 			saveDjangoFile(a.get_name_file())
-			saveDjangoFile(a.get_qr_codes(dump=True))
+			with open("qr.txt") as f:
+				f.write(a.get_qr_code())
 			for pf in a.get_problem_files():
 				saveDjangoFile(pf)
