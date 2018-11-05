@@ -669,6 +669,8 @@ def upload_scans(request):
 						return None
 				except He.models.Entity.DoesNotExist:
 					return None
+				except ValueError:
+					return None
 
 			ps_to_bulk_create = []
 			exams_to_assign = []
