@@ -193,7 +193,7 @@ def grade_scans(request, problem_id):
 			{'problem' : problem, 'exam': problem.exam})
 
 ## VIEWS FOR VERDICTS AND SCANS
-def _get_vtable(request, verdicts):
+def _get_vtable(verdicts):
 	table = []
 	columns = ['Entity', 'Problem', 'Score', 'Size']
 	for verdict in verdicts:
@@ -316,7 +316,7 @@ def view_paper(request, *args):
 		context['title'] = "%s for %s" %(entity, exam)
 		verdicts = He.models.Verdict.objects\
 				.filter(problem__exam = exam, entity = entity)
-	context['columns'], context['table'] =  _get_vtable(request, verdicts)
+	context['columns'], context['table'] =  _get_vtable(verdicts)
 	context['exam'] = exam
 	context['entity'] = entity
 
@@ -331,13 +331,13 @@ def view_paper(request, *args):
 
 @staff_member_required
 def view_conflicts_all(request):
-	columns, table = _get_vtable(request, He.models.Verdict.objects\
+	columns, table = _get_vtable(He.models.Verdict.objects\
 			.filter(is_valid=False, problem__exam__is_ready = True) )
 	context = {'columns' : columns, 'table' : table, 'pagetitle' : 'All Grading Conflicts'}
 	return render(request, "helium/table-only.html", context)
 @staff_member_required
 def view_conflicts_own(request):
-	columns, table = _get_vtable(request, He.models.Verdict.objects\
+	columns, table = _get_vtable(He.models.Verdict.objects\
 			.filter(is_valid=False, problem__exam__is_ready = True,
 				evidence__user = request.user) )
 	context = {'columns' : columns, 'table' : table, 'pagetitle' : 'Own Grading Conflicts'}
