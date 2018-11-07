@@ -81,7 +81,10 @@ class ResultPrinter:
 	(the latter which should probably be fed into get_odf_spreadsheet"""
 	def __init__(self, rows):
 		self.rows = list(rows)
-		self.len = max(len(r.scores) for r in self.rows)
+		if len(self.rows) > 0:
+			self.len = max(len(r.scores) for r in self.rows)
+		else:
+			self.len = 0
 		self.rows.sort(key = lambda r : r.rank)
 
 
