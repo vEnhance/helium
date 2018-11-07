@@ -328,6 +328,13 @@ def view_paper(request, *args):
 			show_god = True)
 	context['gradeurl'] = "/helium/old-grader/exam/%d/" %exam.id
 	return render(request, "helium/view-paper.html", context)
+@staff_member_required
+def view_comedy(request, num_verdicts):
+	columns, table = _get_vtable(He.models.Verdict.objects\
+			.annotate(size = Count('evidence')).order_by('-size')[0:num_verdicts])
+	context = {'columns' : columns, 'table' : table,
+			'pagetitle' : 'Comedic Answers View'}
+	return render(request, "helium/table-only.html", context)
 
 @staff_member_required
 def view_conflicts_all(request):
