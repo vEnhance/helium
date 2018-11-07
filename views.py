@@ -221,10 +221,10 @@ def view_verdict(request, verdict_id):
 		if form.is_valid(): # and we're done!
 			entity = form.cleaned_data['entity']
 			messages.success(request, "Successfully submitted evidence for %s" % entity)
+		verdict.refresh_from_db()
 	else:
 		form = forms.ExamGradingRobustForm(**form_args)
 
-	verdict.refresh_from_db()
 	table = []
 	columns = ['Score', 'User', 'God Mode']
 	for evidence in verdict.evidence_set.all():
