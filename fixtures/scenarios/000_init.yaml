@@ -30,7 +30,7 @@
     user_permissions: []
 - model: helium.exam
   pk: 6
-  fields: {name: GEO!, color: '#EEFFEE', is_indiv: true, is_ready: true, is_alg_scoring: true, uses_qr: True,
+  fields: {name: 'Indiv Round', color: '#EEFFEE', is_indiv: true, is_ready: true, is_alg_scoring: true, uses_qr: True,
     can_upload_scan: true, is_scanned: true, min_grades: 2, min_override: 3}
 - model: helium.exam
   pk: 7
