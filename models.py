@@ -157,7 +157,9 @@ class Exam(models.Model):
 			help_text = "Mark true if you want users to be able to upload scans this exam. "
 			"You should set it to False after all exams are scanned, "
 			"to decrease the chance that someone uploads a scan to the wrong place.")
-	is_alg_scoring = models.BooleanField(default=True)
+	is_alg_scoring = models.BooleanField(default=True,
+			help_text = "Whether this test should use algorithmic scoring "
+			"to have problem weights determined for it.")
 	is_scanned = models.BooleanField(default=False,
 			help_text = "Whether the scan grader will show this problem or not. "
 			"For example, this should almost certainly be False for Guts round.")
