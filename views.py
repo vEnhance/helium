@@ -709,8 +709,12 @@ def upload_scans(request):
 			# OK, all done
 			pdfscribble.is_done = True
 			pdfscribble.save()
-			messages.success(request,
-					"%s uploaded and converted successfully" %scan_name)
+			success_message = "%s uploaded and converted successfully." %scan_name
+			success_message += "\n%d sheets were produced." %num_sheets
+			if exam.uses_qr:
+				success_message += "\n%d students matched by QR code."\
+						% len(exams_to_assign)
+			messages.success(request, success_message)
 			form = forms.UploadScanForm() # fresh form for next upload
 		else:
 			# form is invalid, do nothing
