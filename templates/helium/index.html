@@ -90,11 +90,8 @@
 		<li><a href="{% url 'view_conflicts_own' %}">View your conflicts</a></li>
 		<li><a href="{% url 'view_conflicts_all' %}">View all conflicts</a></li>
 		<li><a href="{% url 'view_comedy' 25 %}">View comedic answers</a></li>
-		<li><a href="{% static 'answers/february-answersheet.pdf' %}">HMMT Feb answer sheets (pdf)</a></li>
-		<li><a href="{% static 'answers/november-answersheet.pdf' %}">HMMT Nov answer sheets (pdf)</a></li>
-		<li><a href="{% static 'answers/internal-answersheet.pdf' %}">Example answer sheets (pdf)</a></li>
 		{% if request.user.is_superuser %}
-			<li><a href="/admin/helium/">Django admin console</a></li>
+			<li><a href="/admin/helium/">Django admin console</a> (admin)</li>
 		{% endif %}
 		</ul>
 
@@ -124,6 +121,18 @@
 	<li><a href="{% url 'manage' 'releaseattention' %}">Release scribbles from attention queue</a></li>
 </ul>
 {% endif %}
+
+<hr />
+
+<h4>Static files</h4>
+<ul>
+	<li><a href="{% static 'helium-manual/helium-manual.pdf' %}">User manual</a></li>
+	<li><a href="{% static 'answers/november-answersheet.pdf' %}">HMMT Nov answer sheets (pdf)</a></li>
+	<li><a href="{% static 'answers/february-answersheet.pdf' %}">HMMT Feb answer sheets (pdf)</a></li>
+	<li><a href="{% static 'answers/internal-answersheet.pdf' %}">Example answer sheets (pdf)</a></li>
+	<li><a href="{% static 'sample-scans/batchX.pdf' %}">Sample scans (pdf, part 1 of 2)</a></li>
+	<li><a href="{% static 'sample-scans/batchY.pdf' %}">Sample scans (pdf, part 2 of 2)</a></li>
+</ul>
 {% endblock %}
 
 {% block layout-footer %}
