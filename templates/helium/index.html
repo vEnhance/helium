@@ -79,36 +79,36 @@
 </form>
 
 <ul>
-	<li><a href="{% url 'estimation_calc' %}">Guts Estimation Calculator</a></li>
+	<li><a href="{% url 'estimation_calc' %}">Guts estimation calculator</a></li>
 </ul>
 
 <h4>View</h4>
 <div class="clearfix">
 	<div class="col-xs-6">
 		<ul>
-		<li><a href="{% url 'find_paper' %}">Find Paper (and Issues)</a></li>
-		<li><a href="{% url 'view_conflicts_own' %}">View Your Conflicts</a></li>
-		<li><a href="{% url 'view_conflicts_all' %}">View All Conflicts</a></li>
-		<li><a href="{% url 'view_comedy' 25 %}">View Comedic Answers</a></li>
-		<li><a href="{% static 'answers/february-answersheet.pdf' %}">HMMT Feb Answer Sheets (PDF)</a></li>
-		<li><a href="{% static 'answers/november-answersheet.pdf' %}">HMMT Nov Answer Sheets (PDF)</a></li>
-		<li><a href="{% static 'answers/internal-answersheet.pdf' %}">Example Answer Sheets (PDF)</a></li>
+		<li><a href="{% url 'find_paper' %}">Find paper (and issues)</a></li>
+		<li><a href="{% url 'view_conflicts_own' %}">View your conflicts</a></li>
+		<li><a href="{% url 'view_conflicts_all' %}">View all conflicts</a></li>
+		<li><a href="{% url 'view_comedy' 25 %}">View comedic answers</a></li>
+		<li><a href="{% static 'answers/february-answersheet.pdf' %}">HMMT Feb answer sheets (pdf)</a></li>
+		<li><a href="{% static 'answers/november-answersheet.pdf' %}">HMMT Nov answer sheets (pdf)</a></li>
+		<li><a href="{% static 'answers/internal-answersheet.pdf' %}">Example answer sheets (pdf)</a></li>
 		{% if request.user.is_superuser %}
-			<li><a href="/admin/helium/">Django Admin</a> (admin)</li>
+			<li><a href="/admin/helium/">Django admin console</a></li>
 		{% endif %}
 		</ul>
 
 	</div>
 	<div class="col-xs-6">
 		<ul>
-		<li><a href="{% url 'progress_problems' %}">Progress Grading</a></li>
-		<li><a href="{% url 'progress_scans' %}">Progress Matching Scans</a></li>
-		<li><a href="{% url 'results_short' %}">Print Short Results</a></li>
-		<li><a href="{% url 'results_extended' %}">Print Extended Results</a></li>
-		<li><a href="{% url 'reports_awards' %}">Get Awards Beamer</a></li>
+		<li><a href="{% url 'progress_problems' %}">Progress grading</a></li>
+		<li><a href="{% url 'progress_scans' %}">Progress matching scans</a></li>
+		<li><a href="{% url 'results_short' %}">Print short results</a></li>
+		<li><a href="{% url 'results_extended' %}">Print extended results</a></li>
+		<li><a href="{% url 'reports_awards' %}">Get awards beamer</a></li>
 		{% if request.user.is_superuser %}
-			<li><a href="{% url 'reports_full' %}">Print Full Results</a> (admin)</li>
-			<li><a href="{% url 'reports_spreadsheet' %}">Score Spreadsheet</a> (admin)</li>
+			<li><a href="{% url 'reports_full' %}">Print full results</a> (admin)</li>
+			<li><a href="{% url 'reports_spreadsheet' %}">Score spreadsheet</a> (admin)</li>
 		{% endif %}
 		</ul>
 	</div>
@@ -117,11 +117,11 @@
 {% if request.user.is_superuser %}
 <h4>Management Commands</h4>
 <ul>
-	<li><a href="{% url 'manage' 'algscore' %}">Run Algorithmic Scoring</a></li>
-	<li><a href="{% url 'manage' 'grade' %}">Run Grading</a></li>
-	<li><a href="{% url 'manage' 'cleanverdicts' %}">Clean Verdicts</a></li>
-	<li><a href="{% url 'manage' 'updatescribbles' %}">Update Scribbles</a></li>
-	<li><a href="{% url 'manage' 'releaseattention' %}">Release Scribbles from Attention Queue</a></li>
+	<li><a href="{% url 'manage' 'algscore' %}">Run algorithmic scoring</a></li>
+	<li><a href="{% url 'manage' 'grade' %}">Run grading</a></li>
+	<li><a href="{% url 'manage' 'cleanverdicts' %}">Clean verdicts</a></li>
+	<li><a href="{% url 'manage' 'updatescribbles' %}">Update scribbles</a></li>
+	<li><a href="{% url 'manage' 'releaseattention' %}">Release scribbles from attention queue</a></li>
 </ul>
 {% endif %}
 {% endblock %}
