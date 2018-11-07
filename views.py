@@ -656,8 +656,11 @@ def upload_scans(request):
 
 			def get_entity(exam, sheet):
 				# Entity derivation
-				if exam.uses_qr is False: return None
+				if exam.uses_qr is False:
+					return None
 				qr = sheet.get_qr_code()
+				if qr is None:
+					return None
 				try:
 					idtype = qr[0]  # C: competitor, T: team
 					idval = int(qr[1:])  # numeric ID value
