@@ -17,7 +17,6 @@ class Command(BaseCommand):
 				.filter(problem__exam__is_alg_scoring = True)\
 				.values('problem__id', 'entity__id', 'score')
 				# hence ordered triples (pid, entity id, score \in \{0,1\})
-		print verdicts
 		num_solves = collections.defaultdict(int)
 					# problem ids -> number of solves
 		for v in verdicts:
@@ -32,6 +31,5 @@ class Command(BaseCommand):
 				w = 9.99
 			else:
 				w = exp(n/20.0) + max(8 - floor(log(N)), 2)
-			print n, N, w
 			problem.weight = w
 			problem.save()
