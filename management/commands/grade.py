@@ -71,7 +71,7 @@ class Command(BaseCommand):
 		individual_totals = {} # mathlete id -> [tot1, tot2, ...]
 		for mathlete in mathletes:
 			individual_totals[mathlete.id] = [
-					sum(all_scores[exam.id].get(mathlete.id, []))
+					sum([_ or 0 for _ in all_scores[exam.id].get(mathlete.id, [])])
 					for exam in exams if exam.is_indiv]
 		all_rows += self.rank_entities("Individual Overall", mathletes, individual_totals)
 		
