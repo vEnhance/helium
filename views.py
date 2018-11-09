@@ -57,6 +57,7 @@ from django.contrib import messages
 from django.db.models import Count
 from django.utils.html import escape
 from django.utils import timezone
+from django.db import transaction
 import django.core.management
 import django.db
 import json
@@ -710,8 +711,12 @@ def upload_scans(request):
 				assert len(vids[pids[n]])==0, "not all ID's used"
 			He.models.ProblemScribble.objects.bulk_create(ps_to_bulk_create)
 
-			for es, entity in exams_to_assign:
-				es.assign(entity)
+			if exam.uses_qr is True:
+				@transaction.atomic
+				def assign_qrs(pairs):
+					for es, entity in pairs:
+						es.assign(entity)
+				assign_qrs(exams_to_assign)
 
 			# OK, all done
 			pdfscribble.is_done = True
