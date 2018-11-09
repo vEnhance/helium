@@ -13,7 +13,7 @@ class Command(BaseCommand):
 				.filter(exam__is_alg_scoring=True).values_list('id', flat=True)
 
 		verdicts = He.models.Verdict.objects\
-				.filter(is_valid = True, is_done = True, entity__isnull = False)\
+				.filter(score__isnull=False, entity__isnull = False)\
 				.filter(problem__exam__is_alg_scoring = True)\
 				.values('problem__id', 'entity__id', 'score')
 				# hence ordered triples (pid, entity id, score \in \{0,1\})
