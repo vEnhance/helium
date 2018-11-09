@@ -1,11 +1,11 @@
 - model: helium.exam
   pk: 6
-  fields: {name: GEO!, color: '#EEFFEE', is_indiv: true, is_ready: true, is_alg_scoring: true,
-    is_scanned: true, min_grades: 2, min_override: 3}
+  fields: {name: 'Indiv Round', color: '#EEFFEE', is_indiv: true, is_ready: true, is_alg_scoring: true, uses_qr: True,
+    can_upload_scan: true, is_scanned: true, min_grades: 2, min_override: 3}
 - model: helium.exam
   pk: 7
-  fields: {name: Mock IMO, color: '#FFFFE0', is_indiv: false, is_ready: true, is_alg_scoring: false,
-    is_scanned: false, min_grades: 2, min_override: 3}
+  fields: {name: Mock IMO, color: '#FFFFE0', is_indiv: false, is_ready: true, is_alg_scoring: false, uses_qr: False,
+    is_scanned: false, min_grades: 1, min_override: 3}
 - model: helium.problem
   pk: 16
   fields: {exam: 6, problem_number: 1, answer: '2, 6', weight: 1.0, allow_partial: false}
