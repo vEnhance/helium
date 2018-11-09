@@ -29,7 +29,7 @@ class Command(BaseCommand):
 			n = problem.problem_number
 			N = num_solves[p_id]
 			if N == 0:
-				w = 10
+				w = 9.99
 			else:
 				w = exp(n/20.0) + max(8 - floor(log(N)), 2)
 			print n, N, w
