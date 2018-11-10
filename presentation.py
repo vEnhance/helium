@@ -330,6 +330,22 @@ December\fi\ \number \year}
 \begin{frame}
 \Huge \alert{TODO}
 \end{frame}
+
+\begin{frame}
+	\frametitle{Ceremony procedure}
+	We announce top-10 groups
+	for each individual test, each team event,
+	overall individuals, and finally overall team sweepstakes.
+	\begin{itemize}
+		\item When your name appears, come on-stage
+		and \alert{stay until the rest of that group is called}.
+		\item For team prizes: \alert{send one representative}
+		to the stage rather than the whole team.
+		\item We will pause for photos between groups.
+		\ii For sake of time,
+		please \alert{hold applause until end of group}.
+	\end{itemize}
+\end{frame}
 """.strip()
 
 BEAMER_POSTAMBLE = r"""
