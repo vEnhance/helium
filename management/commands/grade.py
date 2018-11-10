@@ -78,7 +78,7 @@ class Command(BaseCommand):
 		# then sum the individual scores for everyone
 		aggr = collections.defaultdict(tuple)
 		for team in teams:
-			aggr[team.id] = [individual_totals[m.id][0] for m in mathletes if m.team == team]
+			aggr[team.id] = [individual_totals[m.id] for m in mathletes if m.team == team]
 			aggr[team.id].sort(reverse=True)
 		all_rows += self.rank_entities("Team Aggregate", teams, aggr)
 
