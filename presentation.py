@@ -101,7 +101,11 @@ class ResultPrinter:
 				if zero_pad:
 					return int_string % 0
 				else:
-					return (int_string % 99).replace("9", "-") # use "--" for blanks
+					return (int_string % 99).replace("9", "-")
+					# use "--" for blanks:
+					# it's better than "-" since it's more obvious
+					# otherwise it's easy to overlook when sanity checking results
+					# (cf. HMMT Feb 2018 >_<)
 			elif type(x) == int or x == 0:
 				return int_string % x
 			elif type(x) == float:
