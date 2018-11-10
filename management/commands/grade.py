@@ -2,6 +2,16 @@ from django.core.management.base import BaseCommand, CommandError
 import helium as He
 import collections
 
+def nsum(L):
+	"""Given a list L, returns sum of non-None elements in L,
+	unless L is empty in which case return None"""
+	assert type(L)==list, "L is not a list"
+	if L:
+		return sum(_ or 0 for _ in L)
+	else:
+		return None
+
+
 class Command(BaseCommand):
 	help = "Computes all scores, and stores them in database of ScoreRows"
 
@@ -24,16 +34,18 @@ class Command(BaseCommand):
 
 	def get_sweeps_scores(self, teams, scores, weight = 400):
 		"""Given teams and scores, yield pairs (team, weighted_score)"""
-		def total(sc):
-			return sum([x for x in sc if x is not None])
-		max_score = max(total(sc) for sc in scores.values())\
+		max_score = max((nsum(sc) or 0) for sc in scores.values())\
 				if len(scores) > 0 else 0
 		if max_score > 0:
 			mult = float(weight) / max_score
 		else:
 			mult = 0
 		for team in teams:
-			yield (team, total(scores[team.id]) * mult)
+			s = nsum(scores[team.id])
+			if s is not None:
+				yield (team, s * mult)
+			else:
+				yield (team, None)
 
 	def handle(self, *args, **kwargs):
 		mathletes = list(He.models.Entity.mathletes.all())
@@ -68,22 +80,16 @@ class Command(BaseCommand):
 			all_rows += self.rank_entities(exam.name, entities, all_scores[exam.id])
 
 		# For each mathelete, create a table with their sum of individual scores.
-		def get_total(mathlete, exam):
-			scores = all_scores[exam.id].get(mathlete.id, None)
-			if not scores:
-				return None
-			else:
-				return sum([_ or 0 for _ in scores])
 		individual_totals = {} # mathlete id -> [tot1, tot2, ...]
 		for mathlete in mathletes:
-			individual_totals[mathlete.id] = [get_total(mathlete, exam) \
+			individual_totals[mathlete.id] = [nsum(all_scores[exam.id].get(mathlete.id, []))
 					for exam in exams if exam.is_indiv]
 		all_rows += self.rank_entities("Individual Overall", mathletes, individual_totals)
 		
 		# then sum the individual scores for everyone
 		aggr = collections.defaultdict(tuple)
 		for team in teams:
-			aggr[team.id] = [sum([_ or 0 for _ in individual_totals[m.id]]) \
+			aggr[team.id] = [nsum(individual_totals[m.id]) \
 					for m in mathletes if m.team == team]
 			aggr[team.id].sort(reverse=True)
 		all_rows += self.rank_entities("Mathlete Aggregate", teams, aggr)
