@@ -204,7 +204,7 @@ FINAL_TEXT_BANNER = """
 |  | |  | |  `---.|      |(_|  |  ('  '-'(_.-' |  |   |  | 
 `--' `--' `------'`------'  `--'    `-----'    `--'   `--' 
 
-HELIUM 2 (c) 2017 Evan Chen
+HELIUM 2 (c) 2018 Evan Chen
 """.strip()
 
 def HMMT_text_report(queryset = None,
@@ -226,7 +226,7 @@ def HMMT_text_report(queryset = None,
 	## Individual Results
 	rows = all_rows['Individual Overall']
 	output += RP(rows).get_table(heading = "Overall Individual Awards",
-			num_show = num_show, num_named = num_named,
+			num_show = num_show, num_named = num_named, zero_pad = zero_pad,
 			float_string = "%5.2f", int_string = "%5d")
 	output += "\n"
 

@@ -68,17 +68,23 @@ class Command(BaseCommand):
 			all_rows += self.rank_entities(exam.name, entities, all_scores[exam.id])
 
 		# For each mathelete, create a table with their sum of individual scores.
+		def get_total(mathlete, exam):
+			scores = all_scores[exam.id].get(mathlete.id, None)
+			if not scores:
+				return None
+			else:
+				return sum([_ or 0 for _ in scores])
 		individual_totals = {} # mathlete id -> [tot1, tot2, ...]
 		for mathlete in mathletes:
-			individual_totals[mathlete.id] = [
-					sum([_ or 0 for _ in all_scores[exam.id].get(mathlete.id, [])])
+			individual_totals[mathlete.id] = [get_total(mathlete, exam) \
 					for exam in exams if exam.is_indiv]
 		all_rows += self.rank_entities("Individual Overall", mathletes, individual_totals)
 		
 		# then sum the individual scores for everyone
 		aggr = collections.defaultdict(tuple)
 		for team in teams:
-			aggr[team.id] = [individual_totals[m.id] for m in mathletes if m.team == team]
+			aggr[team.id] = [sum([_ or 0 for _ in individual_totals[m.id]]) \
+					for m in mathletes if m.team == team]
 			aggr[team.id].sort(reverse=True)
 		all_rows += self.rank_entities("Team Aggregate", teams, aggr)
 
