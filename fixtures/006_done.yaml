@@ -2632,15 +2632,15 @@
   fields: {category: Individual Overall, entity: 20, rank: 15, total: 0.0, cached_score_string: '0.0'}
 - model: helium.scorerow
   pk: 364
-  fields: {category: Team Aggregate, entity: 16, rank: 1, total: 144.00316026336554,
+  fields: {category: Mathlete Aggregate, entity: 16, rank: 1, total: 144.00316026336554,
     cached_score_string: '56.9642504004,39.2195282778,32.4928079089,15.3265736762,0.0'}
 - model: helium.scorerow
   pk: 365
-  fields: {category: Team Aggregate, entity: 10, rank: 2, total: 134.12027301866118,
+  fields: {category: Mathlete Aggregate, entity: 10, rank: 2, total: 134.12027301866118,
     cached_score_string: '64.1609429737,32.2461887593,22.5566992712,15.1564420145,0.0'}
 - model: helium.scorerow
   pk: 366
-  fields: {category: Team Aggregate, entity: 22, rank: 3, total: 124.61183489018435,
+  fields: {category: Mathlete Aggregate, entity: 22, rank: 3, total: 124.61183489018435,
     cached_score_string: '47.3086053715,23.9621633426,22.5566992712,16.5116930503,14.2726738545'}
 - model: helium.scorerow
   pk: 367

@@ -122,7 +122,7 @@ class ResultPrinter:
 			else:
 				scores = row.scores
 			output += pre_num + "%4d. " % row.rank
-			output += "%7.2f"  % row.total
+			output += "%7.4f"  % row.total
 			output += "  |  "
 			output += " ".join([score_to_string(x) for x in scores])
 			output += "  |  "
@@ -247,8 +247,8 @@ def HMMT_text_report(queryset = None,
 		output += "\n"
 
 	# Indiv aggregate
-	rows = all_rows["Team Aggregate"]
-	output += RP(rows).get_table("Team Aggregate",
+	rows = all_rows["Mathlete Aggregate"]
+	output += RP(rows).get_table("Mathlete Aggregate",
 			num_show = num_show, num_named = num_named, zero_pad = zero_pad,
 			float_string = "%6.2f", int_string = "%6d")
 	output += "\n"
@@ -256,7 +256,7 @@ def HMMT_text_report(queryset = None,
 	# Sweepstakes
 	rows = all_rows["Sweepstakes"]
 	output += RP(rows).get_table("Sweepstakes",
-			num_show = num_show, num_named = None,
+			num_show = num_show, num_named = None, zero_pad = zero_pad,
 			float_string = "%7.2f", int_string = "%7d")
 	output += "\n"
 
@@ -273,7 +273,7 @@ def HMMT_spreadsheet(queryset = None):
 	for exam in He.models.Exam.objects.all():
 		sheets[unicode(exam)] = RP(all_rows[exam.name]).get_sheet(heading = exam.name)
 	sheets["Indiv"] = RP(all_rows["Individual Overall"]).get_sheet(heading = None)
-	sheets["Aggr"] = RP(all_rows["Team Aggregate"]).get_sheet(heading = "")
+	sheets["Aggr"] = RP(all_rows["Mathlete Aggregate"]).get_sheet(heading = "")
 	sheets["Sweeps"] = RP(all_rows["Sweepstakes"]).get_sheet(heading = None)
 
 	odf = sheetapi.get_odf_spreadsheet(sheets)

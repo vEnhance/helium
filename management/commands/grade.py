@@ -86,7 +86,7 @@ class Command(BaseCommand):
 			aggr[team.id] = [sum([_ or 0 for _ in individual_totals[m.id]]) \
 					for m in mathletes if m.team == team]
 			aggr[team.id].sort(reverse=True)
-		all_rows += self.rank_entities("Team Aggregate", teams, aggr)
+		all_rows += self.rank_entities("Mathlete Aggregate", teams, aggr)
 
 		sweeps = collections.defaultdict(list)
 		# Each team event is worth 400 points:
