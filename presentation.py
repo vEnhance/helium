@@ -249,7 +249,7 @@ def HMMT_text_report(queryset = None,
 	# Indiv aggregate
 	rows = all_rows["Team Aggregate"]
 	output += RP(rows).get_table("Team Aggregate",
-			num_show = num_show, num_named = num_named,
+			num_show = num_show, num_named = num_named, zero_pad = zero_pad,
 			float_string = "%6.2f", int_string = "%6d")
 	output += "\n"
 
