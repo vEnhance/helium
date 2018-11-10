@@ -122,7 +122,7 @@ class ResultPrinter:
 			else:
 				scores = row.scores
 			output += pre_num + "%4d. " % row.rank
-			output += "%7.4f"  % row.total
+			output += "%8.3f"  % row.total
 			output += "  |  "
 			output += " ".join([score_to_string(x) for x in scores])
 			output += "  |  "
